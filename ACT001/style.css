@@ -114,6 +114,120 @@ body {
   background:rgba(8, 8, 10, .92);
 }
 
+.members-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0 !important;
+  padding: 1.25rem;
+}
+
+.members-grid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(3, min-content);
+  gap: .5rem;
+  align-content: center;
+  min-height: 0;
+  margin: 0;
+}
+
+.members-grid > .col {
+  width: auto;
+  padding: 0;
+}
+
+.members-grid > .col:nth-last-child(2) {
+  grid-column: 2;
+  margin-left: 0;
+}
+
+.members-grid > .col:last-child {
+  grid-column: 3;
+}
+
+.members-grid .member-card {
+  aspect-ratio: 1 / 1;
+}
+
+.members-heading h1 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+
+.members-heading p {
+  margin: .3rem 0 1.1rem;
+  color: rgba(255, 255, 255, .7);
+  font-size: .78rem;
+}
+
+.member-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: .65rem;
+  background: rgba(255, 255, 255, .06);
+  cursor: pointer;
+  outline: none;
+}
+
+.member-card:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+.member-photo {
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .02));
+}
+
+.member-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-name {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: .65rem .45rem .45rem;
+  color: var(--white);
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .94));
+  opacity: 0;
+  transform: translateY(.4rem);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.member-card:hover .member-name,
+.member-card:focus .member-name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.members-link {
+  align-self: flex-start;
+  margin-top: 1rem;
+  color: var(--white);
+  font-size: .75rem;
+  font-weight: 700;
+  text-decoration-color: rgba(255, 255, 255, .5);
+  text-underline-offset: .25rem;
+}
+
+.members-link:hover {
+  color: #d8d8d8;
+}
+
 .mainteume-card {
   position: relative;
 }
@@ -124,10 +238,11 @@ body {
   width: 100%;
   height: 100%;
   margin-left: -.75px;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   max-width: 100%;
   max-height: 100%;
+  transform: scale(1);
   transition: transform .35s ease;
 }
 
