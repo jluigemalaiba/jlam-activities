@@ -496,6 +496,33 @@ body {
   line-height: 1.45;
 }
 
+.members-heading h1,
+.members-heading p,
+.album-content h2,
+.album-content p,
+.about-heading h2,
+.about-heading p,
+.award-content h2,
+.award-content p,
+.update-content h2,
+.update-content p {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .85);
+}
+
+.members-heading p,
+.album-content p,
+.about-heading p,
+.award-content p,
+.update-content p {
+  text-shadow: 0 3px 10px rgba(0, 0, 0, .98);
+}
+
+.album-card > img,
+.award-card > img,
+.update-card > img {
+  filter: brightness(.75);
+}
+
 .mainteume-card {
   position: relative;
 }
