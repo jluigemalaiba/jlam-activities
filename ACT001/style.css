@@ -438,6 +438,61 @@ body {
   line-height: 1.45;
 }
 
+.update-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.update-card > img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: translateX(1.5%);
+  transition: transform .35s ease;
+}
+
+.update-card::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  background: rgb(24, 24, 26);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.update-card:hover > img {
+  transform: translateX(1.5%) scale(1.06);
+}
+
+.update-content {
+  position: relative;
+  z-index: 2;
+  min-height: calc(280px - 2px);
+  padding: 1.5rem;
+}
+
+.update-content h2,
+.update-content p {
+  margin: 0;
+}
+
+.update-content h2 {
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  font-weight: 800;
+}
+
+.update-content p {
+  margin-top: .35rem;
+  color: rgba(255, 255, 255, .84);
+  font-size: .85rem;
+  line-height: 1.45;
+}
+
 .mainteume-card {
   position: relative;
 }
