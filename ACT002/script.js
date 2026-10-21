@@ -751,7 +751,7 @@ function render() {
   const items = cast(),
     theme = currentTheme();
   document.documentElement.dataset.theme = app.theme;
-  root.innerHTML = `<div data-theme="${app.theme}" class="app-root"><header class="topbar sticky-top"><div class="stripe"></div><div class="topbar-inner"><a href="#top" class="brand"><span class="brand-mark" role="img" aria-label="Drag Race Philippines"></span><span><span class="brand-name font-display">Drag Race Filipinas Simulator</span><span class="brand-sub">Are u ready to be the next drag superstar?</span></span></a><div class="ms-auto d-flex align-items-center gap-2"><div class="theme-chip from-sm"><span class="text-xs fw-semibold">Theme: ${theme.name}</span></div><div class="count-chip"><span class="font-monospace text-xs">${String(items.length).padStart(2, "0")}<span class="opacity-50">/${MAX}</span></span><div class="progress" role="progressbar" aria-label="Cast size" aria-valuenow="${items.length}" aria-valuemin="0" aria-valuemax="${MAX}"><div class="progress-bar" style="width:${(items.length / MAX) * 100}%"></div></div></div></div></div></header><div class="app-shell"><aside class="app-sidebar"><div class="app-sidebar-inner"><p class="side-label eyebrow">Setup</p><nav class="side-nav">${[
+  root.innerHTML = `<div data-theme="${app.theme}" class="app-root"><header class="topbar sticky-top"><div class="stripe"></div><div class="topbar-inner"><a href="#top" class="brand"><span class="brand-mark" role="img" aria-label="Drag Race Philippines"></span><span><span class="brand-name font-display">Drag Race Filipinas Simulator</span><span class="brand-sub">Are u ready to be the next drag superstar?</span></span></a><div class="ms-auto d-flex align-items-center gap-2 header-controls from-md"><div class="theme-chip"><span class="text-xs fw-semibold">Theme: ${theme.name}</span></div><div class="count-chip"><span class="font-monospace text-xs">${String(items.length).padStart(2, "0")}<span class="opacity-50">/${MAX}</span></span><div class="progress" role="progressbar" aria-label="Cast size" aria-valuenow="${items.length}" aria-valuemin="0" aria-valuemax="${MAX}"><div class="progress-bar" style="width:${(items.length / MAX) * 100}%"></div></div></div></div></div></header><div class="app-shell"><aside class="app-sidebar"><div class="app-sidebar-inner"><p class="side-label eyebrow">Setup</p><nav class="side-nav">${[
     ["werkroom", "Werk Room", "mirror"],
     ["custom", "Custom Queen", "wand"],
     ["look", "Season Look", "palette"],
@@ -976,6 +976,16 @@ function bind() {
     .querySelector("#custom-form")
     ?.addEventListener("change", updatePreview);
   document.querySelector("[data-start]")?.addEventListener("click", startRace);
+
+  const syncTopbar = () =>
+    document
+      .querySelector(".topbar")
+      ?.classList.toggle("is-compact", window.scrollY > 32);
+  syncTopbar();
+  if (!window.__drphTopbarScrollBound) {
+    window.addEventListener("scroll", syncTopbar, { passive: true });
+    window.__drphTopbarScrollBound = true;
+  }
 }
 function createCustom(event) {
   event.preventDefault();

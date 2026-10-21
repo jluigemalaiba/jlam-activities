@@ -5834,18 +5834,22 @@ body {
 }
 
 .topbar {
-    border-bottom: 1px solid var(--line);
-    background: color-mix(in srgb, var(--bg) 85%, transparent);
-    -webkit-backdrop-filter: blur(12px)
+    z-index: 1020;
+    border-bottom: 1px solid color-mix(in srgb, var(--c1) 26%, var(--line));
+    background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--c1) 8%, transparent) 0 2px, transparent 2px 12px), repeating-linear-gradient(-45deg, color-mix(in srgb, var(--c2) 7%, transparent) 0 2px, transparent 2px 12px), color-mix(in srgb, var(--bg) 91%, transparent);
+    transition: width .35s ease, margin .35s ease, border-radius .35s ease, box-shadow .35s ease, border-color .35s ease, background-color .35s ease;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px)
 }
 
 .topbar .stripe {
-    height: 6px
+    height: 6px;
+    transition: height .35s ease, opacity .2s ease
 }
 
 .topbar-inner {
     max-width: 1440px;
-    height: 64px;
+    height: clamp(54px, 7vw, 64px);
     padding-inline: clamp(16px, var(--from-lg), 24px);
     align-items: center;
     gap: 1rem;
@@ -5853,10 +5857,49 @@ body {
     display: flex
 }
 
+.topbar.is-compact {
+    top: 14px;
+    border: 1px solid color-mix(in srgb, var(--c1) 40%, var(--line));
+    border-radius: 999px;
+    width: min(calc(100% - 24px), 1180px);
+    margin: 0 auto;
+    box-shadow: 0 14px 28px -20px var(--ink), inset 0 1px #fff8
+}
+
+.topbar.is-compact .stripe {
+    opacity: 0;
+    height: 0
+}
+
+[data-theme=flag] .topbar {
+    background: repeating-linear-gradient(45deg, #0038a814 0 3px, transparent 3px 12px), repeating-linear-gradient(-45deg, #ce112614 0 3px, transparent 3px 12px), color-mix(in srgb, #fbf8f1 92%, transparent)
+}
+
+[data-theme=s1] .topbar {
+    background: repeating-linear-gradient(90deg, #d62b1f1a 0 16px, #f2b7051a 16px 32px, #1d5ba81a 32px 48px, #2f8f461a 48px 64px), #f3ebdd
+}
+
+[data-theme=s2] .topbar {
+    background: radial-gradient(#ff3d8b2b 1.2px, transparent 1.8px) 0 0/12px 12px, radial-gradient(#ffd23f26 1.2px, transparent 1.8px) 6px 6px/12px 12px, #fff3e4
+}
+
+[data-theme=s3] .topbar {
+    background: linear-gradient(45deg, #0a0a0a0b 25%, transparent 25% 75%, #0a0a0a0b 75%) 0 0/14px 14px, #efede8
+}
+
+[data-theme=s4] .topbar {
+    background: radial-gradient(ellipse at 50% 115%, #13a3b530 0 32%, transparent 33%) 0 0/30px 18px, radial-gradient(ellipse at 50% 115%, #0b6e9928 0 32%, transparent 33%) 15px 9px/30px 18px, #e9f4f5
+}
+
 .brand {
     align-items: center;
     gap: 12px;
+    min-width: 0;
     display: flex
+}
+
+.brand>span:last-child {
+    min-width: 0
 }
 
 .brand-mark {
@@ -5878,9 +5921,12 @@ body {
 }
 
 .brand-name {
-    font-size: 22px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: clamp(15px, 2vw, 22px);
     line-height: 1;
-    display: block
+    display: block;
+    overflow: hidden
 }
 
 .brand-sub {
@@ -5889,9 +5935,12 @@ body {
     text-transform: uppercase;
     color: var(--muted);
     margin-top: 4px;
-    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: clamp(8px, .9vw, 10px);
     line-height: 1;
-    display: block
+    display: block;
+    overflow: hidden
 }
 
 .theme-chip {
