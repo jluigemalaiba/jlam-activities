@@ -558,7 +558,7 @@ function redCarpetSet() {
         wm = w0 + (w1 - w0) * 0.38,
         poly = (ya, wa, yb, wb) =>
           `${500 - wa / 2},${ya} ${500 + wa / 2},${ya} ${500 + wb / 2},${yb} ${500 - wb / 2},${yb}`;
-      return `<polygon points="${poly(y0, w0, ym, wm)}" fill="#d3172f"/><polygon points="${poly(ym, wm, y1, w1)}" fill="#8c091d"/><line x1="${500 - w0 / 2}" y1="${y0}" x2="${500 + w0 / 2}" y2="${y0}" stroke="#fff" stroke-opacity=".16" stroke-width="1.5"/>`;
+      return `<polygon points="${poly(y0, w0, ym, wm)}" fill="var(--carpet-step-a, #d3172f)"/><polygon points="${poly(ym, wm, y1, w1)}" fill="var(--carpet-step-b, #8c091d)"/><line x1="${500 - w0 / 2}" y1="${y0}" x2="${500 + w0 / 2}" y2="${y0}" stroke="#fff" stroke-opacity=".16" stroke-width="1.5"/>`;
     }).join("");
   const post = (x, py, scale) =>
     `<ellipse cx="${x}" cy="${py}" rx="${10 * scale}" ry="${3 * scale}" fill="#7a5a1c"/><rect x="${x - 3 * scale}" y="${py - 74 * scale}" width="${6 * scale}" height="${74 * scale}" rx="${2 * scale}" fill="url(#carpet-gold)"/><circle cx="${x}" cy="${py - 74 * scale}" r="${6 * scale}" fill="url(#carpet-gold)"/>`;
@@ -576,7 +576,7 @@ function redCarpetSet() {
         return `<path d="M${p.x} ${p.py - 74 * p.scale + 6 * p.scale} Q ${(p.x + q.x) / 2} ${(p.py - 74 * p.scale + q.py - 74 * q.scale) / 2 + 26 * q.scale} ${q.x} ${q.py - 74 * q.scale + 6 * q.scale}" fill="none" stroke="#a3001d" stroke-width="${5 * q.scale}" stroke-linecap="round"/>`;
       })
       .join("")}${posts.map((p) => post(p.x, p.py, p.scale)).join("")}</g>`;
-  return `<svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice" class="carpet-set" aria-hidden="true"><defs><linearGradient id="carpet-wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#3a1410"/><stop offset="1" stop-color="#120507"/></linearGradient><linearGradient id="carpet-floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b10d27"/><stop offset="1" stop-color="#4d0410"/></linearGradient><linearGradient id="carpet-gold" x1="0" x2="1"><stop stop-color="#8a6420"/><stop offset=".45" stop-color="#ffe08a"/><stop offset="1" stop-color="#a87a26"/></linearGradient><radialGradient id="carpet-door" cx=".5" cy=".7" r=".7"><stop stop-color="#ffd59a"/><stop offset="1" stop-color="#7a2a10"/></radialGradient></defs><rect width="1000" height="560" fill="url(#carpet-wall)"/>${Array.from({ length: 15 }, (_, i) => `<rect x="${i * 70 + 8}" y="0" width="54" height="410" rx="3" fill="#fff" opacity=".025"/>`).join("")}<path d="M432 112V46Q500-4 568 46v66Z" fill="url(#carpet-door)"/><path d="M418 112V44Q500-22 582 44v68" fill="none" stroke="#c99a45" stroke-width="5" opacity=".8"/><rect x="330" y="106" width="340" height="22" fill="#c4122d"/>${steps}<rect y="414" width="1000" height="146" fill="url(#carpet-floor)"/>${side(false)}${side(true)}${[
+  return `<svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice" class="carpet-set" aria-hidden="true"><defs><linearGradient id="carpet-wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#3a1410"/><stop offset="1" stop-color="#120507"/></linearGradient><linearGradient id="carpet-floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--carpet-floor-a, #b10d27)"/><stop offset="1" stop-color="var(--carpet-floor-b, #4d0410)"/></linearGradient><linearGradient id="carpet-gold" x1="0" x2="1"><stop stop-color="#8a6420"/><stop offset=".45" stop-color="#ffe08a"/><stop offset="1" stop-color="#a87a26"/></linearGradient><radialGradient id="carpet-door" cx=".5" cy=".7" r=".7"><stop stop-color="#ffd59a"/><stop offset="1" stop-color="#7a2a10"/></radialGradient></defs><rect width="1000" height="560" fill="url(#carpet-wall)"/>${Array.from({ length: 15 }, (_, i) => `<rect x="${i * 70 + 8}" y="0" width="54" height="410" rx="3" fill="#fff" opacity=".025"/>`).join("")}<path d="M432 112V46Q500-4 568 46v66Z" fill="url(#carpet-door)"/><path d="M418 112V44Q500-22 582 44v68" fill="none" stroke="#c99a45" stroke-width="5" opacity=".8"/><rect x="330" y="106" width="340" height="22" fill="var(--carpet-landing, #c4122d)"/>${steps}<rect y="414" width="1000" height="146" fill="url(#carpet-floor)"/>${side(false)}${side(true)}${[
     [60, 120],
     [140, 220],
     [40, 300],
@@ -605,13 +605,13 @@ function werkRoom(items) {
   const slots = Array.from({ length: MAX }, (_, i) => items[i]);
   const mirror = (queen, n) =>
     queen
-      ? `<div class="mirror-seat animate-rise"><div class="mirror-frame is-lit"><div class="mirror-screen">${queenArt(queen, undefined, true)}<span class="mirror-sheen"></span><span class="mirror-caption"><span class="mirror-name" title="${esc(queen.name)}">${esc(queen.name)}</span><span class="mirror-meta">${String(n).padStart(2, "0")} · S${queen.season}</span></span></div></div><button type="button" data-remove="${queen.id}" aria-label="Remove ${esc(queen.name)}" class="mirror-remove">${icon("x", "icon-xs")}</button></div>`
+      ? `<div class="mirror-seat animate-rise"><div class="mirror-frame is-lit"><div class="mirror-screen">${queenArt(queen, undefined, true)}<span class="mirror-sheen"></span><span class="mirror-caption"><span class="mirror-name" title="${esc(queen.name)}">${esc(queen.name)}</span><span class="mirror-meta">${String(n).padStart(2, "0")} · ${queen.season === "custom" ? "Custom" : `S${queen.season}`}</span></span></div></div><button type="button" data-remove="${queen.id}" aria-label="Remove ${esc(queen.name)}" class="mirror-remove">${icon("x", "icon-xs")}</button></div>`
       : `<a href="#library" aria-label="Empty mirror ${n}, pick a queen from the library" class="mirror-link"><div class="mirror-frame"><div class="mirror-glass"><span class="mirror-num">${String(n).padStart(2, "0")}</span>${icon("plus", "mirror-plus icon-md")}</div></div></a>`;
   const table = (group, index) => {
     const first = index * 5 + 1;
     return `<div class="werk-table ${index < 2 ? "is-back" : ""}"><div class="werk-mirrors">${group.map((queen, offset) => mirror(queen, first + offset)).join("")}</div><div class="table-top"></div><div class="werk-rail"><span>Station ${String(first).padStart(2, "0")}–${String(first + 4).padStart(2, "0")}</span><span class="opacity-75">${group.filter(Boolean).length}/5</span></div><div class="werk-legs" aria-hidden="true"><span class="werk-leg is-left"></span><span class="werk-leg is-right"></span><span class="werk-bar"></span><span class="werk-shelf"></span></div><span class="werk-table-shadow" aria-hidden="true"></span></div>`;
   };
-  return `<section id="werkroom" class="werk-section werk-wall"><span class="light-strip werk-strip is-left from-sm" aria-hidden="true"></span><span class="light-strip werk-strip is-right from-sm" aria-hidden="true"></span>${neonStar("werk-star is-left is-near from-md")}${neonStar("werk-star is-left is-far from-lg")}${neonStar("werk-star is-right is-near from-md")}${neonStar("werk-star is-right is-far from-lg")}${sun("werk-sun animate-spin-slow")}<div class="werk-head px-section"><p class="werk-blurb text-sm">Minimum ${MIN}, maximum ${MAX}. The lights switch on when a queen takes her seat.</p><div class="d-flex align-items-center gap-2"><button type="button" data-action="random" class="btn btn-glass rounded-pill d-inline-flex align-items-center gap-2">${icon("shuffle")} Fill random</button><button type="button" data-action="clear" class="btn btn-glass rounded-pill d-inline-flex align-items-center gap-2" ${items.length ? "" : "disabled"}>${icon("trash")} Clear</button></div></div><div class="werk-sign"><div class="sign-box"><div class="sign-screen"><h2 class="werk-title neon font-display">Werk Room</h2><p class="werk-sign-meta"><span class="text-c3">${String(items.length).padStart(2, "0")}</span> / ${MAX} queens seated</p></div></div></div><div class="werk-stage"><div class="werk-floor" aria-hidden="true">${werkFloor()}<span class="werk-floor-edge"></span></div><div class="werk-tables">${Array.from({ length: 4 }, (_, index) => table(slots.slice(index * 5, index * 5 + 5), index)).join("")}</div></div></section>`;
+  return `<section id="werkroom" class="werk-section werk-wall"><span class="light-strip werk-strip is-left from-sm" aria-hidden="true"></span><span class="light-strip werk-strip is-right from-sm" aria-hidden="true"></span>${neonStar("werk-star is-left is-near from-md")}${neonStar("werk-star is-left is-far from-lg")}${neonStar("werk-star is-right is-near from-md")}${neonStar("werk-star is-right is-far from-lg")}${sun("werk-sun animate-spin-slow")}<div class="werk-head px-section"><div class="d-flex align-items-center gap-2"><button type="button" data-action="random" class="btn btn-glass werk-action is-random rounded-pill d-inline-flex align-items-center gap-2">${icon("shuffle")} Fill random</button><button type="button" data-action="clear" class="btn btn-glass werk-action is-clear rounded-pill d-inline-flex align-items-center gap-2" ${items.length ? "" : "disabled"}>${icon("trash")} Clear</button></div></div><div class="werk-sign"><div class="sign-box"><div class="sign-screen"><h2 class="werk-title neon font-display">Werk Room</h2><p class="werk-sign-meta"><span class="text-c3">${String(items.length).padStart(2, "0")}</span> / ${MAX} queens seated</p><p class="werk-blurb werk-sign-blurb text-sm">Minimum ${MIN}, maximum ${MAX}. The lights switch on when a queen takes her seat.</p></div></div></div><div class="werk-stage"><div class="werk-floor" aria-hidden="true">${werkFloor()}<span class="werk-floor-edge"></span></div><div class="werk-tables">${Array.from({ length: 4 }, (_, index) => table(slots.slice(index * 5, index * 5 + 5), index)).join("")}</div></div></section>`;
 }
 function customForm() {
   const types = [
@@ -622,7 +622,7 @@ function customForm() {
     "Camp",
     "Look queen",
   ];
-  return `<section id="custom" class="vanity-section vanity-wall"><div class="vanity-pillar is-left"></div><div class="vanity-pillar is-right"></div><header class="text-center"><h2 class="vanity-title font-display neon">Custom Queen</h2><p class="vanity-lede text-sm">Sit down, beat that mug, and create your own queen.</p></header><div class="vanity-mirror"><div class="vanity-frame" style="border-radius:64px;padding:30px"><div class="vanity-glass" style="border-radius:34px"><div class="vanity-body"><div class="vanity-preview"><div id="preview-art" class="vanity-portrait">${queenArt({ name: "Your Queen", season: "custom", tone: "c1" }, undefined, true)}</div><p id="preview-name" class="vanity-name font-display">Your Queen</p><p id="preview-sub" class="vanity-sub text-xs">Pageant · Hometown</p></div><form id="custom-form" class="vanity-form"><div class="vanity-fields"><label><span class="vanity-label">Drag name</span><input name="name" class="form-control vanity-input" maxlength="28"></label><label><span class="vanity-label">Hometown</span><input name="hometown" class="form-control vanity-input" maxlength="36"></label></div><fieldset><legend class="vanity-label">Drag type</legend><div class="chip-row">${types.map((type, i) => `<input type="radio" class="btn-check" name="archetype" id="type-${i}" value="${type}" ${i ? "" : "checked"}><label class="btn chip" for="type-${i}">${type}</label>`).join("")}</div></fieldset><fieldset><legend class="vanity-label">Poster color</legend><div class="swatch-row">${["c1", "c2", "c3", "ink"].map((tone, i) => `<input type="radio" class="btn-check" name="tone" id="tone-${tone}" value="${tone}" ${i ? "" : "checked"}><label class="btn swatch" for="tone-${tone}" style="--swatch:var(--${tone})"></label>`).join("")}</div></fieldset><p id="custom-error" class="stage-accent text-xs fw-semibold"></p><button class="stage-btn-ghost vanity-submit" ${app.castIds.length >= MAX ? "disabled" : ""}>Add to Werk Room</button></form></div></div></div></div><div class="vanity-table"><div class="vanity-top"></div><div class="vanity-front"><div class="vanity-drawer"></div><div class="vanity-drawer"></div><div class="vanity-drawer"></div></div></div></section>`;
+  return `<section id="custom" class="vanity-section vanity-wall"><div class="vanity-pillar is-left"></div><div class="vanity-pillar is-right"></div><header class="text-center"><h2 class="vanity-title font-display neon">Custom Queen</h2><p class="vanity-lede text-sm">Sit down, beat that mug, and create your own queen.</p></header><div class="vanity-mirror"><div class="vanity-frame" style="border-radius:64px;padding:30px"><div class="vanity-glass" style="border-radius:34px"><div class="vanity-body"><div class="vanity-preview"><div id="preview-art" class="vanity-portrait">${queenArt({ name: "Your Queen", season: "custom", tone: "c1" }, undefined, true)}</div><p id="preview-name" class="vanity-name font-display">Your Queen</p><p id="preview-sub" class="vanity-sub text-xs">Pageant · Hometown</p></div><form id="custom-form" class="vanity-form"><div class="vanity-fields"><label><span class="vanity-label">Drag name</span><input name="name" class="form-control vanity-input" maxlength="28"></label><label><span class="vanity-label">Hometown</span><input name="hometown" class="form-control vanity-input" maxlength="36"></label><label class="vanity-image-url"><span class="vanity-label">Image URL <small>(optional)</small></span><input type="url" name="image" class="form-control vanity-input" placeholder="https://example.com/your-queen.jpg"></label></div><fieldset><legend class="vanity-label">Drag type</legend><div class="chip-row">${types.map((type, i) => `<input type="radio" class="btn-check" name="archetype" id="type-${i}" value="${type}" ${i ? "" : "checked"}><label class="btn chip" for="type-${i}">${type}</label>`).join("")}</div></fieldset><fieldset><legend class="vanity-label">Poster color</legend><div class="swatch-row">${["c1", "c2", "c3", "ink"].map((tone, i) => `<input type="radio" class="btn-check" name="tone" id="tone-${tone}" value="${tone}" ${i ? "" : "checked"}><label class="btn swatch" for="tone-${tone}" style="--swatch:var(--${tone})"></label>`).join("")}</div></fieldset><p id="custom-error" class="stage-accent text-xs fw-semibold"></p><button class="stage-btn-ghost vanity-submit" ${app.castIds.length >= MAX ? "disabled" : ""}>Add to Werk Room</button></form></div></div></div></div><div class="vanity-table"><div class="vanity-top"></div><div class="vanity-front"><div class="vanity-drawer"></div><div class="vanity-drawer"></div><div class="vanity-drawer"></div></div></div></section>`;
 }
 function looks() {
   const current = currentTheme(),
@@ -641,8 +641,40 @@ function looks() {
 function card(q, index = 0) {
   const added = app.castIds.includes(q.id),
     full = app.castIds.length >= MAX,
-    season = q.season === "custom" ? "Custom" : `S${q.season}`;
-  return `<li class="queen-card ${added ? "is-added" : ""}"><div class="queen-card-art"><div class="queen-card-zoom">${queenArt(q, index + 1)}</div>${q.placement === "Winner" ? `<span class="badge queen-badge is-winner">${icon("crown", "icon-xs")} Winner</span>` : ""}${q.note ? `<span class="badge queen-badge is-note">${q.note === "In loving memory" ? "♥ " : ""}${esc(q.note)}</span>` : ""}${added ? `<span class="queen-added animate-pop">${icon("check")}</span>` : ""}</div><div class="queen-card-body"><div class="d-flex align-items-start justify-content-between gap-2"><p class="queen-name">${esc(q.name)}</p><span class="badge season-tag">${season}</span></div><p class="queen-hometown text-xs" title="${esc(q.hometown)}">${icon("pin", "icon-xs flex-shrink-0")} <span class="text-truncate">${esc(q.hometown)}</span></p><p class="queen-meta">${q.placement ? `Placed ${q.placement}` : q.archetype || "Season in progress"}</p><button type="button" data-toggle="${q.id}" class="btn cast-btn d-inline-flex align-items-center justify-content-center ${added ? "btn-c1" : "btn-ink-outline"}" ${!added && full ? "disabled" : ""}>${added ? `${icon("check", "icon-sm")} In cast · Remove` : `${icon("plus", "icon-sm")} ${full ? "Cast is full" : "Add to cast"}`}</button></div></li>`;
+    season = q.season === "custom" ? "Custom" : `S${q.season}`,
+    bulbPositions = [
+      ["3.25%", "6px"],
+      ["18%", "6px"],
+      ["34%", "6px"],
+      ["50%", "6px"],
+      ["66%", "6px"],
+      ["82%", "6px"],
+      ["96.25%", "6px"],
+      ["6px", "20%"],
+      ["6px", "37%"],
+      ["6px", "52%"],
+      ["6px", "67%"],
+      ["6px", "82%"],
+      ["calc(100% - 6px)", "20%"],
+      ["calc(100% - 6px)", "37%"],
+      ["calc(100% - 6px)", "52%"],
+      ["calc(100% - 6px)", "67%"],
+      ["calc(100% - 6px)", "82%"],
+      ["3.25%", "calc(100% - 6px)"],
+      ["18%", "calc(100% - 6px)"],
+      ["34%", "calc(100% - 6px)"],
+      ["50%", "calc(100% - 6px)"],
+      ["66%", "calc(100% - 6px)"],
+      ["82%", "calc(100% - 6px)"],
+      ["96.25%", "calc(100% - 6px)"],
+    ],
+    bulbs = bulbPositions
+      .map(
+        ([left, top]) =>
+          `<span class="queen-frame-bulb" style="left:${left};top:${top}"></span>`,
+      )
+      .join("");
+  return `<li class="queen-card ${added ? "is-added" : ""}"><div class="queen-card-wall"><div class="queen-card-frame"><span class="queen-card-bulbs" aria-hidden="true">${bulbs}</span><div class="queen-card-art"><div class="queen-card-zoom">${queenArt(q, index + 1)}</div>${q.placement === "Winner" ? `<span class="badge queen-badge is-winner">${icon("crown", "icon-xs")} Winner</span>` : ""}${q.note ? `<span class="badge queen-badge is-note">${q.note === "In loving memory" ? "♥ " : ""}${esc(q.note)}</span>` : ""}${added ? `<span class="queen-added animate-pop">${icon("check")}</span>` : ""}</div></div></div><div class="queen-card-body"><div class="d-flex align-items-start justify-content-between gap-2"><p class="queen-name">${esc(q.name)}</p><span class="badge season-tag">${season}</span></div><p class="queen-hometown text-xs" title="${esc(q.hometown)}">${icon("pin", "icon-xs flex-shrink-0")} <span class="text-truncate">${esc(q.hometown)}</span></p><p class="queen-meta">${q.placement ? `Placed ${q.placement}` : q.archetype || "Season in progress"}</p><button type="button" data-toggle="${q.id}" class="btn cast-btn d-inline-flex align-items-center justify-content-center ${added ? "btn-c1" : "btn-ink-outline"}" ${!added && full ? "disabled" : ""}>${added ? `${icon("check", "icon-sm")} In cast · Remove` : `${icon("plus", "icon-sm")} ${full ? "Cast is full" : "Add to cast"}`}</button></div></li>`;
 }
 function renderQueenGroups() {
   let list = allQueens().filter(
@@ -675,8 +707,24 @@ function renderQueenGroups() {
   for (let i = 0; i < groups.length; i++) {
     const [title, items] = groups[i];
     const missing = items.filter((q) => !app.castIds.includes(q.id));
-    elParent.innerHTML += `<div class="mt-4"><div class="group-head"><h3 class="group-title font-display">${title}</h3><span class="group-meta from-sm">${items.length} queens</span><span class="group-rule"></span><button type="button" data-add-many="${missing.map((q) => q.id).join(",")}" class="btn btn-line rounded-pill d-inline-flex flex-shrink-0 align-items-center" ${missing.length === 0 || app.castIds.length >= MAX ? "disabled" : ""}>${missing.length === 0 ? `${icon("check", "icon-sm")} All in cast` : `${icon("plus", "icon-sm")} Add all ${missing.length}`}</button></div><ul class="queen-grid list-unstyled mb-0">${items.map(card).join("")}</ul></div>`;
+    elParent.innerHTML += `<div class="mt-4"><div class="group-head"><h3 class="group-title font-display">${title}</h3><span class="group-rule"></span><button type="button" data-add-many="${missing.map((q) => q.id).join(",")}" class="btn btn-line rounded-pill d-inline-flex flex-shrink-0 align-items-center" ${missing.length === 0 || app.castIds.length >= MAX ? "disabled" : ""}>${missing.length === 0 ? `${icon("check", "icon-sm")} All in cast` : `${icon("plus", "icon-sm")} Add all ${missing.length}`}</button></div><ul class="queen-grid list-unstyled mb-0">${items.map(card).join("")}</ul></div>`;
   }
+
+  elParent.querySelectorAll(".queen-card").forEach((queenCard) => {
+    const meta = queenCard.querySelector(".queen-meta");
+    if (!meta) return;
+
+    const status = meta.textContent.trim().replace(/^Placed\s+/, "");
+    meta.remove();
+    if (!status || status === "Winner" || status === "Season in progress")
+      return;
+
+    const pill = document.createElement("span");
+    pill.className = "badge queen-badge is-placement";
+    pill.textContent = status;
+    queenCard.querySelector(".queen-card-art")?.append(pill);
+    queenCard.querySelector(".queen-added")?.classList.add("has-status");
+  });
 }
 function library() {
   const filters = [
@@ -687,7 +735,7 @@ function library() {
     ["4", "Season 4"],
     ...(app.customs.length ? [["custom", "Custom"]] : []),
   ];
-  return `<section id="library" class="library"><div class="carpet"><div class="carpet-vignette"></div><div class="carpet-head"><h2 class="h-section font-display carpet-title">The <span class="text-outline text-c3">Queens</span></h2><p class="carpet-lede">Every queen from Drag Race Philippines Season 1 to 4. Add them one by one, or grab a whole season.</p></div></div><div class="library-controls"><div class="filter-scroller">${filters.map(([id, label]) => `<button data-filter="${id}" class="filter-chip ${app.filter === id ? "is-on" : ""}"><span class="panel filter-chip-badge">${id === "all" ? icon("grid", "icon-sm") : id}</span><span>${label}</span></button>`).join("")}</div><label class="search-pill">${icon("search")}<input id="search" value="${esc(app.query)}" placeholder="Search queens…" class="search-input"></label><div class="sort-toggle"><button data-sort="chrono" class="${app.sort === "chrono" ? "is-on" : ""}">Chronological</button><button data-sort="az" class="${app.sort === "az" ? "is-on" : ""}">A–Z</button></div></div><div id="queen-groups"></div></section>`;
+  return `<section id="library" class="library"><div class="carpet"><div class="carpet-vignette"></div><div class="carpet-head"><h2 class="h-section font-display carpet-title">The <span class="text-outline text-c3">Queens</span></h2><p class="carpet-lede">Every queen from Drag Race Philippines Season 1 to 4. Add them one by one, or grab a whole season.</p></div></div><div class="library-controls"><div class="filter-scroller">${filters.map(([id, label]) => `<button data-filter="${id}" class="filter-chip ${app.filter === id ? "is-on" : ""}"><span class="panel filter-chip-badge">${id === "all" ? icon("grid", "icon-sm") : id === "custom" ? "C" : id}</span><span>${label}</span></button>`).join("")}</div><label class="search-pill">${icon("search")}<input id="search" value="${esc(app.query)}" placeholder="Search queens…" class="search-input"></label><div class="sort-toggle"><button data-sort="chrono" class="${app.sort === "chrono" ? "is-on" : ""}">Chronological</button><button data-sort="az" class="${app.sort === "az" ? "is-on" : ""}">A–Z</button></div></div><div id="queen-groups"></div></section>`;
 }
 function startBar(items) {
   const ready = items.length >= MIN,
@@ -703,7 +751,7 @@ function render() {
   const items = cast(),
     theme = currentTheme();
   document.documentElement.dataset.theme = app.theme;
-  root.innerHTML = `<div data-theme="${app.theme}" class="app-root"><header class="topbar sticky-top"><div class="stripe"></div><div class="topbar-inner"><a href="#top" class="brand"><span class="brand-mark">${sun("brand-sun")}</span><span><span class="brand-name font-display">Drag Race Filipinas Simulator</span><span class="brand-sub">Are u ready to be the next drag superstar?</span></span></a><div class="ms-auto d-flex align-items-center gap-2"><div class="theme-chip from-sm"><span class="swatches">${theme.colors.map((color) => `<span style="background:${color}"></span>`).join("")}</span><span class="text-xs fw-semibold">${theme.name}</span></div><div class="count-chip"><span class="font-monospace text-xs">${String(items.length).padStart(2, "0")}<span class="opacity-50">/${MAX}</span></span><div class="progress" role="progressbar" aria-label="Cast size" aria-valuenow="${items.length}" aria-valuemin="0" aria-valuemax="${MAX}"><div class="progress-bar" style="width:${(items.length / MAX) * 100}%"></div></div></div></div></div></header><div class="app-shell"><aside class="app-sidebar"><div class="app-sidebar-inner"><p class="side-label eyebrow">Setup</p><nav class="side-nav">${[
+  root.innerHTML = `<div data-theme="${app.theme}" class="app-root"><header class="topbar sticky-top"><div class="stripe"></div><div class="topbar-inner"><a href="#top" class="brand"><span class="brand-mark" role="img" aria-label="Drag Race Philippines"></span><span><span class="brand-name font-display">Drag Race Filipinas Simulator</span><span class="brand-sub">Are u ready to be the next drag superstar?</span></span></a><div class="ms-auto d-flex align-items-center gap-2"><div class="theme-chip from-sm"><span class="text-xs fw-semibold">Theme: ${theme.name}</span></div><div class="count-chip"><span class="font-monospace text-xs">${String(items.length).padStart(2, "0")}<span class="opacity-50">/${MAX}</span></span><div class="progress" role="progressbar" aria-label="Cast size" aria-valuenow="${items.length}" aria-valuemin="0" aria-valuemax="${MAX}"><div class="progress-bar" style="width:${(items.length / MAX) * 100}%"></div></div></div></div></div></header><div class="app-shell"><aside class="app-sidebar"><div class="app-sidebar-inner"><p class="side-label eyebrow">Setup</p><nav class="side-nav">${[
     ["werkroom", "Werk Room", "mirror"],
     ["custom", "Custom Queen", "wand"],
     ["look", "Season Look", "palette"],
@@ -753,21 +801,37 @@ function setPieces(items) {
     );
   const frame = document.querySelector(".vanity-frame");
   if (frame) {
-    const bulbs = [
-      ...Array.from({ length: 12 }, (_, i) => [8 + i * 7.65, 3]),
-      ...Array.from({ length: 12 }, (_, i) => [8 + i * 7.65, 97]),
-      ...Array.from({ length: 7 }, (_, i) => [2, 16 + i * 11.3]),
-      ...Array.from({ length: 7 }, (_, i) => [98, 16 + i * 11.3]),
-    ];
-    frame.insertAdjacentHTML(
-      "afterbegin",
-      bulbs
-        .map(
-          ([left, top], i) =>
-            `<span class="vanity-bulb ${i % 4 === 1 ? "twinkle" : ""}" style="left:calc(${left}% - 8px);top:calc(${top}% - 8px);animation-delay:${(i % 7) * -0.45}s"></span>`,
-        )
-        .join(""),
-    );
+    const bulbRail = (side, count, delayOffset = 0) =>
+      `<span class="vanity-bulb-rail is-${side}" aria-hidden="true">${Array.from(
+        { length: count },
+        (_, i) =>
+          `<span class="vanity-bulb ${i % 4 === 1 ? "twinkle" : ""}" style="animation-delay:${((i + delayOffset) % 7) * -0.45}s"></span>`,
+      ).join("")}</span>`;
+
+    const renderVanityBulbs = () => {
+      const { width, height } = frame.getBoundingClientRect();
+      const horizontalCount = Math.min(
+        12,
+        Math.max(5, Math.round(width / 105)),
+      );
+      const verticalCount = Math.min(7, Math.max(4, Math.round(height / 100)));
+
+      frame
+        .querySelectorAll(".vanity-bulb-rail")
+        .forEach((rail) => rail.remove());
+      frame.insertAdjacentHTML(
+        "afterbegin",
+        [
+          bulbRail("top", horizontalCount),
+          bulbRail("right", verticalCount, horizontalCount),
+          bulbRail("bottom", horizontalCount, horizontalCount + verticalCount),
+          bulbRail("left", verticalCount, horizontalCount * 2 + verticalCount),
+        ].join(""),
+      );
+    };
+
+    renderVanityBulbs();
+    new ResizeObserver(renderVanityBulbs).observe(frame);
   }
   document
     .querySelector(".vanity-glass")
@@ -820,12 +884,17 @@ function updatePreview() {
   const name = form.name.value.trim() || "Your Queen",
     hometown = form.hometown.value.trim() || "Hometown",
     type = form.archetype.value,
-    tone = form.tone.value;
+    tone = form.tone.value,
+    image = form.image.value.trim();
   const art = document.querySelector("#preview-art"),
     title = document.querySelector("#preview-name"),
     sub = document.querySelector("#preview-sub");
   if (art)
-    art.innerHTML = queenArt({ name, season: "custom", tone }, undefined, true);
+    art.innerHTML = queenArt(
+      { name, season: "custom", tone, image },
+      undefined,
+      true,
+    );
   if (title) title.textContent = name;
   if (sub) sub.textContent = `${type} · ${hometown}`;
 }
@@ -890,9 +959,12 @@ function bind() {
       rerender();
     });
   document.querySelector("#search")?.addEventListener("input", (e) => {
+    const caret = e.target.selectionStart;
     app.query = e.target.value.toLowerCase();
     render();
-    document.querySelector("#search")?.focus();
+    const search = document.querySelector("#search");
+    search?.focus();
+    search?.setSelectionRange(caret, caret);
   });
   document
     .querySelector("#custom-form")
@@ -917,6 +989,7 @@ function createCustom(event) {
     id: `custom-${Date.now()}`,
     name,
     hometown: form.hometown.value.trim() || "Somewhere fabulous",
+    image: form.image.value.trim(),
     season: "custom",
     archetype: form.archetype.value,
     tone: form.tone.value,
