@@ -4949,6 +4949,10 @@ body {
     --panel-pattern-mask: linear-gradient(180deg, transparent 10%, #000 90%)
 }
 
+[data-theme=sr1] {
+    --panel-pattern: repeating-linear-gradient(45deg, #f4c95d24 0 2px, transparent 2px 11px), repeating-linear-gradient(-45deg, #9c286126 0 2px, transparent 2px 11px)
+}
+
 .werk-wall {
     background: repeating-linear-gradient(45deg, #ffffff12 0 7px, transparent 7px 14px), repeating-linear-gradient(-45deg, #00000014 0 7px, transparent 7px 14px), linear-gradient(180deg, color-mix(in srgb, var(--c2) 78%, var(--ink)) 0%, var(--c2) 55%)
 }
@@ -5518,6 +5522,33 @@ body {
 [data-theme=s4] .carpet-lede {
     color: #f1fdff;
     text-shadow: 0 2px 4px #001f4d
+}
+
+[data-theme=sr1] .carpet {
+    background: #645394
+}
+
+[data-theme=sr1] .carpet-set {
+    filter: hue-rotate(250deg) saturate(.80) brightness(.80)
+}
+
+[data-theme=sr1] .carpet-vignette {
+    background: radial-gradient(at 50% 38%, #17112ab8, #0000 58%)
+}
+
+[data-theme=sr1] .carpet-title .text-c3 {
+    color: #c77dff;
+    -webkit-text-stroke-color: #c77dff;
+    filter: drop-shadow(0 2px 5px #2a0c50) drop-shadow(0 0 8px #a94dff99)
+}
+
+[data-theme=sr1] .carpet-lede {
+    color: #f1e6ff;
+    text-shadow: 0 2px 4px #280b52
+}
+
+[data-theme=sr1] .heels {
+    background: linear-gradient(180deg, transparent, #32105b26)
 }
 
 @keyframes heel-drop {
@@ -7108,7 +7139,6 @@ body {
 }
 
 .sofa-cards {
-    /* Cards stay in front of the sofa seat, front panel, and arms at every width. */
     z-index: 30;
     justify-content: center;
     align-items: flex-end;
@@ -7652,7 +7682,6 @@ body {
     translate: -50% -50%
 }
 
-/* Jeep-Eyyy! filter controls borrow the painted route-sign colors of a jeepney. */
 [data-theme=flag] .library-controls {
     background: repeating-linear-gradient(45deg, #0038a817 0 3px, transparent 3px 12px), repeating-linear-gradient(-45deg, #ce112617 0 3px, transparent 3px 12px), #fbf8f1
 }
@@ -7863,7 +7892,6 @@ body {
     box-shadow: 0 0 0 2px #f2b70580, 0 0 16px -5px #1d5ba8
 }
 
-/* Filipi-yass! uses a clean flag-inspired wall. */
 [data-theme=flag] .queen-card {
     background: repeating-linear-gradient(45deg, #0038a826 0 3px, transparent 3px 12px), repeating-linear-gradient(-45deg, #ce11261f 0 3px, transparent 3px 12px), linear-gradient(135deg, #eff7ff 0 50%, #fff7f8 50% 100%)
 }
@@ -8165,6 +8193,169 @@ body {
 .startbar-go:hover {
     box-shadow: 0 10px 30px -8px var(--c3);
     translate: 0 -2px
+}
+
+[data-theme=sr1] {
+    --bg: #f8f1e7;
+    --surface: #fffaf2;
+    --ink: #201227;
+    --muted: #6e5367;
+    --line: #dec9bd;
+    --c1: #7b1e3a;
+    --c2: #4b2354;
+    --c3: #f4c95d;
+    --c4: #b76e79;
+    --on-c1: #fff;
+    --on-c2: #fff;
+    --on-c3: #201227;
+    --panel-bg: linear-gradient(145deg, #201227, #4b2354 55%, #7b1e3a);
+    --panel-ink: #fff8e9;
+    --display: "Cinzel Decorative", serif;
+    --display-case: uppercase;
+    --display-track: .035em;
+    --display-style: normal;
+    --display-weight: 900;
+    --dscale: .84;
+    --stripe: linear-gradient(90deg, #4b2354, #7b1e3a, #f4c95d, #7b1e3a, #4b2354)
+}
+
+[data-theme=sr1] .lounge-curtain {
+    background: repeating-linear-gradient(90deg, #35142f 0 6px, #7b1e3a 6px 12px, #4b2354 12px 16px)
+}
+
+[data-theme=sr1] .led-letters {
+    color: #ad5ce6;
+    background: none;
+    filter: drop-shadow(0 0 2px #d8b8ff) drop-shadow(0 0 7px #7d36ac);
+    text-shadow: 0 0 3px #d8b8ff, 0 0 10px #7d36ac
+}
+
+[data-theme=sr1] .library-controls {
+    background: repeating-linear-gradient(45deg, #7d36ac1a 0 4px, transparent 4px 13px), #fbf6ff;
+    border-color: #7d36ac
+}
+
+[data-theme=sr1] .filter-chip,
+[data-theme=sr1] .search-pill,
+[data-theme=sr1] .sort-toggle { background: #fffaf2; border-color: #7b1e3a }
+
+[data-theme=sr1] .filter-chip-badge { background: #4b2354; color: #fff; box-shadow: 0 0 9px -3px #4b2354 }
+[data-theme=sr1] .filter-chip.is-on,
+[data-theme=sr1] .sort-toggle button.is-on { background: #7b1e3a; color: #fff; border-color: #f4c95d }
+[data-theme=sr1] .filter-chip.is-on { box-shadow: 0 0 0 2px #f4c95d99, 0 0 10px #7b1e3aa6 }
+[data-theme=sr1] .search-pill:focus-within { border-color: #f4c95d; box-shadow: 0 0 0 2px #f4c95d80, 0 0 16px -5px #7b1e3a }
+[data-theme=sr1] .queen-card-frame { background: linear-gradient(135deg, #4b2354, #7b1e3a 60%, #201227); border-color: #f4c95d }
+
+[data-theme=sr1] .topbar {
+    background: repeating-linear-gradient(45deg, #7d36ac1a 0 4px, transparent 4px 13px), #fbf6ff
+}
+
+[data-theme=sr1] .lounge-section .stage-accent {
+    color: #c05cff;
+    text-shadow: 0 0 18px #9a35dfb3
+}
+
+.lounge-card[data-theme=sr1] .lounge-card-sun {
+    color: #9b2459;
+    filter: drop-shadow(0 0 10px #65247299)
+}
+
+
+[data-theme=sr1] .glitter-star {
+    filter: hue-rotate(252deg) saturate(1.35) drop-shadow(0 0 18px #7d36accc)
+}
+
+[data-theme=sr1] .led-board {
+    border-color: #7d36ac;
+    box-shadow: 0 0 10px #7d36ac80, 0 0 22px -7px #4b2354, inset 0 0 18px #000
+}
+
+[data-theme=sr1] .front-light,
+[data-theme=sr1] .front-light:nth-child(n+4) {
+    --fl: var(--stage-neon)
+}
+
+.led-board {
+    background: linear-gradient(180deg, #17091d, #07050b);
+    border: 2px solid color-mix(in srgb, var(--c3) 55%, #fff);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--c1) 70%, transparent), 0 0 36px -6px var(--c2), inset 0 0 20px #000;
+}
+
+.led-letters {
+    color: var(--c3);
+    background: none;
+    filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 10px var(--c3)) drop-shadow(0 0 20px var(--c1));
+    text-shadow: 0 0 4px #fff, 0 0 12px var(--c3), 0 0 28px var(--c1);
+}
+
+.startbar {
+    padding: 0 clamp(8px, 2vw, 20px) clamp(8px, 2vw, 20px)
+}
+
+.startbar-inner {
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: clamp(9px, 2vw, 20px);
+    padding: 10px clamp(12px, 2vw, 16px);
+    border-radius: clamp(18px, 3vw, 22px)
+}
+
+.startbar-cast {
+    flex: 1 1 205px
+}
+
+.startbar-go {
+    flex: 1 1 210px;
+    justify-content: center;
+    min-height: 48px
+}
+
+.startbar-sub {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip
+}
+
+.avatar-stack {
+    flex-shrink: 0
+}
+
+.lounge-set {
+    min-height: clamp(0px, var(--below-md), 430px)
+}
+
+.lounge-mirror {
+    width: clamp(19%, var(--from-md), 22%);
+    height: clamp(calc(var(--wall-h) * .42), var(--from-md), calc(var(--wall-h) * .54 - 76px));
+    top: clamp(20px, var(--below-md), 28px)
+}
+
+.lounge-alcove {
+    left: clamp(22%, var(--from-md), 28%);
+    right: clamp(22%, var(--from-md), 28%)
+}
+
+.lounge-curtain.is-left {
+    left: clamp(22%, var(--from-md), 28%)
+}
+
+.lounge-curtain.is-right {
+    right: clamp(22%, var(--from-md), 28%)
+}
+
+.led-board {
+    max-width: calc(100% - 32px);
+    margin-inline: auto
+}
+
+.filter-scroller {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none
+}
+
+.filter-scroller::-webkit-scrollbar {
+    display: none
 }
 
 .race-overlay {

@@ -18,7 +18,7 @@ const esc = (value = "") =>
     /[&<>"']/g,
     (c) =>
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
+      c
       ],
   );
 const iconPaths = {
@@ -39,8 +39,10 @@ const iconPaths = {
 };
 const icon = (name, cls = "icon") =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${cls}"><path d="${iconPaths[name]}"/></svg>`;
-const sun = (cls) =>
-  `<svg viewBox="-50 -50 100 100" class="${cls}" aria-hidden="true"><g fill="currentColor">${Array.from({ length: 8 }, (_, i) => `<g transform="rotate(${i * 45})"><polygon points="-4,-20 4,-20 0,-48"/><polygon points="-2,-20 -9,-40 -5,-20" opacity=".75"/><polygon points="2,-20 9,-40 5,-20" opacity=".75"/></g>`).join("")}<circle r="18"/></g></svg>`;
+const sun = (cls) => {
+  const isWerkRiorCard = cls.includes("sr1-card-sun");
+  return `<svg viewBox="-50 -50 100 100" class="${cls}" aria-hidden="true">${isWerkRiorCard ? '<defs><linearGradient id="werkrior-card-sun" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b72c58"/><stop offset=".52" stop-color="#8b245e"/><stop offset="1" stop-color="#59246f"/></linearGradient></defs>' : ""}<g fill="${isWerkRiorCard ? "url(#werkrior-card-sun)" : "currentColor"}">${Array.from({ length: 8 }, (_, i) => `<g transform="rotate(${i * 45})"><polygon points="-4,-20 4,-20 0,-48"/><polygon points="-2,-20 -9,-40 -5,-20" opacity=".75"/><polygon points="2,-20 9,-40 5,-20" opacity=".75"/></g>`).join("")}<circle r="18"/></g></svg>`;
+};
 
 const themes = [
   [
@@ -78,6 +80,7 @@ const themes = [
     "Deep-sea glamour, scales and pearls.",
     ["#0B6E99", "#13A3B5", "#8FE3D6", "#06283D"],
   ],
+  ["sr1", "SR Season 1", "Werk-rior!", "Warrior-princess power, gilded armor and royal resolve.", ["#7B1E3A", "#4B2354", "#F4C95D", "#201227"]],
 ].map(([id, season, name, tagline, colors]) => ({
   id,
   season,
@@ -264,7 +267,7 @@ const queenRoster = [
     name: "Nicole Pardaux",
     image: "assets/Nicole Pardaux.jpg",
     hometown: "Cebu City, Cebu",
-    placement: "11th",
+    placement: "12th",
   },
   {
     season: 3,
@@ -429,6 +432,91 @@ const queenRoster = [
     hometown: "Manila, Metro Manila",
     placement: "TBA",
   },
+  {
+    season: "sr1",
+    name: "Brigiding",
+    image: "assets/Brigiding SR.jpg",
+    hometown: "Mandaluyong, Metro Manila",
+    placement: "Winner"
+  },
+  {
+    season: "sr1",
+    name: "Viñas DeLuxe",
+    image: "assets/Vinas Deluxe SR.jpg",
+    hometown: "San Jose del Monte, Bulacan",
+    placement: "Runner-up"
+  },
+  {
+    season: "sr1",
+    name: "Arizona Brandy",
+    image: "assets/Arizona Brandy SR.jpg",
+    hometown: "Makati, Metro Manila",
+    placement: "3rd"
+  },
+  {
+    season: "sr1",
+    name: "Suki Doll",
+    image: "assets/Suki Doll SR.jpg",
+    hometown: "Montréal, Quebec",
+    placement: "3rd",
+    note: "Miss Congeniality"
+  },
+  {
+    season: "sr1",
+    name: "Khianna",
+    image: "assets/Khianna SR.jpg",
+    hometown: "Cagayan de Oro, Misamis Oriental",
+    placement: "5th"
+  },
+  {
+    season: "sr1",
+    name: "Yuhua",
+    image: "assets/Yuhua SR.jpg",
+    hometown: "New York City, New York",
+    placement: "6th"
+  },
+  {
+    season: "sr1",
+    name: "Siam Phusri",
+    image: "assets/Siam Phusri SR.jpg",
+    hometown: "Las Vegas, Nevada",
+    placement: "7th"
+  },
+  {
+    season: "sr1",
+    name: "Bernie",
+    image: "assets/Bernie SR.jpg",
+    hometown: "Mandaluyong, Metro Manila",
+    placement: "8th"
+  },
+  {
+    season: "sr1",
+    name: "Kitty Space",
+    image: "assets/Kitty Space SR.jpg",
+    hometown: "Lyon, France",
+    placement: "9th"
+  },
+  {
+    season: "sr1",
+    name: "Ivory Glaze",
+    image: "assets/Ivory Glaze SR.jpg",
+    hometown: "Sydney, Australia",
+    placement: "10th"
+  },
+  {
+    season: "sr1",
+    name: "Sum Ting Wong",
+    image: "assets/Sum Ting Wong SR.jpg",
+    hometown: "Birmingham, England",
+    placement: "11th"
+  },
+  {
+    season: "sr1",
+    name: "Madame Yoko",
+    image: "assets/Madame Yoko SR.jpg",
+    hometown: "Luxembourg City, Luxembourg",
+    placement: "12th"
+  },
 ];
 const queens = queenRoster.map((queen) => ({
   ...queen,
@@ -443,6 +531,8 @@ const app = {
   query: "",
 };
 const allQueens = () => [...queens, ...app.customs];
+const seasonLabel = (season) =>
+  season === "custom" ? "Custom" : season === "sr1" ? "SR Season 1" : `S${season}`;
 const cast = () => {
   const byId = new Map(allQueens().map((q) => [q.id, q]));
   return app.castIds.map((id) => byId.get(id)).filter(Boolean);
@@ -468,7 +558,7 @@ function queenArt(q, number, compact = false) {
     fg = tone === "ink" ? "var(--bg)" : `var(--on-${tone})`,
     mono = initials(q.name),
     fontSize = mono.length === 1 ? 104 : 70,
-    season = q.season === "custom" ? "Custom" : `S${q.season}`;
+    season = seasonLabel(q.season);
   const stars = [0, 1, 2]
     .map((i) => {
       const x = [10, 100, 56][i] + ((h >> (i + 2)) % 8) - 4,
@@ -524,7 +614,7 @@ function glitterStar() {
 }
 function mannequin(tone, classes) {
   const fill =
-      tone === "gold" ? ["#f7d77a", "#b8862b"] : ["#ffffff", "#c9c4cf"],
+    tone === "gold" ? ["#f7d77a", "#b8862b"] : ["#ffffff", "#c9c4cf"],
     id = `mannequin-${tone}`;
   return `<svg viewBox="0 0 80 200" class="mannequin ${classes}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${fill[1]}"/><stop offset=".45" stop-color="${fill[0]}"/><stop offset="1" stop-color="${fill[1]}"/></linearGradient></defs><rect x="36" y="2" width="8" height="12" rx="2" fill="#2a2030"/><path d="M30 14h20c20 6 24 20 20 36-6 20-12 30-10 46 2 16 10 24 6 34H14c-4-10 4-18 6-34 2-16-4-26-10-46-4-16 0-30 20-36Z" fill="url(#${id})"/><rect x="38" y="130" width="4" height="60" fill="#2a2030"/><ellipse cx="40" cy="194" rx="20" ry="5" fill="#2a2030"/></svg>`;
 }
@@ -599,7 +689,7 @@ function toast(message) {
   setTimeout(() => document.querySelector(".app-toast")?.remove(), 2200);
 }
 function hero() {
-  return `<section id="top" class="hero stage-bg"><div class="hero-stage"><div class="led-tiles led-center" aria-hidden="true"></div><div class="led-tiles led-left" aria-hidden="true"></div><div class="led-tiles led-right" aria-hidden="true"></div><div class="light-strip hero-strip is-left" aria-hidden="true"></div><div class="light-strip hero-strip is-right" aria-hidden="true"></div><div class="disco" aria-hidden="true"></div><div class="spotlight" aria-hidden="true"></div><div class="hero-floor">${stageFloor()}</div><div class="hero-floor-front" aria-hidden="true"></div><div class="hero-lights" aria-hidden="true">${Array.from({ length: 7 }, (_, i) => `<span class="front-light ${i % 2 ? "from-sm" : ""}"></span>`).join("")}</div><div class="hero-content"><div class="hero-kicker-frame"><p class="hero-kicker">Drag Race Filipinas Simulator</p></div><h1 class="h-stage font-display stage-title">Build your<br><span class="text-outline">own</span> season.</h1><div class="stage-card"><p class="hero-lede font-serif-accent">Pick up to <span class="stage-accent fw-semibold">20 queens</span> from Season 1 to 4, or create your own <span class="stage-accent fw-semibold">custom queen</span>.</p><p class="hero-note">Choose a season look, then hit start.</p><p class="hero-tag font-serif-accent stage-accent">Good luck, at dapat pakak!</p><div class="hero-actions"><a href="#library" class="stage-btn-ghost">Pick your queens</a><a href="#custom" class="stage-btn-ghost">Create your own queen</a></div></div></div></div></section>`;
+  return `<section id="top" class="hero stage-bg"><div class="hero-stage"><div class="led-tiles led-center" aria-hidden="true"></div><div class="led-tiles led-left" aria-hidden="true"></div><div class="led-tiles led-right" aria-hidden="true"></div><div class="light-strip hero-strip is-left" aria-hidden="true"></div><div class="light-strip hero-strip is-right" aria-hidden="true"></div><div class="disco" aria-hidden="true"></div><div class="spotlight" aria-hidden="true"></div><div class="hero-floor">${stageFloor()}</div><div class="hero-floor-front" aria-hidden="true"></div><div class="hero-lights" aria-hidden="true">${Array.from({ length: 7 }, (_, i) => `<span class="front-light ${i % 2 ? "from-sm" : ""}"></span>`).join("")}</div><div class="hero-content"><div class="hero-kicker-frame"><p class="hero-kicker">Drag Race Filipinas Simulator</p></div><h1 class="h-stage font-display stage-title">Build your<br><span class="text-outline">own</span> season.</h1><div class="stage-card"><p class="hero-lede font-serif-accent">Pick up to <span class="stage-accent fw-semibold">20 queens</span> from Seasons 1 to 4 and <span class="stage-accent fw-semibold">Slaysian Royale Season 1</span>, or create your own <span class="stage-accent fw-semibold">custom queen</span>.</p><p class="hero-note">Choose a season look, then hit start.</p><p class="hero-tag font-serif-accent stage-accent">Good luck, at dapat pakak!</p><div class="hero-actions"><a href="#library" class="stage-btn-ghost">Pick your queens</a><a href="#custom" class="stage-btn-ghost">Create your own queen</a></div></div></div></div></section>`;
 }
 function werkRoom(items) {
   const slots = Array.from({ length: MAX }, (_, i) => items[i]);
@@ -631,7 +721,7 @@ function looks() {
     `<div class="sofa" style="--sofa:${color}"><div class="sofa-back"><div class="sofa-cushions"><span class="sofa-cushion"></span><span class="sofa-cushion"></span><span class="sofa-cushion"></span></div></div><div class="sofa-seat"></div><div class="sofa-cards">${items
       .map((t, index) => {
         const on = app.theme === t.id;
-        return `<button type="button" data-theme-pick="${t.id}" class="lounge-pick ${on ? "is-on" : ""}" aria-pressed="${on}" aria-label="${t.season}: ${t.name}" style="z-index:${on ? 5 : 1}"><span class="lounge-pick-shadow"></span><div class="lounge-pick-lift" style="transform:${on ? "translateY(-42px) scale(1.08)" : `rotate(${tilts[(offset + index) % tilts.length]}deg)`}"><div class="lounge-pick-hover"><div class="${on ? "animate-floaty" : ""}"><div data-theme="${t.id}" class="lounge-card"><div class="panel lounge-card-art"><div class="panel-pattern fill"></div>${sun(`lounge-card-sun ${on ? "animate-spin-slow" : ""}`)}<span class="lounge-card-season">${t.season}</span><p class="lounge-card-name font-display">${t.name}</p></div><div class="lounge-card-foot"><span class="lounge-card-status">${on ? `${icon("check", "icon-xs")} On` : "Apply"}</span></div></div></div></div></div></button>`;
+        return `<button type="button" data-theme-pick="${t.id}" class="lounge-pick ${on ? "is-on" : ""}" aria-pressed="${on}" aria-label="${t.season}: ${t.name}" style="z-index:${on ? 5 : 1}"><span class="lounge-pick-shadow"></span><div class="lounge-pick-lift" style="transform:${on ? "translateY(-42px) scale(1.08)" : `rotate(${tilts[(offset + index) % tilts.length]}deg)`}"><div class="lounge-pick-hover"><div class="${on ? "animate-floaty" : ""}"><div data-theme="${t.id}" class="lounge-card"><div class="panel lounge-card-art"><div class="panel-pattern fill"></div>${sun(`lounge-card-sun ${t.id === "sr1" ? "sr1-card-sun" : ""} ${on ? "animate-spin-slow" : ""}`)}<span class="lounge-card-season">${t.season}</span><p class="lounge-card-name font-display">${t.name}</p></div><div class="lounge-card-foot"><span class="lounge-card-status">${on ? `${icon("check", "icon-xs")} On` : "Apply"}</span></div></div></div></div></div></button>`;
       })
       .join(
         "",
@@ -641,7 +731,7 @@ function looks() {
 function card(q, index = 0) {
   const added = app.castIds.includes(q.id),
     full = app.castIds.length >= MAX,
-    season = q.season === "custom" ? "Custom" : `S${q.season}`,
+    season = seasonLabel(q.season),
     bulbPositions = [
       ["3.25%", "6px"],
       ["18%", "6px"],
@@ -689,12 +779,12 @@ function renderQueenGroups() {
   const groups =
     app.sort === "az"
       ? [["A–Z", list]]
-      : ["1", "2", "3", "4", "custom"]
-          .map((key) => [
-            key === "custom" ? "Custom Queens" : `Season ${key}`,
-            list.filter((q) => String(q.season) === key),
-          ])
-          .filter(([, items]) => items.length);
+      : ["1", "2", "3", "4", "sr1", "custom"]
+        .map((key) => [
+          key === "custom" ? "Custom Queens" : key === "sr1" ? "Slaysian Royale Season 1" : `Season ${key}`,
+          list.filter((q) => String(q.season) === key),
+        ])
+        .filter(([, items]) => items.length);
   const elParent = document.getElementById("queen-groups");
   if (!elParent) return;
 
@@ -733,19 +823,19 @@ function library() {
     ["2", "Season 2"],
     ["3", "Season 3"],
     ["4", "Season 4"],
+    ["sr1", "SR Season 1"],
     ...(app.customs.length ? [["custom", "Custom"]] : []),
   ];
-  return `<section id="library" class="library"><div class="carpet"><div class="carpet-vignette"></div><div class="carpet-head"><h2 class="h-section font-display carpet-title">The <span class="text-outline text-c3">Queens</span></h2><p class="carpet-lede">Every queen from Drag Race Philippines Season 1 to 4. Add them one by one, or grab a whole season.</p></div></div><div class="library-controls"><div class="filter-scroller">${filters.map(([id, label]) => `<button data-filter="${id}" class="filter-chip ${app.filter === id ? "is-on" : ""}"><span class="panel filter-chip-badge">${id === "all" ? icon("grid", "icon-sm") : id === "custom" ? "C" : id}</span><span>${label}</span></button>`).join("")}</div><label class="search-pill">${icon("search")}<input id="search" value="${esc(app.query)}" placeholder="Search queens…" class="search-input"></label><div class="sort-toggle"><button data-sort="chrono" class="${app.sort === "chrono" ? "is-on" : ""}">Chronological</button><button data-sort="az" class="${app.sort === "az" ? "is-on" : ""}">A–Z</button></div></div><div id="queen-groups"></div></section>`;
+  return `<section id="library" class="library"><div class="carpet"><div class="carpet-vignette"></div><div class="carpet-head"><h2 class="h-section font-display carpet-title">The <span class="text-outline text-c3">Queens</span></h2><p class="carpet-lede">Every queen from Drag Race Philippines Season 1 to 4 and Slaysian Royale Season 1. Add them one by one, or grab a whole season.</p></div></div><div class="library-controls"><div class="filter-scroller">${filters.map(([id, label]) => `<button data-filter="${id}" class="filter-chip ${app.filter === id ? "is-on" : ""}"><span class="panel filter-chip-badge">${id === "all" ? icon("grid", "icon-sm") : id === "custom" ? "C" : id === "sr1" ? "SR" : id}</span><span>${label}</span></button>`).join("")}</div><label class="search-pill">${icon("search")}<input id="search" value="${esc(app.query)}" placeholder="Search queens…" class="search-input"></label><div class="sort-toggle"><button data-sort="chrono" class="${app.sort === "chrono" ? "is-on" : ""}">Chronological</button><button data-sort="az" class="${app.sort === "az" ? "is-on" : ""}">A–Z</button></div></div><div id="queen-groups"></div></section>`;
 }
 function startBar(items) {
   const ready = items.length >= MIN,
     theme = currentTheme();
-  return `<div class="startbar fixed-bottom pe-none"><div class="startbar-inner pe-auto"><div class="startbar-cast"><div class="avatar-stack">${
-    items
-      .slice(0, 5)
-      .map((q) => `<span class="avatar">${queenArt(q, undefined, true)}</span>`)
-      .join("") || '<span class="avatar is-empty">?</span>'
-  }${items.length > 5 ? `<span class="avatar is-more">+${items.length - 5}</span>` : ""}</div><div class="min-w-0 lh-sm"><p class="text-sm fw-bold">${items.length}/${MAX} queens</p><p class="startbar-sub text-truncate">${ready ? "Ready to sashay!" : `Add ${MIN - items.length} more to start`}</p></div></div><div class="startbar-progress from-md" aria-hidden="true"><div class="seg-track">${Array.from({ length: MAX }, (_, i) => `<span class="seg ${i < items.length ? "is-on" : ""}"></span>`).join("")}</div><div class="startbar-theme">${icon("palette", "icon startbar-theme-icon")}<div class="lh-sm"><p class="startbar-theme-season">${theme.season}</p><p class="text-xs fw-bold">${theme.name}</p></div></div></div><button type="button" data-start class="btn btn-c3 startbar-go d-inline-flex flex-shrink-0 align-items-center ms-auto" ${ready ? "" : "disabled"}>${icon("play")} Start the race</button></div></div>`;
+  return `<div class="startbar fixed-bottom pe-none"><div class="startbar-inner pe-auto"><div class="startbar-cast"><div class="avatar-stack">${items
+    .slice(0, 5)
+    .map((q) => `<span class="avatar">${queenArt(q, undefined, true)}</span>`)
+    .join("") || '<span class="avatar is-empty">?</span>'
+    }${items.length > 5 ? `<span class="avatar is-more">+${items.length - 5}</span>` : ""}</div><div class="min-w-0 lh-sm"><p class="text-sm fw-bold">${items.length}/${MAX} queens</p><p class="startbar-sub text-truncate">${ready ? "Ready to sashay!" : `Add ${MIN - items.length} more to start`}</p></div></div><div class="startbar-progress from-md" aria-hidden="true"><div class="seg-track">${Array.from({ length: MAX }, (_, i) => `<span class="seg ${i < items.length ? "is-on" : ""}"></span>`).join("")}</div><div class="startbar-theme">${icon("palette", "icon startbar-theme-icon")}<div class="lh-sm"><p class="startbar-theme-season">${theme.season}</p><p class="text-xs fw-bold">${theme.name}</p></div></div></div><button type="button" data-start class="btn btn-c3 startbar-go d-inline-flex flex-shrink-0 align-items-center ms-auto" ${ready ? "" : "disabled"}>${icon("play")} Start the race</button></div></div>`;
 }
 function render() {
   const items = cast(),
@@ -871,10 +961,11 @@ function setPieces(items) {
       { season: "2", color: "#ff3d8b", rot: 18, drop: 34 },
       { season: "3", color: "#151318", rot: -10, drop: 10 },
       { season: "4", color: "#13a3b5", rot: 30, drop: 40 },
+      { season: "sr1", label: "SR1", color: "#6b2d8f", rot: -18, drop: 22 },
     ];
     carpet.insertAdjacentHTML(
       "beforeend",
-      `<div class="heels heels-in" aria-label="Season quick filters">${shoes.map((shoe, i) => `<button type="button" data-filter="${shoe.season}" class="heel heel-drop ${app.filter === shoe.season ? "is-selected" : ""}" aria-label="Show Season ${shoe.season} queens" title="Season ${shoe.season}" style="margin-top:${shoe.drop}px;animation-delay:${i * 0.14}s;--r:${shoe.rot}deg"><span class="heel-sway" style="animation-delay:${i * -0.9}s"><span class="heel-art" style="filter:drop-shadow(0 10px 12px rgba(0,0,0,.55))"><svg class="stiletto" viewBox="0 0 120 82" aria-hidden="true"><defs><pattern id="shoe-${shoe.season}" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="1.2" cy="1.4" r=".7" fill="#fff" opacity=".55"/><circle cx="3.8" cy="3.6" r=".5" fill="#fff" opacity=".35"/></pattern><linearGradient id="heel-gold-${shoe.season}" x1="0" x2="1"><stop stop-color="#9a7022"/><stop offset=".5" stop-color="#ffe08a"/><stop offset="1" stop-color="#a87a26"/></linearGradient></defs><path d="M14 44 24 46 21 80 18 80Z" fill="url(#heel-gold-${shoe.season})"/><path d="M14 14C22 14 26 22 34 30c14 14 32 22 56 26 14 2 24 6 24 12 0 4-4 5-10 5H74c-18 0-32-11-42-23-4-4-8-6-12-6H14Z" fill="${shoe.color}"/><path d="M14 14C22 14 26 22 34 30c14 14 32 22 56 26 14 2 24 6 24 12 0 4-4 5-10 5H74c-18 0-32-11-42-23-4-4-8-6-12-6H14Z" fill="url(#shoe-${shoe.season})"/><text x="56" y="60" transform="rotate(26 56 56)" text-anchor="middle" class="font-display" font-size="13" fill="#fff">S${shoe.season}</text></svg></span></span></button>`).join("")}</div>`,
+      `<div class="heels heels-in" aria-label="Season quick filters">${shoes.map((shoe, i) => `<button type="button" data-filter="${shoe.season}" class="heel heel-drop ${app.filter === shoe.season ? "is-selected" : ""}" aria-label="Show ${shoe.label || `Season ${shoe.season}`} queens" title="${shoe.label || `Season ${shoe.season}`}" style="margin-top:${shoe.drop}px;animation-delay:${i * 0.14}s;--r:${shoe.rot}deg"><span class="heel-sway" style="animation-delay:${i * -0.9}s"><span class="heel-art" style="filter:drop-shadow(0 10px 12px rgba(0,0,0,.55))"><svg class="stiletto" viewBox="0 0 120 82" aria-hidden="true"><defs><pattern id="shoe-${shoe.season}" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="1.2" cy="1.4" r=".7" fill="#fff" opacity=".55"/><circle cx="3.8" cy="3.6" r=".5" fill="#fff" opacity=".35"/></pattern><linearGradient id="heel-gold-${shoe.season}" x1="0" x2="1"><stop stop-color="#9a7022"/><stop offset=".5" stop-color="#ffe08a"/><stop offset="1" stop-color="#a87a26"/></linearGradient></defs><path d="M14 44 24 46 21 80 18 80Z" fill="url(#heel-gold-${shoe.season})"/><path d="M14 14C22 14 26 22 34 30c14 14 32 22 56 26 14 2 24 6 24 12 0 4-4 5-10 5H74c-18 0-32-11-42-23-4-4-8-6-12-6H14Z" fill="${shoe.color}"/><path d="M14 14C22 14 26 22 34 30c14 14 32 22 56 26 14 2 24 6 24 12 0 4-4 5-10 5H74c-18 0-32-11-42-23-4-4-8-6-12-6H14Z" fill="url(#shoe-${shoe.season})"/><text x="56" y="60" transform="rotate(26 56 56)" text-anchor="middle" class="font-display" font-size="13" fill="#fff">${shoe.label || `S${shoe.season}`}</text></svg></span></span></button>`).join("")}</div>`,
     );
   }
 }
@@ -908,36 +999,36 @@ function bind() {
     );
   document.querySelectorAll("[data-theme-pick]").forEach(
     (button) =>
-      (button.onclick = () => {
-        app.theme = button.dataset.themePick;
-        rerender();
-      }),
+    (button.onclick = () => {
+      app.theme = button.dataset.themePick;
+      rerender();
+    }),
   );
   document.querySelectorAll("[data-filter]").forEach(
     (el) =>
-      (el.onclick = () => {
-        app.filter = el.dataset.filter;
-        render();
-      }),
+    (el.onclick = () => {
+      app.filter = el.dataset.filter;
+      render();
+    }),
   );
   document.querySelectorAll("[data-sort]").forEach(
     (el) =>
-      (el.onclick = () => {
-        app.sort = el.dataset.sort;
-        render();
-      }),
+    (el.onclick = () => {
+      app.sort = el.dataset.sort;
+      render();
+    }),
   );
   document.querySelectorAll("[data-add-many]").forEach(
     (button) =>
-      (button.onclick = () => {
-        const openIds = button.dataset.addMany
-          .split(",")
-          .filter(Boolean)
-          .slice(0, MAX - app.castIds.length);
-        if (!openIds.length) return;
-        app.castIds.push(...openIds);
-        rerender(`${openIds.length} queens joined the cast!`);
-      }),
+    (button.onclick = () => {
+      const openIds = button.dataset.addMany
+        .split(",")
+        .filter(Boolean)
+        .slice(0, MAX - app.castIds.length);
+      if (!openIds.length) return;
+      app.castIds.push(...openIds);
+      rerender(`${openIds.length} queens joined the cast!`);
+    }),
   );
   document
     .querySelector('[data-action="random"]')
