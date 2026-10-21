@@ -34,6 +34,7 @@ const iconPaths = {
   mirror: "M12 3a6 8 0 016 8v10H6V11a6 8 0 016-8z",
   palette:
     "M12 3a9 9 0 100 18c1.2 0 1.8-.8 1.8-1.7 0-1.4-1.2-1.6-1.2-2.8 0-1 .8-1.5 1.8-1.5H17a4 4 0 004-4c0-4.4-4-8-9-8zM7.5 11h.01M10 7.5h.01M14.5 7.5h.01",
+  settings: "M4 7h16M4 12h16M4 17h16M8 5v4M16 10v4M11 15v4",
   grid: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",
   wand: "M5 19L17 7M14 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1z",
 };
@@ -532,7 +533,7 @@ const app = {
 };
 const allQueens = () => [...queens, ...app.customs];
 const seasonLabel = (season) =>
-  season === "custom" ? "Custom" : season === "sr1" ? "SR Season 1" : `S${season}`;
+  season === "custom" ? "Custom" : season === "sr1" ? "SR S1" : `S${season}`;
 const cast = () => {
   const byId = new Map(allQueens().map((q) => [q.id, q]));
   return app.castIds.map((id) => byId.get(id)).filter(Boolean);
@@ -695,7 +696,7 @@ function werkRoom(items) {
   const slots = Array.from({ length: MAX }, (_, i) => items[i]);
   const mirror = (queen, n) =>
     queen
-      ? `<div class="mirror-seat animate-rise"><div class="mirror-frame is-lit"><div class="mirror-screen">${queenArt(queen, undefined, true)}<span class="mirror-sheen"></span><span class="mirror-caption"><span class="mirror-name" title="${esc(queen.name)}">${esc(queen.name)}</span><span class="mirror-meta">${String(n).padStart(2, "0")} · ${queen.season === "custom" ? "Custom" : `S${queen.season}`}</span></span></div></div><button type="button" data-remove="${queen.id}" aria-label="Remove ${esc(queen.name)}" class="mirror-remove">${icon("x", "icon-xs")}</button></div>`
+      ? `<div class="mirror-seat animate-rise"><div class="mirror-frame is-lit"><div class="mirror-screen">${queenArt(queen, undefined, true)}<span class="mirror-sheen"></span><span class="mirror-caption"><span class="mirror-name" title="${esc(queen.name)}">${esc(queen.name)}</span><span class="mirror-meta">${String(n).padStart(2, "0")} · ${queen.season === "custom" ? "Custom" : queen.season === "sr1" ? "SR S1" : `S${queen.season}`}</span></span></div></div><button type="button" data-remove="${queen.id}" aria-label="Remove ${esc(queen.name)}" class="mirror-remove">${icon("x", "icon-xs")}</button></div>`
       : `<a href="#library" aria-label="Empty mirror ${n}, pick a queen from the library" class="mirror-link"><div class="mirror-frame"><div class="mirror-glass"><span class="mirror-num">${String(n).padStart(2, "0")}</span>${icon("plus", "mirror-plus icon-md")}</div></div></a>`;
   const table = (group, index) => {
     const first = index * 5 + 1;
@@ -830,12 +831,13 @@ function library() {
 }
 function startBar(items) {
   const ready = items.length >= MIN,
-    theme = currentTheme();
+    theme = currentTheme(),
+    visibleAvatarCount = items.length >= 4 ? 3 : 5;
   return `<div class="startbar fixed-bottom pe-none"><div class="startbar-inner pe-auto"><div class="startbar-cast"><div class="avatar-stack">${items
-    .slice(0, 5)
+    .slice(0, visibleAvatarCount)
     .map((q) => `<span class="avatar">${queenArt(q, undefined, true)}</span>`)
     .join("") || '<span class="avatar is-empty">?</span>'
-    }${items.length > 5 ? `<span class="avatar is-more">+${items.length - 5}</span>` : ""}</div><div class="min-w-0 lh-sm"><p class="text-sm fw-bold">${items.length}/${MAX} queens</p><p class="startbar-sub text-truncate">${ready ? "Ready to sashay!" : `Add ${MIN - items.length} more to start`}</p></div></div><div class="startbar-progress from-md" aria-hidden="true"><div class="seg-track">${Array.from({ length: MAX }, (_, i) => `<span class="seg ${i < items.length ? "is-on" : ""}"></span>`).join("")}</div><div class="startbar-theme">${icon("palette", "icon startbar-theme-icon")}<div class="lh-sm"><p class="startbar-theme-season">${theme.season}</p><p class="text-xs fw-bold">${theme.name}</p></div></div></div><button type="button" data-start class="btn btn-c3 startbar-go d-inline-flex flex-shrink-0 align-items-center ms-auto" ${ready ? "" : "disabled"}>${icon("play")} Start the race</button></div></div>`;
+    }${items.length > visibleAvatarCount ? `<span class="avatar is-more">+${items.length - visibleAvatarCount}</span>` : ""}</div><div class="min-w-0 lh-sm"><p class="text-sm fw-bold">${items.length}/${MAX} queens</p><p class="startbar-sub text-truncate">${ready ? "Ready to WERK!" : `Add ${MIN - items.length} more to start`}</p></div></div><div class="startbar-progress from-md" aria-hidden="true"><div class="seg-track">${Array.from({ length: MAX }, (_, i) => `<span class="seg ${i < items.length ? "is-on" : ""}"></span>`).join("")}</div><div class="startbar-theme">${icon("palette", "icon startbar-theme-icon")}<div class="lh-sm"><p class="startbar-theme-season">${theme.season}</p><p class="text-xs fw-bold">${theme.name}</p></div></div></div><div class="startbar-actions ms-auto"><a href="#look" class="btn btn-glass startbar-edit d-inline-flex align-items-center justify-content-center">${icon("palette", "icon-sm")} Edit sim settings</a><button type="button" data-start class="btn btn-c3 startbar-go d-inline-flex align-items-center justify-content-center" ${ready ? "" : "disabled"}>${icon("play")} Start the race</button></div></div></div>`;
 }
 function render() {
   const items = cast(),
@@ -877,11 +879,27 @@ function toggle(id) {
 }
 function setPieces(items) {
   const side = document.querySelector(".app-sidebar-inner");
-  if (side)
-    side.insertAdjacentHTML(
-      "beforeend",
-      `<div class="side-card"><div class="d-flex align-items-center justify-content-between">${sun("side-card-sun")}<span class="font-monospace text-2xs text-muted">v0.1 beta</span></div><p class="side-card-title">${items.length === 0 ? "The werk room is still empty." : items.length < MIN ? "Just a few more queens!" : "Your cast is ready."}</p><p class="side-card-note">Fan-made simulator. Not affiliated with World of Wonder or HBO.</p></div>`,
-    );
+  if (side) {
+    const label = side.querySelector(".side-label"),
+      nav = side.querySelector(".side-nav"),
+      sections = [
+        ["werkroom", "Werk Room", "mirror"],
+        ["custom", "Custom Queens", "wand"],
+        ["look", "Season Look", "palette"],
+        ["library", "The Queens", "grid"],
+        ["top", "Edit Options", "settings"],
+      ];
+    if (label) label.textContent = "Season setup";
+    if (nav) {
+      nav.classList.add("side-cabinet");
+      nav.innerHTML = sections
+        .map(
+          ([id, name, glyph]) =>
+            `<a href="#${id}" class="side-link cabinet-shelf"><span class="cabinet-cosmetics" aria-hidden="true"><i class="cabinet-lipstick"></i><i class="cabinet-compact"></i><i class="cabinet-palette"></i><i class="cabinet-perfume"></i></span><span class="side-link-icon">${icon(glyph)}</span><span class="cabinet-label">${name}</span></a>`,
+        )
+        .join("");
+    }
+  }
 
   const table = document.querySelector(".vanity-table");
   if (table)
@@ -1066,6 +1084,14 @@ function bind() {
   document
     .querySelector("#custom-form")
     ?.addEventListener("change", updatePreview);
+  document.querySelectorAll(".cabinet-shelf").forEach((shelf) =>
+    shelf.addEventListener("click", () => {
+      document
+        .querySelectorAll(".cabinet-shelf")
+        .forEach((item) => item.classList.remove("is-active"));
+      shelf.classList.add("is-active");
+    }),
+  );
   document.querySelector("[data-start]")?.addEventListener("click", startRace);
 
   const syncTopbar = () =>
