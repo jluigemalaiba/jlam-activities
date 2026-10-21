@@ -5229,7 +5229,6 @@ body {
     box-shadow: inset 0 0 0 2px #ffffff59, inset 0 0 50px #0009
 }
 
-/* Chic Vogue's black poster needs a visibly separate mirror surface. */
 [data-theme=s3] .vanity-frame {
     background: linear-gradient(135deg, #2c2c2f, #050506 48%, #19191c), #080809;
     box-shadow: 0 0 0 3px #e9e5dc, 0 0 22px #ffffff59, 0 30px 50px -24px #000c, inset 0 0 0 3px #000
@@ -5244,8 +5243,15 @@ body {
     box-shadow: 0 20px 40px -18px #000, 0 0 0 3px #f7f4ee, 0 0 20px #ffffff73
 }
 
-/* The lower-left wig's outer shell must stay distinct in Chic Vogue. */
+
 [data-theme=s3] .prop-wig path {
+    display: block;
+    fill: #0a0a0a;
+    stroke: #e9e5dc;
+    stroke-width: .75px
+}
+
+[data-theme=s3] .prop-wig path:last-of-type {
     display: none
 }
 
@@ -5355,7 +5361,6 @@ body {
     animation: 4s ease-out infinite carpet-flash
 }
 
-/* Static renderer: keep the three set pieces in sync with the selected look. */
 [data-theme=s1] .lounge-curtain {
     background: repeating-linear-gradient(90deg, #8b1b16 0 6px, #d62b1f 6px 12px, #53110f 12px 16px)
 }
@@ -5364,7 +5369,6 @@ body {
     background: repeating-linear-gradient(90deg, #c21f63 0 6px, #ff3d8b 6px 12px, #74113d 12px 16px)
 }
 
-/* The footlights under the hero follow Summer Sizzle's hot-pink palette. */
 [data-theme=s2] .front-light,
 [data-theme=s2] .front-light:nth-child(n+4) {
     --fl: #ff3d8b
@@ -5390,9 +5394,6 @@ body {
 
 [data-theme=s1] .carpet-set { filter: saturate(1.18) hue-rotate(-8deg) }
 
-/* Summer Sizzle needs a warm pink carpet, rather than a generic hue shift.
-   The brighter outline is deliberately kept lighter than the carpet so the
-   "Queens" title remains legible at every breakpoint. */
 [data-theme=s2] .carpet-set { filter: hue-rotate(344deg) saturate(1.42) brightness(1.03) }
 [data-theme=s2] .carpet-title .text-c3 {
     color: #ffe1ef;
@@ -5403,8 +5404,6 @@ body {
 
 [data-theme=s3] .carpet-set { filter: grayscale(1) contrast(1.22) }
 
-/* Sirena Blue uses a deep royal/ocean blue—not cyan—so the pale aqua outline
-   and the white explanatory copy keep a strong contrast against the scene. */
 [data-theme=s4] .carpet-set { filter: hue-rotate(210deg) saturate(1.2) brightness(.82) }
 [data-theme=s4] .carpet-title .text-c3 {
     color: #aaf5ff;
@@ -6901,7 +6900,8 @@ body {
 }
 
 .sofa-cards {
-    z-index: 10;
+    /* Cards stay in front of the sofa seat, front panel, and arms at every width. */
+    z-index: 30;
     justify-content: center;
     align-items: flex-end;
     gap: 4%;
@@ -7044,7 +7044,6 @@ body {
     right: 8px
 }
 
-/* Both labels stay readable over the sun rays, dots, and every card theme. */
 .lounge-card-season,
 .lounge-card-name {
     text-shadow: 0 2px 3px #000, 0 0 8px #000000bf
@@ -7143,7 +7142,6 @@ body {
     transform: scale(1.05)
 }
 
-/* The shoe remains themed; only its edge/light bloom turns white as feedback. */
 .heel:hover .heel-art,
 .heel:focus-visible .heel-art,
 .heel:active .heel-art,
@@ -7764,6 +7762,7 @@ body {
 .queen-art {
     width: 100%;
     height: 100%;
+    object-fit: cover;
     display: block
 }
 
@@ -7865,4 +7864,5 @@ body {
     line-height: 1.2
 }
 
-/*$vite$:1*/
+
+
