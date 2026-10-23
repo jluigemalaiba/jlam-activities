@@ -106,6 +106,7 @@ const queenRoster = [
     image: "assets/Precious Paula Nicole.jpg",
     hometown: "Daet, Camarines Norte",
     placement: "Winner",
+    entline: "(fake scream) Echos..."
   },
   {
     season: 1,
@@ -113,6 +114,7 @@ const queenRoster = [
     image: "assets/Marina Summers.jpg",
     hometown: "Makati, Metro Manila",
     placement: "Runner-up",
+    entline: "Just like summer, this is my season."
   },
   {
     season: 1,
@@ -120,6 +122,7 @@ const queenRoster = [
     image: "assets/Eva Le Queen.jpg",
     hometown: "Marikina, Metro Manila",
     placement: "3rd",
+    entline: "Mirror, mirror, on the wall... Who's the baddest bitch of them all?"
   },
   {
     season: 1,
@@ -127,6 +130,7 @@ const queenRoster = [
     image: "assets/Xilhouete.jpg",
     hometown: "Cabanatuan, Nueva Ecija",
     placement: "3rd",
+    entline: "I see stalkers... Oh, there they are. Hi, kids!"
   },
   {
     season: 1,
