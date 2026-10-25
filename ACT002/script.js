@@ -138,6 +138,7 @@ const queenRoster = [
     image: "assets/Minty Fresh.jpg",
     hometown: "Quezon City, Metro Manila",
     placement: "5th",
+    entline: "Pilipinas, fresh ka pa ba?"
   },
   {
     season: 1,
@@ -145,6 +146,7 @@ const queenRoster = [
     image: "assets/Brigiding.jpg",
     hometown: "Mandaluyong, Metro Manila",
     placement: "6th",
+    entline: "Finally... I'm here! Bring it on, girls!"
   },
   {
     season: 1,
@@ -152,6 +154,7 @@ const queenRoster = [
     image: "assets/Vinas Deluxe.jpg",
     hometown: "San Jose del Monte, Bulacan",
     placement: "7th",
+    entline: "♫ Say yeeeeeahhhhh... ♫ (looks towards the queens' direction) Andito na pala kayo! Oh, my God!"
   },
   {
     season: 1,
@@ -160,6 +163,7 @@ const queenRoster = [
     hometown: "Davao City, Davao del Sur",
     placement: "8th",
     note: "Miss Congeniality",
+    entline: "Madayon, mga kaigsuonan!, or I should say... Hello, mga kaibigan, with feelings!"
   },
   {
     season: 1,
@@ -167,6 +171,7 @@ const queenRoster = [
     image: "assets/Turing.jpg",
     hometown: "Cainta, Rizal",
     placement: "9th",
+    entline: "Let's do this!"
   },
   {
     season: 1,
@@ -174,6 +179,7 @@ const queenRoster = [
     image: "assets/Gigi Era.jpg",
     hometown: "Melbourne, Australia",
     placement: "10th",
+    entline: "Miss ma'am! I'm home... And I'm ready to sit on that throne, bitches!"
   },
   {
     season: 1,
@@ -181,6 +187,7 @@ const queenRoster = [
     image: "assets/Corazon.jpg",
     hometown: "Bolinao, Pangasinan",
     placement: "11th",
+    entline: "(tongue trill) Happy fiesta! (chuckle) Oh, my God! My name is Corazon at naniniwala ako sa mga katagang: Mga sis! Diyan muna kayo sa likod, tatawagin na lang 'pag may tira."
   },
   {
     season: 1,
@@ -188,6 +195,7 @@ const queenRoster = [
     image: "assets/Prince.jpg",
     hometown: "Calumpit, Bulacan",
     placement: "12th",
+    entline: "Dude. Pare. Tsong. Of course."
   },
   {
     season: 2,
@@ -195,6 +203,7 @@ const queenRoster = [
     image: "assets/Captivating Katkat.jpg",
     hometown: "Santa Maria, Ilocos Sur",
     placement: "Winner",
+    entline: "Ah, eh... Maganda ba 'ko sa picture?"
   },
   {
     season: 2,
@@ -202,6 +211,7 @@ const queenRoster = [
     image: "assets/Arizona Brandy.jpg",
     hometown: "Makati, Metro Manila",
     placement: "Runner-up",
+    entline: "Ito ang tunay na shot puno!"
   },
   {
     season: 2,
@@ -209,6 +219,7 @@ const queenRoster = [
     image: "assets/Bernie.jpg",
     hometown: "Mandaluyong, Metro Manila",
     placement: "3rd",
+    entline: "Hello, mga diday! Pinag-uusapan niyo ba 'ko?"
   },
   {
     season: 2,
@@ -216,6 +227,7 @@ const queenRoster = [
     image: "assets/M1ss Jade So.jpg",
     hometown: "Marikina, Metro Manila",
     placement: "3rd",
+    entline: "It's raining... men. Ha-ha-hallelujah!"
   },
   {
     season: 2,
@@ -224,6 +236,7 @@ const queenRoster = [
     hometown: "Cagayan de Oro, Misamis Oriental",
     placement: "5th",
     note: "Miss Congeniality",
+    entline: "The Bluesoos device is... ready to paiwww."
   },
   {
     season: 2,
@@ -231,6 +244,7 @@ const queenRoster = [
     image: "assets/ØV Cunt.jpg",
     hometown: "Rosario, Cavite",
     placement: "5th",
+    entline: "Ehem, ehem, ehem... Bakit kasi hindi kayo makuha sa tingin?"
   },
   {
     season: 2,
@@ -238,6 +252,7 @@ const queenRoster = [
     image: "assets/DeeDee Marie Holiday.jpg",
     hometown: "Tayabas, Quezon",
     placement: "7th",
+    entline: "Well, well... I'm horny."
   },
   {
     season: 2,
@@ -245,6 +260,7 @@ const queenRoster = [
     image: "assets/Matilduh.jpg",
     hometown: "Vigan, Ilocos Sur",
     placement: "8th",
+    entline: "Handuh na ba kayo?"
   },
   {
     season: 2,
@@ -252,6 +268,7 @@ const queenRoster = [
     image: "assets/Veruschka Levels.jpg",
     hometown: "Hong Kong",
     placement: "9th",
+    entline: "Bitch, the goddess is here!"
   },
   {
     season: 2,
@@ -259,6 +276,7 @@ const queenRoster = [
     image: "assets/Tiny Deluxe.jpg",
     hometown: "Pasig, Metro Manila",
     placement: "10th",
+    entline: "Chubby, ah?"
   },
   {
     season: 2,
@@ -266,6 +284,7 @@ const queenRoster = [
     image: "assets/Astrid Mercury.jpg",
     hometown: "Mandaluyong, Metro Manila",
     placement: "11th",
+    entline: "Mercury... is in retrograde."
   },
   {
     season: 2,
@@ -273,6 +292,7 @@ const queenRoster = [
     image: "assets/Nicole Pardaux.jpg",
     hometown: "Cebu City, Cebu",
     placement: "12th",
+    entline: "Dong, anhi diri... Sabak Mommy B."
   },
   {
     season: 3,
@@ -280,6 +300,7 @@ const queenRoster = [
     image: "assets/Maxie.jpg",
     hometown: "Manila, Metro Manila",
     placement: "Winner",
+    entline: "Tang ina niyo, ano na? Bomba na! (fake sniffing) Parang ang baho... kayo yun?"
   },
   {
     season: 3,
@@ -287,6 +308,7 @@ const queenRoster = [
     image: "assets/Khianna.jpg",
     hometown: "Cagayan de Oro, Misamis Oriental",
     placement: "Runner-up",
+    entline: "What's up, mga gay? It's Khianna with a K..."
   },
   {
     season: 3,
@@ -294,6 +316,7 @@ const queenRoster = [
     image: "assets/Angel.jpg",
     hometown: "Manila, Metro Manila",
     placement: "3rd",
+    entline: "Ba't niyo 'ko tinitignan?"
   },
   {
     season: 3,
@@ -301,6 +324,7 @@ const queenRoster = [
     image: "assets/Tita Baby.jpg",
     hometown: "Marikina, Metro Manila",
     placement: "3rd",
+    entline: "Ihanda na ang kanin, andito na ang ulam!"
   },
   {
     season: 3,
@@ -308,6 +332,7 @@ const queenRoster = [
     image: "assets/Zymba Ding.jpg",
     hometown: "Caloocan, Metro Manila",
     placement: "5th",
+    entline: "I... have no worries. (grrr)"
   },
   {
     season: 3,
@@ -315,6 +340,7 @@ const queenRoster = [
     image: "assets/Myx Chanel.jpg",
     hometown: "Marikina, Metro Manila",
     placement: "6th",
+    entline: "Drag Race Philippines Season 3, beke nemen!"
   },
   {
     season: 3,
@@ -322,6 +348,7 @@ const queenRoster = [
     image: "assets/Popstar Bench.jpg",
     hometown: "Manila, Metro Manila",
     placement: "7th",
+    entline: "Ciao, ciao, ciao! Tong-its! Whoo!"
   },
   {
     season: 3,
@@ -329,6 +356,7 @@ const queenRoster = [
     image: "assets/John Fedellaga.jpg",
     hometown: "San Francisco, USA",
     placement: "8th",
+    entline: "(moan) Hi, Daddy... are you ready for me?"
   },
   {
     season: 3,
@@ -336,6 +364,7 @@ const queenRoster = [
     image: "assets/J Quinn.jpg",
     hometown: "Caloocan, Metro Manila",
     placement: "9th",
+    entline: "Naro sijakdoeneun drama."
   },
   {
     season: 3,
@@ -343,6 +372,7 @@ const queenRoster = [
     image: "assets/Yudipota.jpg",
     hometown: "Bacolod, Negros Occidental",
     placement: "10th",
+    entline: "It's your favorite puta, Yudipota."
   },
   {
     season: 3,
@@ -351,6 +381,7 @@ const queenRoster = [
     hometown: "Manila, Metro Manila",
     placement: "11th",
     note: "Miss Congeniality",
+    entline: "Gandang hindi mo ranas... bitch."
   },
   {
     season: 4,
@@ -358,6 +389,7 @@ const queenRoster = [
     image: "assets/Andy Crocker.jpg",
     hometown: "Caloocan, Metro Manila",
     placement: "TBA",
+    entline: "Avisala, mga Crock-lings! (bites salt and vinegar-flavored cracker) Mmm! May asim pa! Diyos ko..."
   },
   {
     season: 4,
@@ -365,13 +397,15 @@ const queenRoster = [
     image: "assets/Bhorj Gum.jpg",
     hometown: "Bacolod, Negros Occidental",
     placement: "TBA",
+    entline: "When you walked out, I... walked in! (fake laugh)"
   },
   {
     season: 4,
     name: "Bombalicious Eklaver",
     image: "assets/Bombalicious Eklaver.jpg",
-    hometown: "Baltimore, USA",
+    hometown: "Washington D.C., USA",
     placement: "TBA",
+    entline: "Shhh... Pasabog, 'di ba?!"
   },
   {
     season: 4,
@@ -379,6 +413,7 @@ const queenRoster = [
     image: "assets/Dixxxy Decoy.jpg",
     hometown: "Davao City, Davao del Sur",
     placement: "11th",
+    entline: "Your Diva-wenya superstar has finally arrived! You're welcome."
   },
   {
     season: 4,
@@ -386,6 +421,7 @@ const queenRoster = [
     image: "assets/Ghulli Ghush.jpg",
     hometown: "Cavite City, Cavite",
     placement: "10th",
+    entline: "Drag Race Philippines, pwede bang bumanat?"
   },
   {
     season: 4,
@@ -393,6 +429,7 @@ const queenRoster = [
     image: "assets/Katana.jpg",
     hometown: "Santiago, Isabela",
     placement: "TBA",
+    entline: "It's... your... kanto... mama."
   },
   {
     season: 4,
@@ -400,6 +437,7 @@ const queenRoster = [
     image: "assets/Manza.jpg",
     hometown: "Nabunturan, Davao de Oro",
     placement: "TBA",
+    entline: "The long wait is over. (looks towards the queens) Ano? Sugdan na ag tubot! (fake scream)"
   },
   {
     season: 4,
@@ -407,6 +445,7 @@ const queenRoster = [
     image: "assets/Maureen Biology.jpg",
     hometown: "Baguio, Benguet",
     placement: "TBA",
+    entline: "Bless."
   },
   {
     season: 4,
@@ -414,6 +453,7 @@ const queenRoster = [
     image: "assets/Merckz.jpg",
     hometown: "Antipolo, Rizal",
     placement: "TBA",
+    entline: "If you do not feel, breathe, and ooze cunt, do not come to this floor." 
   },
   {
     season: 4,
@@ -422,6 +462,7 @@ const queenRoster = [
     hometown: "Cagayan de Oro, Misamis Oriental",
     placement: "†Departured",
     note: "In loving memory",
+    entline: "Meron ba kayong Misua?!"
   },
   {
     season: 4,
@@ -429,6 +470,7 @@ const queenRoster = [
     image: "assets/Taylor Sheesh.jpg",
     hometown: "Antipolo, Rizal",
     placement: "TBA",
+    entline: "Talaga naman, talaga namang... trending na trending, at... pinipilahan!"
   },
   {
     season: 4,
@@ -436,27 +478,31 @@ const queenRoster = [
     image: "assets/Valeria.jpg",
     hometown: "Manila, Metro Manila",
     placement: "TBA",
+    entline: "Avisala... mga big cock!"
   },
   {
     season: "sr1",
     name: "Brigiding",
     image: "assets/Brigiding SR.jpg",
     hometown: "Mandaluyong, Metro Manila",
-    placement: "Winner"
+    placement: "Winner",
+    entline: "Ding, ding, ding! It's a new Ding in the Werk Room..."
   },
   {
     season: "sr1",
     name: "Viñas DeLuxe",
     image: "assets/Vinas Deluxe SR.jpg",
     hometown: "San Jose del Monte, Bulacan",
-    placement: "Runner-up"
+    placement: "Runner-up",
+    entline: "I'm back... la!"
   },
   {
     season: "sr1",
     name: "Arizona Brandy",
     image: "assets/Arizona Brandy SR.jpg",
     hometown: "Makati, Metro Manila",
-    placement: "3rd"
+    placement: "3rd",
+    entline: "Welcome to Drag Race Philippines: Slaysian Royale! And I... thank you!"
   },
   {
     season: "sr1",
@@ -464,63 +510,72 @@ const queenRoster = [
     image: "assets/Suki Doll SR.jpg",
     hometown: "Montréal, Quebec",
     placement: "3rd",
-    note: "Miss Congeniality"
+    note: "Miss Congeniality",
+    entline: "Mother Doll has arrived... Bisous."
   },
   {
     season: "sr1",
     name: "Khianna",
     image: "assets/Khianna SR.jpg",
     hometown: "Cagayan de Oro, Misamis Oriental",
-    placement: "5th"
+    placement: "5th",
+    entline: "Round 2! Fight..."
   },
   {
     season: "sr1",
     name: "Yuhua",
     image: "assets/Yuhua SR.jpg",
     hometown: "New York City, New York",
-    placement: "6th"
+    placement: "6th",
+    entline: "Did somebody order a drag QUEEEEEEEEEEN?! Woo!"
   },
   {
     season: "sr1",
     name: "Siam Phusri",
     image: "assets/Siam Phusri SR.jpg",
     hometown: "Las Vegas, Nevada",
-    placement: "7th"
+    placement: "7th",
+    entline: "Gagawin ang lahat... Bigay... bigay... bigay... bigay? Bigay... Bigay mo sa'kin ang crown! Hi, Siam! Sawatdee kha! Hi, Siam! Mabuhay!"
   },
   {
     season: "sr1",
     name: "Bernie",
     image: "assets/Bernie SR.jpg",
     hometown: "Mandaluyong, Metro Manila",
-    placement: "8th"
+    placement: "8th",
+    entline: "Psst! Gusto mo bang patungan kita?"
   },
   {
     season: "sr1",
     name: "Kitty Space",
     image: "assets/Kitty Space SR.jpg",
     hometown: "Lyon, France",
-    placement: "9th"
+    placement: "9th",
+    entline: "Did you prepare a big Asian buffet? 'Cause I'm gonna eat them all... Bon appétit!"
   },
   {
     season: "sr1",
     name: "Ivory Glaze",
     image: "assets/Ivory Glaze SR.jpg",
     hometown: "Sydney, Australia",
-    placement: "10th"
+    placement: "10th",
+    entline: "Oh, my God, oh, my God, oh, my God, oh, my God, oh, my God! I'm so excited, I think I could... (pretends to faint)"
   },
   {
     season: "sr1",
     name: "Sum Ting Wong",
     image: "assets/Sum Ting Wong SR.jpg",
     hometown: "Birmingham, England",
-    placement: "11th"
+    placement: "11th",
+    entline: "Sum Ting wicked this way comes!"
   },
   {
     season: "sr1",
     name: "Madame Yoko",
     image: "assets/Madame Yoko SR.jpg",
     hometown: "Luxembourg City, Luxembourg",
-    placement: "12th"
+    placement: "12th",
+    entline: "Summer holidays, here I am... joking. No... Let's fight! ...for the crown."
   },
 ];
 const queens = queenRoster.map((queen) => ({
