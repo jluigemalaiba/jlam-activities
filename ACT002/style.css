@@ -9005,3 +9005,409 @@ body {
     .options-close, .options-close svg { transition: none; }
     .options-close:hover, .options-close:active, .options-close:hover svg { transform: none; }
 }
+
+/* Simulator: countdown, doorway entrances, and the completed cast. */
+.entrance-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1060;
+    display: grid;
+    place-items: center;
+    padding: clamp(8px, 2vw, 24px);
+    background: #080811ce;
+    backdrop-filter: blur(12px);
+}
+.entrance-shell {
+    position: relative;
+    isolation: isolate;
+    width: min(1160px, 100%);
+    max-height: 94dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: #fff;
+    border: 1px solid color-mix(in srgb, var(--c3) 38%, transparent);
+    border-radius: clamp(20px, 3vw, 34px);
+    background: color-mix(in srgb, var(--c2) 22%, #080d17);
+    box-shadow: 0 35px 100px #000a, 0 0 40px color-mix(in srgb, var(--c1) 20%, transparent);
+    scrollbar-width: thin;
+    scrollbar-color: var(--c3) #ffffff10;
+}
+.entrance-shell :is(h2, h3, p, blockquote, ol) { margin: 0; }
+.entrance-shell svg { display: block; }
+.entrance-shell button { font: inherit; }
+.entrance-shell [hidden] { display: none !important; }
+.entrance-close { position: absolute; top: 16px; right: 16px; z-index: 10; background: #080e1c80; }
+.entrance-close:focus-visible, .entrance-next:focus-visible { outline: 3px solid var(--c3); outline-offset: 4px; }
+.entrance-countdown {
+    position: relative;
+    min-height: min(72dvh, 610px);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    isolation: isolate;
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--c2) 84%, #121735), color-mix(in srgb, var(--c2) 60%, #0a1027));
+}
+.entrance-rays {
+    position: absolute;
+    z-index: -1;
+    width: 160vmax;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 5deg, transparent 0deg 28deg, color-mix(in srgb, var(--c3) 14%, transparent) 28deg 40deg);
+    animation: entrance-rays-spin 80s linear infinite;
+}
+.entrance-countdown-sun {
+    position: absolute;
+    width: clamp(260px, 45vw, 440px);
+    max-width: 86%;
+    color: var(--c3);
+    opacity: .6;
+    filter: drop-shadow(0 0 24px color-mix(in srgb, var(--c3) 30%, transparent));
+    animation: entrance-rays-spin 24s linear infinite;
+}
+.entrance-count-number {
+    position: relative;
+    font-family: var(--display);
+    font-style: var(--display-style);
+    font-weight: var(--display-weight);
+    font-size: clamp(8rem, 19vw, 12rem);
+    line-height: 1.1;
+    text-align: center;
+    text-shadow: 0 5px 28px #0005;
+}
+.entrance-count-label { position: absolute; bottom: 34px; font: 600 .65rem "DM Mono", monospace; letter-spacing: .22em; color: #ffffffa8; text-align: center; padding: 0 20px; }
+.is-announcing .entrance-count-number { max-width: 720px; font-size: clamp(2.5rem, 7vw, 5.6rem); padding: 20px; }
+.is-announcing .entrance-countdown-sun { opacity: .22; }
+.entrance-room { position: relative; isolation: isolate; min-height: 680px; padding-bottom: 24px; }
+.entrance-set { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.entrance-wall {
+    position: absolute;
+    inset: 0 0 160px;
+    background: repeating-linear-gradient(45deg, #ffffff0c 0 3px, transparent 3px 13px), repeating-linear-gradient(-45deg, #0000001c 0 3px, transparent 3px 13px), linear-gradient(135deg, color-mix(in srgb, var(--c1) 68%, #17162a), color-mix(in srgb, var(--c2) 75%, #101626));
+    border-bottom: 10px solid color-mix(in srgb, var(--c3) 70%, #111);
+}
+.entrance-door-sun { position: absolute; width: 410px; height: 410px; left: 50%; top: 12px; transform: translateX(-50%); color: var(--c3); opacity: .6; }
+.entrance-pillar {
+    position: absolute;
+    width: 24px;
+    top: 0;
+    bottom: 150px;
+    background: repeating-linear-gradient(0deg, transparent 0 20px, #ffffff70 22px 26px, transparent 28px 48px), linear-gradient(90deg, var(--c1), color-mix(in srgb, var(--c1) 50%, #fff), var(--c1));
+    border-inline: 2px solid #ffffff40;
+    box-shadow: 0 0 22px color-mix(in srgb, var(--c1) 55%, transparent);
+}
+.entrance-pillar.is-left { left: 12%; }
+.entrance-pillar.is-right { right: 12%; }
+.entrance-door {
+    position: absolute;
+    top: 109px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 174px;
+    height: 230px;
+    padding: 12px;
+    border: 2px solid var(--c3);
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    background: color-mix(in srgb, var(--c3) 65%, var(--c1));
+    box-shadow: 0 0 20px color-mix(in srgb, var(--c3) 30%, transparent), 0 12px 20px #0008;
+}
+.entrance-door-inside { position: relative; height: 100%; overflow: hidden; background: #080812; }
+.entrance-curtain { position: absolute; top: 0; bottom: 0; width: 50%; background: repeating-linear-gradient(90deg, #0005 0, transparent 5px 9px, #ffffff20 12px, #0005 16px), var(--c1); transition: transform .75s ease; }
+.entrance-curtain.is-left { left: 0; background-color: var(--c2); }
+.entrance-curtain.is-right { right: 0; }
+.is-entering .entrance-curtain.is-left { transform: translateX(-72%); }
+.is-entering .entrance-curtain.is-right { transform: translateX(72%); }
+.entrance-door-sign { position: absolute; z-index: 1; width: 100%; top: 22px; text-align: center; color: #fff; font-style: italic; letter-spacing: .18em; font-size: .9rem; text-shadow: 0 0 8px #fff, 0 0 18px var(--c1); }
+.entrance-door-bulbs { position: absolute; display: flex; justify-content: space-between; }
+.entrance-door-bulbs.is-top { top: 2px; left: 3px; right: 3px; }
+.entrance-door-bulbs.is-left { top: 20px; bottom: 3px; left: 1px; flex-direction: column; }
+.entrance-door-bulbs.is-right { top: 20px; bottom: 3px; right: 1px; flex-direction: column; }
+.entrance-door-bulbs i { width: 7px; height: 7px; border-radius: 50%; background: #fff9db; box-shadow: 0 0 5px #fff, 0 0 12px var(--c3); }
+.entrance-floor { position: absolute; inset: 339px 0 0; background: linear-gradient(180deg, color-mix(in srgb, var(--c2) 40%, #111a28), #0a101bed 75%); }
+.entrance-floor::before { content: ""; position: absolute; inset: 0; opacity: .2; background: repeating-conic-gradient(#fff2 0% 25%, transparent 0% 50%) 0 0 / 90px 90px; mask-image: linear-gradient(#000, transparent 70%); }
+.entrance-floor span { position: absolute; top: 5px; left: 50%; width: 120px; height: 20px; transform: translateX(-50%); background: var(--c3); filter: blur(24px); opacity: .7; }
+.entrance-heading { position: relative; padding: 24px 76px 18px 30px; display: flex; align-items: center; gap: 20px; justify-content: space-between; background: linear-gradient(#050813b3, transparent); }
+.entrance-kicker { display: block; font: 600 .65rem/1.6 "DM Mono", monospace; letter-spacing: .1em; color: var(--c3); }
+.entrance-heading h2 { margin-top: 5px; font-family: var(--display); font-style: var(--display-style); font-weight: var(--display-weight); font-size: clamp(1.35rem, 3.2vw, 2.2rem); line-height: 1.15; }
+.entrance-counter { flex: none; border: 1px solid #ffffff40; background: #0003; padding: 7px 12px; border-radius: 999px; color: #fff; font: .7rem "DM Mono", monospace; }
+.entrance-scene { position: relative; min-height: 365px; padding: 65px 22px 16px; display: flex; justify-content: center; }
+.entrance-feature { position: relative; width: min(680px, 100%); display: flex; flex-direction: column; align-items: center; text-align: center; }
+.entrance-portrait { position: relative; width: 138px; height: 138px; flex: none; border-radius: 50%; border: 4px solid var(--c3); padding: 4px; background: color-mix(in srgb, var(--c1) 55%, #12111b); box-shadow: 0 0 0 5px #ffffff18, 0 12px 35px #0008, 0 0 24px color-mix(in srgb, var(--c3) 25%, transparent); }
+.entrance-portrait .queen-art { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 20%; border-radius: 50%; }
+.entrance-introduction { width: 100%; margin-top: 16px; padding: 0 12px; }
+.entrance-introduction .entrance-kicker { font-size: .6rem; color: #ffffffbd; }
+.entrance-introduction h3 { font-family: var(--display); font-style: var(--display-style); font-weight: var(--display-weight); font-size: clamp(1.65rem, 4vw, 2.5rem); line-height: 1.2; margin: 6px 0 9px; color: #fff; text-shadow: 0 3px 16px #0008; overflow-wrap: anywhere; }
+.entrance-introduction blockquote { min-height: 3em; color: #fff4dc; font-size: clamp(.85rem, 1.7vw, 1rem); line-height: 1.6; overflow-wrap: anywhere; text-shadow: 0 2px 8px #000; }
+.entrance-introduction blockquote::before { content: '\201c'; color: var(--c3); }
+.entrance-introduction blockquote::after { content: '\201d'; color: var(--c3); }
+.entrance-deck { position: relative; margin: 0 26px; padding: 16px 18px; border: 1px solid #ffffff24; border-radius: 18px; background: #080d1bbf; backdrop-filter: blur(8px); }
+.entrance-deck-heading { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 14px; font: .6rem/1.4 "DM Mono", monospace; color: #ffffffa3; }
+.entrance-roster-label { color: var(--c3); letter-spacing: .1em; }
+.entrance-roster { padding: 0; list-style: none; display: flex; justify-content: center; flex-wrap: wrap; gap: 12px 14px; min-height: 72px; align-items: flex-start; }
+.entrance-roster-queen { display: flex; flex: 0 0 64px; min-width: 0; flex-direction: column; align-items: center; gap: 8px; }
+.entrance-roster .entrance-portrait { width: 54px; height: 54px; padding: 2px; border-width: 2px; box-shadow: 0 0 0 2px #ffffff12, 0 6px 15px #0004; transform-origin: top left; }
+.entrance-roster-name { display: block; width: 100%; font-size: .58rem; line-height: 1.25; color: #ffffffd9; text-align: center; overflow-wrap: anywhere; }
+.entrance-controls { position: relative; display: flex; justify-content: center; padding: 20px 24px 0; }
+.entrance-next { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 46px; padding: 12px 26px; border: 1px solid transparent; border-radius: 999px; background: var(--c3); color: var(--on-c3); font-size: .9rem !important; font-weight: 800 !important; cursor: pointer; box-shadow: 0 5px 24px color-mix(in srgb, var(--c3) 22%, transparent); transition: transform .2s, box-shadow .2s, opacity .2s; }
+.entrance-next:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 7px 30px color-mix(in srgb, var(--c3) 38%, transparent); }
+.entrance-next:active:not(:disabled) { transform: translateY(1px) scale(.97); }
+.entrance-next:disabled { cursor: default; opacity: .5; }
+.entrance-group-complete { padding: 80px 0 50px; }
+.entrance-group-complete h3 { font-family: var(--display); font-size: clamp(2rem, 5vw, 3.5rem); margin: 12px 0; }
+.entrance-group-complete p { font-size: .9rem; color: #ffffffb3; }
+.is-complete.entrance-room { min-height: 600px; display: flex; flex-direction: column; }
+.is-complete .entrance-counter { display: none; }
+.is-complete .entrance-door { opacity: .3; }
+.is-complete .entrance-heading { text-align: center; justify-content: center; padding: 28px 65px 20px; }
+.is-complete .entrance-deck { flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 18px; padding: 26px 20px; background: #080d1be0; }
+.is-complete .entrance-deck-heading { justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+.is-complete .entrance-roster { gap: 22px 18px; }
+.is-complete .entrance-roster-queen { flex-basis: 88px; }
+.is-complete .entrance-roster .entrance-portrait { width: 76px; height: 76px; border-width: 3px; }
+.is-complete .entrance-roster-name { font-size: .68rem; }
+.is-complete .entrance-controls { padding-top: 26px; }
+.entrance-ready { position: relative; overflow: hidden; text-align: center; padding: 60px clamp(22px, 5vw, 70px) 40px; isolation: isolate; }
+.entrance-ready-sun { position: absolute; width: 450px; top: -180px; left: 50%; margin-left: -225px; opacity: .12; color: var(--c3); z-index: -1; animation: entrance-rays-spin 40s linear infinite; }
+.entrance-ready h2 { font-size: clamp(2rem, 6vw, 4.5rem); margin: 12px 0; }
+.entrance-ready > p { color: #ffffffb3; }
+.entrance-rules { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 30px auto; max-width: 700px; text-align: left; }
+.entrance-rules > div { border: 1px solid #ffffff26; border-radius: 14px; background: #ffffff08; padding: 18px; }
+.entrance-rules span { display: block; color: var(--c3); font-size: .7rem; margin-bottom: 6px; }
+.entrance-rules strong { display: block; font-size: .9rem; }
+.entrance-ready-note { font-size: .8rem; margin-bottom: 24px !important; }
+@keyframes entrance-rays-spin { to { transform: rotate(360deg); } }
+@media (max-width: 600px) {
+    .entrance-shell { max-height: 96dvh; border-radius: 20px; }
+    .entrance-close { top: 12px; right: 12px; width: 34px; height: 34px; }
+    .entrance-heading { padding: 22px 54px 12px 18px; align-items: flex-start; gap: 8px; }
+    .entrance-heading h2 { max-width: 220px; }
+    .entrance-heading .entrance-kicker { font-size: .55rem; }
+    .entrance-counter { padding: 5px 7px; font-size: .6rem; }
+    .entrance-room { min-height: 0; padding-bottom: 20px; }
+    .entrance-scene { min-height: 345px; padding: 62px 12px 16px; }
+    .entrance-door-sun { width: 330px; height: 330px; top: 60px; }
+    .entrance-door { top: 138px; width: 145px; height: 194px; }
+    .entrance-pillar.is-left { left: 5%; }
+    .entrance-pillar.is-right { right: 5%; }
+    .entrance-portrait { width: 118px; height: 118px; }
+    .entrance-deck { margin: 0 12px; padding: 14px 10px; }
+    .entrance-deck-heading { font-size: .54rem; gap: 8px; }
+    .entrance-roster { gap: 12px 8px; }
+    .entrance-roster-queen { flex-basis: 53px; }
+    .entrance-roster .entrance-portrait { width: 46px; height: 46px; }
+    .entrance-roster-name { font-size: .54rem; }
+    .entrance-controls { padding-inline: 16px; }
+    .entrance-next { width: 100%; max-width: 360px; }
+    .is-complete.entrance-room { min-height: min(700px, 87dvh); }
+    .is-complete .entrance-heading { padding: 24px 48px 12px; }
+    .is-complete .entrance-roster { gap: 16px 8px; }
+    .is-complete .entrance-roster-queen { flex-basis: 65px; }
+    .is-complete .entrance-roster .entrance-portrait { width: 58px; height: 58px; }
+    .is-complete .entrance-roster-name { font-size: .6rem; }
+    .entrance-rules { grid-template-columns: 1fr; }
+    .entrance-count-label { font-size: .55rem; letter-spacing: .12em; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .entrance-rays, .entrance-countdown-sun, .entrance-ready-sun { animation: none; }
+    .entrance-curtain, .entrance-next { transition: none; }
+    .entrance-next:hover:not(:disabled), .entrance-next:active:not(:disabled) { transform: none; }
+}
+
+.entrance-portrait-placeholder { flex: none; }
+
+/* Keep the current entrance and controls reachable even with a 20-queen cast. */
+.entrance-room:not(.is-complete) .entrance-roster {
+    max-height: 110px;
+    overflow-y: auto;
+    padding: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c3) #ffffff10;
+}
+
+/* Give the queen's origin a solid, readable surface above the name. */
+.entrance-introduction .entrance-origin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px 10px;
+    max-width: 100%;
+    padding: 7px 12px;
+    border: 1px solid color-mix(in srgb, var(--c3) 45%, #ffffff28);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--c2) 18%, #0a101b);
+    color: #fff;
+    font-family: var(--bs-body-font-family, sans-serif);
+    font-size: .73rem;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: .015em;
+    text-shadow: none;
+    box-shadow: 0 3px 12px #0005;
+}
+.entrance-origin-season { flex: none; color: var(--c3); font-weight: 800; }
+.entrance-origin-hometown { min-width: 0; overflow-wrap: anywhere; }
+.entrance-introduction h3 { margin-top: 10px; }
+
+/* Furniture is part of the scenery, leaving the central entrance clear. */
+.entrance-furnishings {
+    position: absolute;
+    top: 153px;
+    width: min(24%, 250px);
+}
+.entrance-furnishings.is-left { left: 3%; }
+.entrance-furnishings.is-right { right: 3%; }
+.entrance-wall-cabinets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.entrance-wall-cabinet {
+    position: relative;
+    height: 114px;
+    padding: 7px;
+    border: 2px solid color-mix(in srgb, var(--c3) 65%, #fff);
+    border-radius: 5px;
+    background: linear-gradient(135deg, #ffffff30, #0002), var(--c1);
+    box-shadow: 3px 7px 0 #0003, 0 10px 18px #0005, inset 0 1px #ffffff70;
+}
+.entrance-cabinet-glass {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 100%;
+    padding: 3px 4px 0;
+    border: 1px solid #ffffff50;
+    background: linear-gradient(120deg, transparent 30%, #ffffff18 31% 38%, transparent 39% 70%, #ffffff0d 71%), color-mix(in srgb, var(--c2) 25%, #0c1823);
+    box-shadow: inset 0 2px 10px #0008;
+}
+.entrance-cabinet-glass::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: color-mix(in srgb, var(--c3) 60%, #fff); }
+.entrance-cabinet-shelf { display: flex; align-items: flex-end; justify-content: space-around; gap: 3px; padding-bottom: 5px; border-bottom: 3px solid color-mix(in srgb, var(--c3) 55%, var(--c1)); }
+.entrance-cabinet-shelf > i { flex: none; }
+.entrance-cabinet-handles { position: absolute; top: 44%; left: calc(50% - 6px); width: 12px; height: 12px; border-inline: 2px solid #fff4d1; filter: drop-shadow(0 1px 1px #0008); }
+.entrance-worktable { position: relative; margin-top: 44px; }
+.entrance-worktable .table-top { height: 12px; border-radius: 4px; }
+.entrance-worktable .werk-rail { height: 15px; padding-inline: 10px; font-size: 7px; }
+.entrance-worktable .werk-legs { height: 74px; margin-inline: 12px; }
+.entrance-worktable .werk-leg { width: 8px; background: linear-gradient(90deg, #ffffff35, transparent), var(--c1); }
+.entrance-worktable .werk-bar { height: 7px; }
+.entrance-worktable .werk-shelf { inset-inline: 14px; height: 14px; bottom: 28px; background: color-mix(in srgb, var(--c2) 65%, #12131e); }
+.entrance-table-props { display: flex; align-items: flex-end; justify-content: flex-start; gap: 7px; padding: 0 14px 2px; }
+.entrance-table-props > i { flex: none; }
+@media (max-width: 760px) {
+    /* Stack the two cabinets per side instead of squeezing their proportions. */
+    .entrance-furnishings { top: 132px; width: 76px; }
+    .entrance-furnishings.is-left { left: 12px; }
+    .entrance-furnishings.is-right { right: 12px; }
+    .entrance-wall-cabinets { grid-template-columns: 1fr; gap: 12px; }
+    .entrance-wall-cabinet { height: 66px; padding: 4px; }
+    .entrance-cabinet-glass { padding: 0 3px; }
+    .entrance-cabinet-shelf { padding-bottom: 2px; border-bottom-width: 2px; }
+    .entrance-cabinet-shelf .cabinet-perfume { height: 14px; }
+    .entrance-cabinet-shelf .cabinet-lipstick { height: 13px; }
+    .entrance-cabinet-shelf .cabinet-compact { width: 12px; height: 12px; }
+    .entrance-worktable { width: 94px; margin-top: 37px; }
+    .is-left > .entrance-worktable { margin-left: -6px; }
+    .is-right > .entrance-worktable { margin-left: -12px; }
+    .entrance-worktable .werk-legs { height: 60px; margin-inline: 8px; }
+    .entrance-worktable .werk-rail { height: 12px; }
+    .entrance-worktable .werk-shelf { inset-inline: 7px; }
+    .entrance-table-props { gap: 5px; padding-inline: 9px; }
+    .entrance-table-props .cabinet-palette { display: none; }
+}
+@media (max-width: 380px) {
+    .entrance-furnishings { width: 64px; }
+    .entrance-furnishings.is-left { left: 8px; }
+    .entrance-furnishings.is-right { right: 8px; }
+    .entrance-worktable { width: 78px; }
+    .entrance-introduction .entrance-origin { padding: 7px 10px; font-size: .7rem; }
+}
+
+/* Jeep-Eyyy: red stage lights, chrome bodywork, green cabinetry, gold trim. */
+[data-theme=s1] .entrance-shell {
+    background: color-mix(in srgb, var(--c4) 18%, var(--ink));
+    border-color: var(--c3);
+    box-shadow: 0 35px 100px #000a, 0 0 28px color-mix(in srgb, var(--c1) 24%, transparent);
+}
+[data-theme=s1] .entrance-countdown {
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--led-a) 78%, var(--ink)), color-mix(in srgb, var(--led-b) 45%, var(--ink)));
+}
+[data-theme=s1] .entrance-wall {
+    background: repeating-linear-gradient(45deg, #f3ebdd12 0 3px, transparent 3px 16px), repeating-linear-gradient(-45deg, #00000024 0 3px, transparent 3px 16px), linear-gradient(145deg, color-mix(in srgb, var(--c1) 72%, var(--ink)), color-mix(in srgb, var(--led-b) 42%, var(--ink)));
+    border-bottom-color: var(--c3);
+}
+[data-theme=s1] .entrance-wall::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 10px;
+    background: var(--stripe);
+    box-shadow: 0 -2px 0 #f3ebdd99;
+}
+[data-theme=s1] .entrance-pillar {
+    background: repeating-linear-gradient(0deg, transparent 0 20px, #fff7d3 22px 26px, transparent 28px 48px), linear-gradient(90deg, #777771, var(--bg) 35%, #b3b0a6 65%, #565750);
+    border-inline-color: var(--c3);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--c3) 28%, transparent);
+}
+[data-theme=s1] .entrance-door {
+    background: linear-gradient(90deg, #a6a59b, var(--bg) 45%, #777971);
+    border-color: var(--c3);
+}
+[data-theme=s1] .entrance-curtain.is-left { background-color: var(--c4); }
+[data-theme=s1] .entrance-curtain.is-right { background-color: var(--c1); }
+[data-theme=s1] .entrance-floor {
+    background: linear-gradient(180deg, #45443d, var(--ink) 60%, #10291b);
+}
+[data-theme=s1] .entrance-wall-cabinet {
+    background: linear-gradient(180deg, var(--c4), #174a2a);
+    border-color: var(--c3);
+    box-shadow: 3px 7px 0 #0d2d19, 0 10px 18px #0005, inset 0 1px #fff7;
+}
+[data-theme=s1] .entrance-cabinet-glass {
+    background: linear-gradient(120deg, transparent 30%, #ffffff24 31% 38%, transparent 39% 70%, #ffffff12 71%), #10291b;
+}
+[data-theme=s1] .entrance-cabinet-shelf { border-bottom-color: var(--c3); }
+[data-theme=s1] .entrance-worktable .werk-rail,
+[data-theme=s1] .entrance-worktable .werk-bar { background: var(--c4); }
+[data-theme=s1] .entrance-worktable .werk-rail { color: var(--bg); }
+[data-theme=s1] .entrance-worktable .werk-leg {
+    background: linear-gradient(90deg, #777971, var(--bg) 45%, #a6a59b);
+}
+[data-theme=s1] .entrance-worktable .werk-shelf { background: #174a2a; }
+[data-theme=s1] .entrance-portrait { background: linear-gradient(135deg, var(--bg), #777971); }
+[data-theme=s1] .entrance-introduction .entrance-origin {
+    background: #10291b;
+    border-color: var(--c3);
+    color: var(--bg);
+}
+[data-theme=s1] .entrance-deck {
+    background: #10291bf0;
+    border-color: color-mix(in srgb, var(--c3) 50%, transparent);
+    box-shadow: inset 0 1px #ffffff12;
+}
+[data-theme=s1] .is-complete .entrance-deck { background: #0d2116f2; }
+[data-theme=s1] .entrance-counter { background: #10291b; border-color: #f2b70580; }
+[data-theme=s1] .entrance-ready {
+    background: radial-gradient(ellipse at top, #2f8f4626, transparent 65%), var(--ink);
+}
+[data-theme=s1] .entrance-rules > div { background: #10291b; border-color: #f2b70566; }
+
+[data-theme=s1] .options-frame.vanity-frame {
+    --options-metal: #b3b0a6;
+    --options-trim: #777971;
+}
+[data-theme=s1] .options-glass {
+    background: radial-gradient(ellipse at 15% 0%, #d62b1f2b, transparent 60%), linear-gradient(145deg, #18271b, var(--ink) 65%, #10291b);
+}
+[data-theme=s1] .options-group { background: #10291b99; border-color: #f2b70540; }
+[data-theme=s1] .options-choice input:checked + span { background: #174a2a; color: var(--bg); }
+
+/* Give Cinzel Decorative's wide letterforms room in the Werk-rior heading. */
+[data-theme=sr1] .entrance-heading > div { min-width: 0; }
+[data-theme=sr1] .entrance-heading h2 {
+    font-size: clamp(1.15rem, 2.6vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: .065em;
+    line-height: 1.35;
+    font-kerning: none;
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "clig" 0, "dlig" 0, "calt" 0;
+    overflow-wrap: break-word;
+}

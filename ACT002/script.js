@@ -1222,28 +1222,242 @@ function openOptions(trigger) {
   overlay.querySelector("form").addEventListener("submit", (event) => { event.preventDefault(); const data = new FormData(event.currentTarget); optionGroups.forEach(([key]) => { app.options[key] = data.get(key); }); save(); close(); toast("Season settings saved!"); });
   overlay.querySelector(".options-close").focus();
 }
-function startRace() {
-  const names = cast();
-  const groups = app.options.premiere.startsWith("Double") ? [names.slice(0, Math.ceil(names.length / 2)), names.slice(Math.ceil(names.length / 2))] : [names];
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    `<div class="race-overlay"><div class="panel race-panel"><button class="glass race-close">${icon("x")}</button><div class="race-count"><span class="race-num animate-pop font-display">3</span></div></div></div>`,
-  );
-  const modal = document.querySelector(".race-overlay"),
-    number = modal.querySelector(".race-num");
-  let step = 0;
-  const timer = setInterval(() => {
-    step++;
-    if (step < 4) number.textContent = ["3", "2", "1", "Sashay!"][step];
-    else {
-      clearInterval(timer);
-      modal.querySelector(".race-count").innerHTML =
-        `<div class="race-body"><div class="race-head race-pad"><h2 class="race-title font-display">Episode 1: The Grand Entrance</h2></div><ul class="race-list race-pad list-unstyled">${groups.map((group, index) => `${groups.length > 1 ? `<li class="race-group-title">Premiere ${index + 1}</li>` : ""}${group.map((q) => `<li class="race-item glass"><span class="race-thumb">${queenArt(q)}</span><span><b>${esc(q.name)}</b><span class="race-line">${esc(q.entline || `Hello, hello! ${q.name} is in the building.`)}</span></span></li>`).join("")}`).join("")}</ul></div>`;
-    }
-  }, 650);
-  modal.querySelector(".race-close").onclick = () => {
-    clearInterval(timer);
-    modal.remove();
+// Fisher-Yates gives each queen an equal chance at every entrance position.
+function shuffleEntranceCast(queens) {
+  const order = [...queens];
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return order;
+}
+function createEntranceSession(queens, options) {
+  const order = shuffleEntranceCast(queens);
+  return {
+    options: { ...options },
+    cast: order,
+    groups: options.premiere.startsWith("Double")
+      ? [order.slice(0, Math.ceil(order.length / 2)), order.slice(Math.ceil(order.length / 2))]
+      : [order],
+    groupIndex: 0,
+    queenIndex: 0,
+    arrived: [],
+    phase: "countdown",
   };
 }
+// Advance only after the current portrait has reached the cast row.
+function advanceEntranceSession(session) {
+  if (session.phase === "entrances") {
+    const group = session.groups[session.groupIndex];
+    session.arrived.push(group[session.queenIndex].id);
+    if (session.queenIndex + 1 < group.length) session.queenIndex++;
+    else session.phase = session.groupIndex + 1 < session.groups.length ? "between-premieres" : "lineup";
+  } else if (session.phase === "between-premieres") {
+    session.groupIndex++;
+    session.queenIndex = 0;
+    session.phase = "entrances";
+  } else if (session.phase === "lineup") session.phase = "ready";
+  return session.phase;
+}
+function entranceSet() {
+  const bulbs = (side, count) => `<span class="entrance-door-bulbs is-${side}">${'<i></i>'.repeat(count)}</span>`;
+  const cosmetics = '<i class="cabinet-lipstick"></i><i class="cabinet-perfume"></i><i class="cabinet-compact"></i>';
+  const cabinet = () => `<div class="entrance-wall-cabinet"><div class="entrance-cabinet-glass"><span class="entrance-cabinet-shelf">${cosmetics}</span><span class="entrance-cabinet-shelf">${cosmetics}</span></div><span class="entrance-cabinet-handles"></span></div>`;
+  const furniture = (side) => `<div class="entrance-furnishings is-${side}"><div class="entrance-wall-cabinets">${cabinet()}${cabinet()}</div><div class="entrance-worktable"><div class="entrance-table-props">${cosmetics}<i class="cabinet-palette"></i></div><div class="table-top"></div><div class="werk-rail"><span>WERK</span></div><div class="werk-legs"><span class="werk-leg is-left"></span><span class="werk-leg is-right"></span><span class="werk-bar"></span><span class="werk-shelf"></span></div><span class="werk-table-shadow"></span></div></div>`;
+  return `<div class="entrance-set" aria-hidden="true"><div class="entrance-wall"></div>${sun("entrance-door-sun")}<div class="entrance-pillar is-left"></div><div class="entrance-pillar is-right"></div><div class="entrance-door"><div class="entrance-door-inside"><span class="entrance-door-sign">WERK</span><span class="entrance-curtain is-left"></span><span class="entrance-curtain is-right"></span></div>${bulbs("top", 6)}${bulbs("left", 7)}${bulbs("right", 7)}</div><div class="entrance-floor"><span></span><i></i></div>${furniture("left")}${furniture("right")}</div>`;
+}
+function entrancePortrait(queen) {
+  return `<div class="entrance-portrait">${queenArt(queen, undefined, true).replace('loading="lazy"', 'loading="eager"')}</div>`;
+}
+function startRace() {
+  if (document.querySelector(".entrance-overlay")) return;
+  const queens = cast();
+  if (queens.length < MIN || queens.length > MAX) return;
+  const trigger = document.activeElement;
+  const session = createEntranceSession(queens, app.options);
+  app.race = session;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const overlay = document.createElement("div");
+  overlay.className = "entrance-overlay";
+  overlay.innerHTML = `<section class="entrance-shell" role="dialog" aria-modal="true" aria-label="Meet the queens"><button type="button" class="entrance-close options-close" aria-label="Close entrances">${icon("x")}</button><div class="entrance-content"></div><p class="visually-hidden entrance-live" aria-live="polite" aria-atomic="true"></p></section>`;
+  document.body.append(overlay);
+  const content = overlay.querySelector(".entrance-content");
+  const live = overlay.querySelector(".entrance-live");
+  const previousOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+  const timers = new Set();
+  const animations = new Set();
+  let disposed = false;
+  let busy = true;
+  const later = (callback, delay) => {
+    const timer = setTimeout(() => { timers.delete(timer); if (!disposed) callback(); }, delay);
+    timers.add(timer);
+  };
+  const animate = (element, keyframes, duration = 650, delay = 0) => {
+    if (reducedMotion || !element.animate) return Promise.resolve();
+    const animation = element.animate(keyframes, { duration, delay, easing: "cubic-bezier(.2,.75,.25,1)", fill: "backwards" });
+    animations.add(animation);
+    return animation.finished.catch(() => {}).finally(() => animations.delete(animation));
+  };
+  const close = () => {
+    disposed = true;
+    timers.forEach(clearTimeout);
+    animations.forEach((animation) => animation.cancel());
+    document.removeEventListener("keydown", onKey);
+    document.body.style.overflow = previousOverflow;
+    overlay.remove();
+    if (trigger?.isConnected) trigger.focus({ preventScroll: true });
+  };
+  const onKey = (event) => {
+    if (event.key === "Escape") { close(); return; }
+    if (event.key !== "Tab") return;
+    const controls = [...overlay.querySelectorAll('button:not(:disabled), [tabindex="0"]')].filter((el) => el.getClientRects().length);
+    const first = controls[0], last = controls.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+  };
+  document.addEventListener("keydown", onKey);
+  overlay.querySelector(".entrance-close").addEventListener("click", close);
+  overlay.querySelector(".entrance-close").focus({ preventScroll: true });
+
+  const updateHeader = () => {
+    const group = session.groups[session.groupIndex];
+    content.querySelector(".entrance-progress").textContent = `${session.arrived.length} / ${session.cast.length} queens in the room`;
+    content.querySelector(".entrance-premiere-label").textContent = session.groups.length > 1
+      ? `Premiere ${session.groupIndex + 1} of 2 | ${session.options.premiere.includes("Non-Elimination") ? "Non-elimination" : "Split premiere"}`
+      : session.options.premiere;
+    content.querySelector(".entrance-counter").textContent = `${String(session.queenIndex + 1).padStart(2, "0")} / ${String(group.length).padStart(2, "0")}`;
+  };
+  const enterQueen = async () => {
+    session.phase = "entrances";
+    busy = true;
+    const queen = session.groups[session.groupIndex][session.queenIndex];
+    const feature = content.querySelector(".entrance-feature");
+    const next = content.querySelector(".entrance-next");
+    updateHeader();
+    feature.innerHTML = `${entrancePortrait(queen)}<div class="entrance-introduction"><span class="entrance-kicker entrance-origin"><span class="entrance-origin-season">${esc(seasonLabel(queen.season))}</span><span class="entrance-origin-hometown">${esc(queen.hometown || "Somewhere fabulous")}</span></span><h3>${esc(queen.name)}</h3><blockquote>${esc(queen.entline || `Hello, hello! ${queen.name} is in the building.`)}</blockquote></div>`;
+    const portrait = feature.querySelector(".entrance-portrait");
+    content.querySelector(".entrance-room").classList.add("is-entering");
+    next.disabled = true;
+    next.innerHTML = `${session.queenIndex === session.groups[session.groupIndex].length - 1 ? "Complete this premiere" : "Next queen"} ${icon("play", "icon-sm")}`;
+    live.textContent = `${queen.name}. ${queen.entline || "Welcome to the Werk Room!"}`;
+    // The portrait starts inside the doorway, then comes forward into the spotlight.
+    await Promise.all([
+      animate(portrait, [{ opacity: 0, transform: "translateY(-90px) scale(.16)" }, { opacity: 1, transform: "translateY(-65px) scale(.35)", offset: .3 }, { opacity: 1, transform: "translateY(0) scale(1)" }], 1050),
+      animate(feature.querySelector(".entrance-introduction"), [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "translateY(0)" }], 550, 650),
+    ]);
+    if (disposed) return;
+    content.querySelector(".entrance-room").classList.remove("is-entering");
+    next.disabled = false;
+    busy = false;
+  };
+  const finishEntrances = async () => {
+    session.phase = "lineup";
+    const portraits = [...content.querySelectorAll(".entrance-roster .entrance-portrait")];
+    const before = portraits.map((portrait) => portrait.getBoundingClientRect());
+    const room = content.querySelector(".entrance-room");
+    room.classList.add("is-complete");
+    content.querySelector(".entrance-heading h2").textContent = "The queens are here!";
+    content.querySelector(".entrance-premiere-label").textContent = "The cast is complete. Let the season begin.";
+    content.querySelector(".entrance-roster-label").textContent = "YOUR CAST";
+    content.querySelector(".entrance-scene").hidden = true;
+    const next = content.querySelector(".entrance-next");
+    next.innerHTML = `Let's start the race! ${icon("play", "icon-sm")}`;
+    next.disabled = true;
+    live.textContent = `All ${session.cast.length} queens have entered. Let's start the race!`;
+    await Promise.all(portraits.map((portrait, index) => {
+      const after = portrait.getBoundingClientRect();
+      return animate(portrait, [{ transform: `translate(${before[index].left - after.left}px, ${before[index].top - after.top}px) scale(${before[index].width / after.width})` }, { transform: "translate(0, 0) scale(1)" }], 850, index * 30);
+    }));
+    if (disposed) return;
+    next.disabled = false;
+    busy = false;
+    animate(next, [{ opacity: 0, transform: "translateY(15px)" }, { opacity: 1, transform: "translateY(0)" }], 450);
+  };
+  const featurePlaceholder = (portrait) => {
+    const placeholder = document.createElement("div");
+    placeholder.className = "entrance-portrait-placeholder";
+    placeholder.style.width = `${portrait.offsetWidth}px`;
+    placeholder.style.height = `${portrait.offsetHeight}px`;
+    portrait.before(placeholder);
+  };
+  const nextQueen = async () => {
+    if (busy || disposed) return;
+    if (session.phase === "lineup") { showSeasonReady(); return; }
+    if (session.phase === "between-premieres") {
+      advanceEntranceSession(session);
+      await enterQueen();
+      return;
+    }
+    busy = true;
+    const next = content.querySelector(".entrance-next");
+    next.disabled = true;
+    const queen = session.groups[session.groupIndex][session.queenIndex];
+    const portrait = content.querySelector(".entrance-feature .entrance-portrait");
+    const before = portrait.getBoundingClientRect();
+    // Preserve the spotlight's space while its portrait moves into the roster.
+    featurePlaceholder(portrait);
+    const item = document.createElement("li");
+    item.className = "entrance-roster-queen";
+    item.innerHTML = `<span class="entrance-roster-name">${esc(queen.name)}</span>`;
+    item.prepend(portrait);
+    const roster = content.querySelector(".entrance-roster");
+    roster.append(item);
+    roster.scrollTop = roster.scrollHeight;
+    const after = portrait.getBoundingClientRect();
+    // Animate a floating copy so the scrollable cast row cannot clip the flight.
+    const flyingPortrait = portrait.cloneNode(true);
+    Object.assign(flyingPortrait.style, {
+      position: "fixed", left: `${before.left}px`, top: `${before.top}px`,
+      width: `${before.width}px`, height: `${before.height}px`,
+      transformOrigin: "top left", pointerEvents: "none", zIndex: "20",
+    });
+    overlay.append(flyingPortrait);
+    portrait.style.visibility = "hidden";
+    content.querySelector(".entrance-introduction").style.visibility = "hidden";
+    await animate(flyingPortrait, [{ transform: "translate(0, 0) scale(1)" }, { transform: `translate(${after.left - before.left}px, ${after.top - before.top}px) scale(${after.width / before.width})` }], 650);
+    flyingPortrait.remove();
+    if (disposed) return;
+    portrait.style.visibility = "";
+    advanceEntranceSession(session);
+    content.querySelector(".entrance-progress").textContent = `${session.arrived.length} / ${session.cast.length} queens in the room`;
+    if (session.phase === "entrances") {
+      await enterQueen();
+    } else if (session.phase === "between-premieres") {
+      content.querySelector(".entrance-feature").innerHTML = `<div class="entrance-group-complete"><span class="entrance-kicker">ONE ROOM. TWO GRAND ENTRANCES.</span><h3>Premiere 1 is here.</h3><p>There's another group of queens waiting behind the curtain.</p></div>`;
+      next.innerHTML = `Meet Premiere 2 ${icon("plus", "icon-sm")}`;
+      next.disabled = false;
+      busy = false;
+    } else await finishEntrances();
+  };
+  const showSeasonReady = () => {
+    advanceEntranceSession(session);
+    content.innerHTML = `<div class="entrance-ready">${sun("entrance-ready-sun")}<span class="entrance-kicker">THE STAGE IS SET</span><h2 class="font-display">Let's start the race!</h2><p>${session.cast.length} queens. One crown. Your season is ready.</p><div class="entrance-rules">${optionGroups.map(([key, label]) => `<div><span>${label}</span><strong>${esc(session.options[key])}</strong></div>`).join("")}</div><p class="entrance-ready-note">Entrances complete. The first challenge is the next stage of the simulator.</p><button type="button" class="entrance-next entrance-return">Back to season setup ${icon("check", "icon-sm")}</button></div>`;
+    content.querySelector(".entrance-return").addEventListener("click", close);
+    window.dispatchEvent(new CustomEvent("drph:entrances-complete", { detail: { cast: [...session.cast], options: { ...session.options }, groups: session.groups.map((group) => [...group]) } }));
+  };
+  const showRoom = () => {
+    content.innerHTML = `<div class="entrance-room">${entranceSet()}<header class="entrance-heading"><div><span class="entrance-kicker entrance-premiere-label"></span><h2>Welcome to the Werk Room</h2></div><span class="entrance-counter"></span></header><div class="entrance-scene"><article class="entrance-feature"></article></div><section class="entrance-deck" aria-label="Queens in the Werk Room"><div class="entrance-deck-heading"><span class="entrance-roster-label">IN THE WERK ROOM</span><span class="entrance-progress"></span></div><ol class="entrance-roster"></ol></section><footer class="entrance-controls"><button type="button" class="entrance-next" disabled>Next queen ${icon("plus", "icon-sm")}</button></footer></div>`;
+    content.querySelector(".entrance-next").addEventListener("click", nextQueen);
+    enterQueen();
+  };
+  content.innerHTML = `<div class="entrance-countdown"><div class="entrance-rays" aria-hidden="true"></div>${sun("entrance-countdown-sun")}<span class="entrance-count-number">3</span><p class="entrance-count-label">THE WERK ROOM IS WAITING</p></div>`;
+  const number = content.querySelector(".entrance-count-number");
+  const count = (value) => {
+    number.textContent = value;
+    live.textContent = String(value);
+    animate(number, [{ opacity: 0, transform: "scale(.7)" }, { opacity: 1, transform: "scale(1)" }], 350);
+  };
+  count(3);
+  later(() => count(2), 900);
+  later(() => count(1), 1800);
+  later(() => {
+    number.textContent = "Let's Meet The Queens!";
+    content.querySelector(".entrance-countdown").classList.add("is-announcing");
+    live.textContent = "Let's Meet The Queens!";
+    animate(number, [{ opacity: 0, transform: "translateY(20px)" }, { opacity: 1, transform: "translateY(0)" }], 500);
+  }, 2700);
+  later(showRoom, 4300);
+}
+
 render();
