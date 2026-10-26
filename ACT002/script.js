@@ -9,6 +9,7 @@ const read = (key, fallback) => {
   }
 };
 const save = () => {
+  localStorage.setItem("drph-options", JSON.stringify(app.options));
   localStorage.setItem("drph-theme", JSON.stringify(app.theme));
   localStorage.setItem("drph-cast", JSON.stringify(app.castIds));
   localStorage.setItem("drph-customs", JSON.stringify(app.customs));
@@ -583,6 +584,7 @@ const queens = queenRoster.map((queen) => ({
   id: `s${queen.season}-${slug(queen.name)}`,
 }));
 const app = {
+  options: { premiere: "Normal Premiere", season: "Regular", returning: "None", finale: "Top 4", ...read("drph-options", {}) },
   theme: read("drph-theme", "flag"),
   castIds: read("drph-cast", []),
   customs: read("drph-customs", []),
@@ -772,7 +774,7 @@ function customForm() {
     "Camp",
     "Look queen",
   ];
-  return `<section id="custom" class="vanity-section vanity-wall"><div class="vanity-pillar is-left"></div><div class="vanity-pillar is-right"></div><header class="text-center"><h2 class="vanity-title font-display neon">Custom Queen</h2><p class="vanity-lede text-sm">Sit down, beat that mug, and create your own queen.</p></header><div class="vanity-mirror"><div class="vanity-frame" style="border-radius:64px;padding:30px"><div class="vanity-glass" style="border-radius:34px"><div class="vanity-body"><div class="vanity-preview"><div id="preview-art" class="vanity-portrait">${queenArt({ name: "Your Queen", season: "custom", tone: "c1" }, undefined, true)}</div><p id="preview-name" class="vanity-name font-display">Your Queen</p><p id="preview-sub" class="vanity-sub text-xs">Pageant · Hometown</p></div><form id="custom-form" class="vanity-form"><div class="vanity-fields"><label><span class="vanity-label">Drag name</span><input name="name" class="form-control vanity-input" maxlength="28"></label><label><span class="vanity-label">Hometown</span><input name="hometown" class="form-control vanity-input" maxlength="36"></label><label class="vanity-image-url"><span class="vanity-label">Image URL <small>(optional)</small></span><input type="url" name="image" class="form-control vanity-input" placeholder="https://example.com/your-queen.jpg"></label></div><fieldset><legend class="vanity-label">Drag type</legend><div class="chip-row">${types.map((type, i) => `<input type="radio" class="btn-check" name="archetype" id="type-${i}" value="${type}" ${i ? "" : "checked"}><label class="btn chip" for="type-${i}">${type}</label>`).join("")}</div></fieldset><fieldset><legend class="vanity-label">Poster color</legend><div class="swatch-row">${["c1", "c2", "c3", "ink"].map((tone, i) => `<input type="radio" class="btn-check" name="tone" id="tone-${tone}" value="${tone}" ${i ? "" : "checked"}><label class="btn swatch" for="tone-${tone}" style="--swatch:var(--${tone})"></label>`).join("")}</div></fieldset><p id="custom-error" class="stage-accent text-xs fw-semibold"></p><button class="stage-btn-ghost vanity-submit" ${app.castIds.length >= MAX ? "disabled" : ""}>Add to Werk Room</button></form></div></div></div></div><div class="vanity-table"><div class="vanity-top"></div><div class="vanity-front"><div class="vanity-drawer"></div><div class="vanity-drawer"></div><div class="vanity-drawer"></div></div></div></section>`;
+  return `<section id="custom" class="vanity-section vanity-wall"><div class="vanity-pillar is-left"></div><div class="vanity-pillar is-right"></div><header class="text-center"><h2 class="vanity-title font-display neon">Custom Queen</h2><p class="vanity-lede text-sm">Sit down, beat that mug, and create your own queen.</p></header><div class="vanity-mirror"><div class="vanity-frame" style="border-radius:64px;padding:30px"><div class="vanity-glass" style="border-radius:34px"><div class="vanity-body"><div class="vanity-preview"><div id="preview-art" class="vanity-portrait">${queenArt({ name: "Your Queen", season: "custom", tone: "c1" }, undefined, true)}</div><p id="preview-name" class="vanity-name font-display">Your Queen</p><p id="preview-sub" class="vanity-sub text-xs">Pageant · Hometown</p></div><form id="custom-form" class="vanity-form"><div class="vanity-fields"><label><span class="vanity-label">Drag Name</span><input name="name" class="form-control vanity-input" maxlength="28"></label><label><span class="vanity-label">Hometown</span><input name="hometown" class="form-control vanity-input" maxlength="36"></label><label class="vanity-entrance"><span class="vanity-label">Entrance Line</span><textarea name="entline" class="form-control vanity-input" rows="3" required placeholder="Your Queen's Grand Entrance Line"></textarea></label><label class="vanity-image-url"><span class="vanity-label">Image URL <small>(optional)</small></span><input type="url" name="image" class="form-control vanity-input" placeholder="https://example.com/your-queen.jpg"></label></div><fieldset><legend class="vanity-label">Drag Type</legend><div class="chip-row">${types.map((type, i) => `<input type="radio" class="btn-check" name="archetype" id="type-${i}" value="${type}" ${i ? "" : "checked"}><label class="btn chip" for="type-${i}">${type}</label>`).join("")}</div></fieldset><fieldset><legend class="vanity-label">Poster Color</legend><div class="swatch-row">${["c1", "c2", "c3", "ink"].map((tone, i) => `<input type="radio" class="btn-check" name="tone" id="tone-${tone}" value="${tone}" ${i ? "" : "checked"}><label class="btn swatch" for="tone-${tone}" style="--swatch:var(--${tone})"></label>`).join("")}</div></fieldset><p id="custom-error" class="stage-accent text-xs fw-semibold"></p><button class="stage-btn-ghost vanity-submit" ${app.castIds.length >= MAX ? "disabled" : ""}>Add to Werk Room</button></form></div></div></div></div><div class="vanity-table"><div class="vanity-top"></div><div class="vanity-front"><div class="vanity-drawer"></div><div class="vanity-drawer"></div><div class="vanity-drawer"></div></div></div></section>`;
 }
 function looks() {
   const current = currentTheme(),
@@ -873,7 +875,6 @@ function renderQueenGroups() {
     pill.className = "badge queen-badge is-placement";
     pill.textContent = status;
     queenCard.querySelector(".queen-card-art")?.append(pill);
-    queenCard.querySelector(".queen-added")?.classList.add("has-status");
   });
 }
 function library() {
@@ -896,7 +897,7 @@ function startBar(items) {
     .slice(0, visibleAvatarCount)
     .map((q) => `<span class="avatar">${queenArt(q, undefined, true)}</span>`)
     .join("") || '<span class="avatar is-empty">?</span>'
-    }${items.length > visibleAvatarCount ? `<span class="avatar is-more">+${items.length - visibleAvatarCount}</span>` : ""}</div><div class="min-w-0 lh-sm"><p class="text-sm fw-bold">${items.length}/${MAX} queens</p><p class="startbar-sub text-truncate">${ready ? "Ready to WERK!" : `Add ${MIN - items.length} more to start`}</p></div></div><div class="startbar-progress from-md" aria-hidden="true"><div class="seg-track">${Array.from({ length: MAX }, (_, i) => `<span class="seg ${i < items.length ? "is-on" : ""}"></span>`).join("")}</div><div class="startbar-theme">${icon("palette", "icon startbar-theme-icon")}<div class="lh-sm"><p class="startbar-theme-season">${theme.season}</p><p class="text-xs fw-bold">${theme.name}</p></div></div></div><div class="startbar-actions ms-auto"><a href="#look" class="btn btn-glass startbar-edit d-inline-flex align-items-center justify-content-center">${icon("palette", "icon-sm")} Edit sim settings</a><button type="button" data-start class="btn btn-c3 startbar-go d-inline-flex align-items-center justify-content-center" ${ready ? "" : "disabled"}>${icon("play")} Start the race</button></div></div></div>`;
+    }${items.length > visibleAvatarCount ? `<span class="avatar is-more">+${items.length - visibleAvatarCount}</span>` : ""}</div><div class="min-w-0 lh-sm"><p class="text-sm fw-bold">${items.length}/${MAX} queens</p><p class="startbar-sub text-truncate">${ready ? "Ready to WERK!" : `Add ${MIN - items.length} more to start`}</p></div></div><div class="startbar-progress from-md" aria-hidden="true"><div class="seg-track">${Array.from({ length: MAX }, (_, i) => `<span class="seg ${i < items.length ? "is-on" : ""}"></span>`).join("")}</div><div class="startbar-theme">${icon("palette", "icon startbar-theme-icon")}<div class="lh-sm"><p class="startbar-theme-season">${theme.season}</p><p class="text-xs fw-bold">${theme.name}</p></div></div></div><div class="startbar-actions ms-auto"><button type="button" data-options class="btn btn-glass startbar-edit d-inline-flex align-items-center justify-content-center">${icon("palette", "icon-sm")} Edit sim settings</button><button type="button" data-start class="btn btn-c3 startbar-go d-inline-flex align-items-center justify-content-center" ${ready ? "" : "disabled"}>${icon("play")} Start the race</button></div></div></div>`;
 }
 function render() {
   const items = cast(),
@@ -954,7 +955,7 @@ function setPieces(items) {
       nav.innerHTML = sections
         .map(
           ([id, name, glyph]) =>
-            `<a href="#${id}" class="side-link cabinet-shelf"><span class="cabinet-cosmetics" aria-hidden="true"><i class="cabinet-lipstick"></i><i class="cabinet-compact"></i><i class="cabinet-palette"></i><i class="cabinet-perfume"></i></span><span class="side-link-icon">${icon(glyph)}</span><span class="cabinet-label">${name}</span></a>`,
+            `<a ${id === "top" ? 'href="#" data-options' : `href="#${id}"`} class="side-link cabinet-shelf"><span class="cabinet-cosmetics" aria-hidden="true"><i class="cabinet-lipstick"></i><i class="cabinet-compact"></i><i class="cabinet-palette"></i><i class="cabinet-perfume"></i></span><span class="side-link-icon">${icon(glyph)}</span><span class="cabinet-label">${name}</span></a>`,
         )
         .join("");
     }
@@ -1068,6 +1069,7 @@ function updatePreview() {
 }
 function bind() {
   setPieces(cast());
+  document.querySelectorAll("[data-options]").forEach((button) => button.addEventListener("click", (event) => { event.preventDefault(); openOptions(button); }));
   document
     .querySelectorAll("[data-toggle],[data-remove]")
     .forEach(
@@ -1167,13 +1169,16 @@ function createCustom(event) {
   event.preventDefault();
   const form = event.currentTarget,
     name = form.name.value.trim(),
+    entline = form.elements.entline.value.trim(),
     error = document.querySelector("#custom-error");
   if (!name) return (error.textContent = "Your queen needs a drag name.");
+  if (!entline) return (error.textContent = "Your queen needs an entrance line.");
   if (allQueens().some((q) => q.name.toLowerCase() === name.toLowerCase()))
     return (error.textContent = "A queen with that name already exists.");
   const q = {
     id: `custom-${Date.now()}`,
     name,
+    entline,
     hometown: form.hometown.value.trim() || "Somewhere fabulous",
     image: form.image.value.trim(),
     season: "custom",
@@ -1184,8 +1189,42 @@ function createCustom(event) {
   app.castIds.push(q.id);
   rerender(`Welcome to the werk room, ${q.name}!`);
 }
+const optionGroups = [
+  ["premiere", "Premiere Format", ["Normal Premiere", "Normal Premiere (Non-Elimination)", "Double Premiere", "Double Premiere (Non-Elimination)"]],
+  ["season", "Season Format", ["Regular", "Lipsync For Your Legacy", "All Winners"]],
+  ["returning", "Returning Format", ["None", "Choose who returns", "LaLaPaRuZa", "Remaining Queens Vote"]],
+  ["finale", "Finale Format", ["Top 4", "Top 3"]],
+];
+function openOptions(trigger) {
+  const overlay = document.createElement("div");
+  overlay.className = "options-overlay";
+  overlay.innerHTML = `<div class="options-frame vanity-frame" role="dialog" aria-modal="true" aria-labelledby="options-title"><div class="options-glass"><div class="options-scroll"><header class="options-header"><div><span class="options-eyebrow">EDIT OPTIONS</span><h2 id="options-title">Set the stage<span>!</span></h2><p>Choose the rules for your season!</p></div><button type="button" class="options-close" aria-label="Close settings">${icon("x")}</button></header><form class="options-form">${optionGroups.map(([key, title, values], index) => `<fieldset class="options-group"><legend><span>0${index + 1}</span> ${title}</legend><div class="options-choices">${values.map((value) => `<label class="options-choice"><input type="radio" name="${key}" value="${esc(value)}" ${app.options[key] === value ? "checked" : ""}><span>${esc(value)}<i aria-hidden="true"></i></span></label>`).join("")}</div></fieldset>`).join("")}<div class="options-actions"><button type="button" class="options-cancel">Cancel</button><button type="submit" class="options-save">Save settings ${icon("check", "icon-sm")}</button></div></form></div></div></div>`;
+  document.body.append(overlay);
+  const frame = overlay.querySelector(".options-frame");
+  const renderBulbs = () => {
+    const { width, height } = frame.getBoundingClientRect();
+    const horizontal = Math.min(12, Math.max(5, Math.round(width / 105)));
+    const vertical = Math.min(7, Math.max(4, Math.round(height / 100)));
+    frame.querySelectorAll(".vanity-bulb-rail").forEach((rail) => rail.remove());
+    frame.insertAdjacentHTML("afterbegin", ["top", "right", "bottom", "left"].map((side) =>
+      `<span class="vanity-bulb-rail is-${side}" aria-hidden="true">${Array.from({ length: side === "top" || side === "bottom" ? horizontal : vertical }, () => '<span class="vanity-bulb"></span>').join("")}</span>`
+    ).join(""));
+  };
+  renderBulbs();
+  const bulbObserver = new ResizeObserver(renderBulbs);
+  bulbObserver.observe(frame);
+  const previousOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+  const close = () => { bulbObserver.disconnect(); document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKey); overlay.remove(); trigger.focus(); };
+  const onKey = (event) => { if (event.key === "Escape") close(); };
+  document.addEventListener("keydown", onKey);
+  overlay.addEventListener("click", (event) => { if (event.target === overlay || event.target.closest(".options-close, .options-cancel")) close(); });
+  overlay.querySelector("form").addEventListener("submit", (event) => { event.preventDefault(); const data = new FormData(event.currentTarget); optionGroups.forEach(([key]) => { app.options[key] = data.get(key); }); save(); close(); toast("Season settings saved!"); });
+  overlay.querySelector(".options-close").focus();
+}
 function startRace() {
   const names = cast();
+  const groups = app.options.premiere.startsWith("Double") ? [names.slice(0, Math.ceil(names.length / 2)), names.slice(Math.ceil(names.length / 2))] : [names];
   document.body.insertAdjacentHTML(
     "beforeend",
     `<div class="race-overlay"><div class="panel race-panel"><button class="glass race-close">${icon("x")}</button><div class="race-count"><span class="race-num animate-pop font-display">3</span></div></div></div>`,
@@ -1199,7 +1238,7 @@ function startRace() {
     else {
       clearInterval(timer);
       modal.querySelector(".race-count").innerHTML =
-        `<div class="race-body"><div class="race-head race-pad"><h2 class="race-title font-display">Episode 1: The Grand Entrance</h2></div><ul class="race-list race-pad list-unstyled">${names.map((q) => `<li class="race-item glass"><span class="race-thumb">${queenArt(q)}</span><span><b>${esc(q.name)}</b><span class="race-line">Hello, hello! ${esc(q.name)} is in the building.</span></span></li>`).join("")}</ul></div>`;
+        `<div class="race-body"><div class="race-head race-pad"><h2 class="race-title font-display">Episode 1: The Grand Entrance</h2></div><ul class="race-list race-pad list-unstyled">${groups.map((group, index) => `${groups.length > 1 ? `<li class="race-group-title">Premiere ${index + 1}</li>` : ""}${group.map((q) => `<li class="race-item glass"><span class="race-thumb">${queenArt(q)}</span><span><b>${esc(q.name)}</b><span class="race-line">${esc(q.entline || `Hello, hello! ${q.name} is in the building.`)}</span></span></li>`).join("")}`).join("")}</ul></div>`;
     }
   }, 650);
   modal.querySelector(".race-close").onclick = () => {
