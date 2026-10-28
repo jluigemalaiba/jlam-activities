@@ -1,3 +1,16 @@
+(() => {
+  const page = document.documentElement;
+  const widths = [380, 480, 600, 760];
+  const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const syncLayout = () => {
+    widths.forEach((width) => page.toggleAttribute(`data-width-${width}`, window.innerWidth <= width));
+    page.toggleAttribute("data-reduced-motion", motion.matches);
+  };
+  syncLayout();
+  window.addEventListener("resize", syncLayout, { passive: true });
+  motion.addEventListener("change", syncLayout);
+})();
+
 const MAX = 20,
   MIN = 4,
   root = document.querySelector("#root");
@@ -31,6 +44,8 @@ const iconPaths = {
   search: "M11 18a7 7 0 100-14 7 7 0 000 14zM20 20l-4-4",
   crown: "M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5L3 8z",
   play: "M7 5l12 7-12 7V5z",
+  pause: "M8 5v14M16 5v14",
+  resume: "M3 11a9 9 0 1 1 2.7 6.4M3 4v7h7",
   pin: "M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 100-5 2.5 2.5 0 000 5z",
   mirror: "M12 3a6 8 0 016 8v10H6V11a6 8 0 016-8z",
   palette:
@@ -98,8 +113,6 @@ const slug = (text) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
-// Set `image` to a relative file path (for example, "assets/images/precious-paula-nicole.jpg").
-// Leave it blank to keep the generated poster art.
 const queenRoster = [
   {
     season: 1,
@@ -630,7 +643,7 @@ function queenArt(q, number, compact = false) {
     .join("");
   return `<svg viewBox="0 0 120 150" class="queen-art" role="img" aria-label="${esc(q.name)} poster art" preserveAspectRatio="xMidYMid slice"><rect width="120" height="150" fill="${bg}"/><g transform="translate(${20 + (h % 80)} ${18 + ((h >> 3) % 60)}) rotate(${(h >> 5) % 45})" fill="${fg}" opacity=".16">${Array.from({ length: 8 }, (_, i) => `<polygon points="-7,0 7,0 0,-170" transform="rotate(${i * 45})"/>`).join("")}<circle r="20"/></g>${stars}<text x="-4" y="146" fill="${fg}" style="font-family:var(--display);font-style:var(--display-style);font-weight:var(--display-weight);font-size:calc(${fontSize}px * var(--dscale));letter-spacing:-.02em">${mono}</text>${compact ? "" : `<text x="112" y="16" text-anchor="end" fill="${fg}" style="font-family:DM Mono,monospace;font-size:8px;letter-spacing:.08em" opacity=".9">${season}${number === undefined ? "" : ` · ${String(number).padStart(2, "0")}`}</text>`}</svg>`;
 }
-function stageFloor() {
+function stageFloor(fadeId = "stage-floor-fade") {
   const rows = [0, 0.16, 0.36, 0.62, 1],
     cols = 10,
     left = (t) => 140 - 260 * t,
@@ -652,7 +665,7 @@ function stageFloor() {
       }),
     )
     .join("");
-  return `<svg viewBox="0 0 1000 300" preserveAspectRatio="none" class="fill" aria-hidden="true"><defs><linearGradient id="stage-floor-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07060b" stop-opacity=".75"/><stop offset=".5" stop-color="#07060b" stop-opacity=".15"/><stop offset="1" stop-color="#fff" stop-opacity=".08"/></linearGradient></defs>${tiles}<rect width="1000" height="300" fill="url(#stage-floor-fade)"/><polyline class="stage-neon-line" points="-120,300 140,0 860,0 1120,300" fill="none" stroke-width="3"/></svg>`;
+  return `<svg viewBox="0 0 1000 300" preserveAspectRatio="none" class="fill" aria-hidden="true"><defs><linearGradient id="${fadeId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07060b" stop-opacity=".75"/><stop offset=".5" stop-color="#07060b" stop-opacity=".15"/><stop offset="1" stop-color="#fff" stop-opacity=".08"/></linearGradient></defs>${tiles}<rect width="1000" height="300" fill="url(#${fadeId})"/><polyline class="stage-neon-line" points="-120,300 140,0 860,0 1120,300" fill="none" stroke-width="3"/></svg>`;
 }
 const neonStar = (classes) =>
   `<svg viewBox="0 0 24 24" class="neon-star ${classes}" aria-hidden="true"><path d="M12 2.5l2.8 6.3 6.8.6-5.2 4.5 1.6 6.7L12 17.1l-6 3.5 1.6-6.7-5.2-4.5 6.8-.6z" fill="none" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
@@ -776,19 +789,24 @@ function customForm() {
   ];
   return `<section id="custom" class="vanity-section vanity-wall"><div class="vanity-pillar is-left"></div><div class="vanity-pillar is-right"></div><header class="text-center"><h2 class="vanity-title font-display neon">Custom Queen</h2><p class="vanity-lede text-sm">Sit down, beat that mug, and create your own queen.</p></header><div class="vanity-mirror"><div class="vanity-frame" style="border-radius:64px;padding:30px"><div class="vanity-glass" style="border-radius:34px"><div class="vanity-body"><div class="vanity-preview"><div id="preview-art" class="vanity-portrait">${queenArt({ name: "Your Queen", season: "custom", tone: "c1" }, undefined, true)}</div><p id="preview-name" class="vanity-name font-display">Your Queen</p><p id="preview-sub" class="vanity-sub text-xs">Pageant · Hometown</p></div><form id="custom-form" class="vanity-form"><div class="vanity-fields"><label><span class="vanity-label">Drag Name</span><input name="name" class="form-control vanity-input" maxlength="28"></label><label><span class="vanity-label">Hometown</span><input name="hometown" class="form-control vanity-input" maxlength="36"></label><label class="vanity-entrance"><span class="vanity-label">Entrance Line</span><textarea name="entline" class="form-control vanity-input" rows="3" required placeholder="Your Queen's Grand Entrance Line"></textarea></label><label class="vanity-image-url"><span class="vanity-label">Image URL <small>(optional)</small></span><input type="url" name="image" class="form-control vanity-input" placeholder="https://example.com/your-queen.jpg"></label></div><fieldset><legend class="vanity-label">Drag Type</legend><div class="chip-row">${types.map((type, i) => `<input type="radio" class="btn-check" name="archetype" id="type-${i}" value="${type}" ${i ? "" : "checked"}><label class="btn chip" for="type-${i}">${type}</label>`).join("")}</div></fieldset><fieldset><legend class="vanity-label">Poster Color</legend><div class="swatch-row">${["c1", "c2", "c3", "ink"].map((tone, i) => `<input type="radio" class="btn-check" name="tone" id="tone-${tone}" value="${tone}" ${i ? "" : "checked"}><label class="btn swatch" for="tone-${tone}" style="--swatch:var(--${tone})"></label>`).join("")}</div></fieldset><p id="custom-error" class="stage-accent text-xs fw-semibold"></p><button class="stage-btn-ghost vanity-submit" ${app.castIds.length >= MAX ? "disabled" : ""}>Add to Werk Room</button></form></div></div></div></div><div class="vanity-table"><div class="vanity-top"></div><div class="vanity-front"><div class="vanity-drawer"></div><div class="vanity-drawer"></div><div class="vanity-drawer"></div></div></div></section>`;
 }
+function loungeSofa(content, color) {
+  return `<div class="sofa" style="--sofa:${color}"><div class="sofa-back"><div class="sofa-cushions">${'<span class="sofa-cushion"></span>'.repeat(3)}</div></div><div class="sofa-seat"></div>${content ? `<div class="sofa-cards">${content}</div>` : ''}<div class="sofa-front"></div><div class="sofa-arm is-left"></div><div class="sofa-arm is-right"></div><span class="sofa-leg is-left"></span><span class="sofa-leg is-right"></span></div>`;
+}
+function loungeSet(sofas, decorations = '') {
+  return `<div class="lounge-set"><div class="lounge-wall"></div><div class="lounge-floor"></div><div class="lounge-alcove"></div><div class="lounge-curtain is-left"></div><div class="lounge-curtain is-right"></div><div class="lounge-mirror is-left"></div><div class="lounge-mirror is-right"></div><div class="led-board"><span class="led-letters">UNTUCKED!</span></div><div class="lounge-sofas">${sofas}</div>${decorations}</div>`;
+}
 function looks() {
   const current = currentTheme(),
     tilts = [-4, 2.5, -2, 3, -3];
-  const sofa = (items, color, offset) =>
-    `<div class="sofa" style="--sofa:${color}"><div class="sofa-back"><div class="sofa-cushions"><span class="sofa-cushion"></span><span class="sofa-cushion"></span><span class="sofa-cushion"></span></div></div><div class="sofa-seat"></div><div class="sofa-cards">${items
+  const sofa = (items, color, offset) => loungeSofa(items
       .map((t, index) => {
         const on = app.theme === t.id;
         return `<button type="button" data-theme-pick="${t.id}" class="lounge-pick ${on ? "is-on" : ""}" aria-pressed="${on}" aria-label="${t.season}: ${t.name}" style="z-index:${on ? 5 : 1}"><span class="lounge-pick-shadow"></span><div class="lounge-pick-lift" style="transform:${on ? "translateY(-42px) scale(1.08)" : `rotate(${tilts[(offset + index) % tilts.length]}deg)`}"><div class="lounge-pick-hover"><div class="${on ? "animate-floaty" : ""}"><div data-theme="${t.id}" class="lounge-card"><div class="panel lounge-card-art"><div class="panel-pattern fill"></div>${sun(`lounge-card-sun ${t.id === "sr1" ? "sr1-card-sun" : ""} ${on ? "animate-spin-slow" : ""}`)}<span class="lounge-card-season">${t.season}</span><p class="lounge-card-name font-display">${t.name}</p></div><div class="lounge-card-foot"><span class="lounge-card-status">${on ? `${icon("check", "icon-xs")} On` : "Apply"}</span></div></div></div></div></div></button>`;
       })
       .join(
         "",
-      )}</div><div class="sofa-front"></div><div class="sofa-arm is-left"></div><div class="sofa-arm is-right"></div><span class="sofa-leg is-left"></span><span class="sofa-leg is-right"></span></div>`;
-  return `<section id="look" class="lounge-section"><div class="lounge-head px-section"><div><h2 class="h-section font-display">Choose the <span class="text-outline stage-accent">vibe</span></h2></div><div class="lounge-blurb text-sm"><p class="mt-2 fw-semibold"><span class="stage-accent">${current.name}</span> <span class="lounge-blurb-tag">· ${current.tagline}</span></p></div></div><div class="lounge-set"><div class="lounge-wall"></div><div class="lounge-floor"></div><div class="lounge-alcove"></div><div class="lounge-curtain is-left"></div><div class="lounge-curtain is-right"></div><div class="lounge-mirror is-left"></div><div class="lounge-mirror is-right"></div><div class="led-board"><span class="led-letters">UNTUCKED!</span></div><div class="lounge-sofas">${sofa(themes.slice(0, 3), "#e8344e", 0)}${sofa(themes.slice(3), "#f2703a", 3)}</div></div></section>`;
+      ), color);
+  return `<section id="look" class="lounge-section"><div class="lounge-head px-section"><div><h2 class="h-section font-display">Choose the <span class="text-outline stage-accent">vibe</span></h2></div><div class="lounge-blurb text-sm"><p class="mt-2 fw-semibold"><span class="stage-accent">${current.name}</span> <span class="lounge-blurb-tag">&middot; ${current.tagline}</span></p></div></div>${loungeSet(sofa(themes.slice(0, 3), '#e8344e', 0) + sofa(themes.slice(3), '#f2703a', 3))}</section>`;
 }
 function card(q, index = 0) {
   const added = app.castIds.includes(q.id),
@@ -889,15 +907,34 @@ function library() {
   ];
   return `<section id="library" class="library"><div class="carpet"><div class="carpet-vignette"></div><div class="carpet-head"><h2 class="h-section font-display carpet-title">The <span class="text-outline text-c3">Queens</span></h2><p class="carpet-lede">Every queen from Drag Race Philippines Season 1 to 4 and Slaysian Royale Season 1. Add them one by one, or grab a whole season.</p></div></div><div class="library-controls"><div class="filter-scroller">${filters.map(([id, label]) => `<button data-filter="${id}" class="filter-chip ${app.filter === id ? "is-on" : ""}"><span class="panel filter-chip-badge">${id === "all" ? icon("grid", "icon-sm") : id === "custom" ? "C" : id === "sr1" ? "SR" : id}</span><span>${label}</span></button>`).join("")}</div><label class="search-pill">${icon("search")}<input id="search" value="${esc(app.query)}" placeholder="Search queens…" class="search-input"></label><div class="sort-toggle"><button data-sort="chrono" class="${app.sort === "chrono" ? "is-on" : ""}">Chronological</button><button data-sort="az" class="${app.sort === "az" ? "is-on" : ""}">A–Z</button></div></div><div id="queen-groups"></div></section>`;
 }
+function hasCurrentSeason() {
+  const season = read("drph-season", null);
+  return season?.version === 1 && season.status === "playing";
+}
+function startBarRaceControls(ready, current) {
+  return `<button type="button" data-start class="btn btn-c3 startbar-go d-inline-flex align-items-center justify-content-center" ${ready ? "" : "disabled"}>${icon("play")}<span>${current ? "Start new race" : "Start the race"}</span></button>${current ? `<button type="button" data-resume-season class="btn startbar-resume d-inline-flex align-items-center justify-content-center" aria-label="Resume current season">${icon("resume", "icon-sm")}<span>Resume</span></button>` : ""}`;
+}
+function bindStartBarRaceControls() {
+  document.querySelector("[data-start]")?.addEventListener("click", startRace);
+  document.querySelector("[data-resume-season]")?.addEventListener("click", (event) => window.DRSeasonUI.resume(event.currentTarget));
+}
+function syncStartBarSeason() {
+  const controls = document.querySelector(".startbar-race-controls");
+  const current = hasCurrentSeason();
+  if (!controls || controls.dataset.currentSeason === String(current)) return;
+  controls.dataset.currentSeason = String(current);
+  controls.innerHTML = startBarRaceControls(cast().length >= MIN, current);
+  bindStartBarRaceControls();
+}
 function startBar(items) {
   const ready = items.length >= MIN,
-    theme = currentTheme(),
+    current = hasCurrentSeason(),
     visibleAvatarCount = items.length >= 4 ? 3 : 5;
   return `<div class="startbar fixed-bottom pe-none"><div class="startbar-inner pe-auto"><div class="startbar-cast"><div class="avatar-stack">${items
     .slice(0, visibleAvatarCount)
     .map((q) => `<span class="avatar">${queenArt(q, undefined, true)}</span>`)
     .join("") || '<span class="avatar is-empty">?</span>'
-    }${items.length > visibleAvatarCount ? `<span class="avatar is-more">+${items.length - visibleAvatarCount}</span>` : ""}</div><div class="min-w-0 lh-sm"><p class="text-sm fw-bold">${items.length}/${MAX} queens</p><p class="startbar-sub text-truncate">${ready ? "Ready to WERK!" : `Add ${MIN - items.length} more to start`}</p></div></div><div class="startbar-progress from-md" aria-hidden="true"><div class="seg-track">${Array.from({ length: MAX }, (_, i) => `<span class="seg ${i < items.length ? "is-on" : ""}"></span>`).join("")}</div><div class="startbar-theme">${icon("palette", "icon startbar-theme-icon")}<div class="lh-sm"><p class="startbar-theme-season">${theme.season}</p><p class="text-xs fw-bold">${theme.name}</p></div></div></div><div class="startbar-actions ms-auto"><button type="button" data-options class="btn btn-glass startbar-edit d-inline-flex align-items-center justify-content-center">${icon("palette", "icon-sm")} Edit sim settings</button><button type="button" data-start class="btn btn-c3 startbar-go d-inline-flex align-items-center justify-content-center" ${ready ? "" : "disabled"}>${icon("play")} Start the race</button></div></div></div>`;
+    }${items.length > visibleAvatarCount ? `<span class="avatar is-more">+${items.length - visibleAvatarCount}</span>` : ""}</div><div class="min-w-0 lh-sm"><p class="text-sm fw-bold">${items.length}/${MAX} queens</p><p class="startbar-sub text-truncate">${ready ? "Ready to WERK!" : `Add ${MIN - items.length} more to start`}</p></div></div><div class="startbar-progress from-md" aria-hidden="true"><div class="seg-track">${Array.from({ length: MAX }, (_, i) => `<span class="seg ${i < items.length ? "is-on" : ""}"></span>`).join("")}</div></div><div class="startbar-actions ms-auto"><button type="button" data-options class="btn btn-glass startbar-edit d-inline-flex align-items-center justify-content-center">${icon("palette", "icon-sm")} Edit sim settings</button><div class="startbar-race-controls" data-current-season="${current}">${startBarRaceControls(ready, current)}</div></div></div></div>`;
 }
 function render() {
   const items = cast(),
@@ -1153,7 +1190,7 @@ function bind() {
       shelf.classList.add("is-active");
     }),
   );
-  document.querySelector("[data-start]")?.addEventListener("click", startRace);
+  bindStartBarRaceControls();
 
   const syncTopbar = () =>
     document
@@ -1222,7 +1259,6 @@ function openOptions(trigger) {
   overlay.querySelector("form").addEventListener("submit", (event) => { event.preventDefault(); const data = new FormData(event.currentTarget); optionGroups.forEach(([key]) => { app.options[key] = data.get(key); }); save(); close(); toast("Season settings saved!"); });
   overlay.querySelector(".options-close").focus();
 }
-// Fisher-Yates gives each queen an equal chance at every entrance position.
 function shuffleEntranceCast(queens) {
   const order = [...queens];
   for (let i = order.length - 1; i > 0; i--) {
@@ -1242,20 +1278,16 @@ function createEntranceSession(queens, options) {
     groupIndex: 0,
     queenIndex: 0,
     arrived: [],
+    autoAdvance: false,
     phase: "countdown",
   };
 }
-// Advance only after the current portrait has reached the cast row.
 function advanceEntranceSession(session) {
   if (session.phase === "entrances") {
     const group = session.groups[session.groupIndex];
     session.arrived.push(group[session.queenIndex].id);
     if (session.queenIndex + 1 < group.length) session.queenIndex++;
-    else session.phase = session.groupIndex + 1 < session.groups.length ? "between-premieres" : "lineup";
-  } else if (session.phase === "between-premieres") {
-    session.groupIndex++;
-    session.queenIndex = 0;
-    session.phase = "entrances";
+    else session.phase = "lineup";
   } else if (session.phase === "lineup") session.phase = "ready";
   return session.phase;
 }
@@ -1263,7 +1295,7 @@ function entranceSet() {
   const bulbs = (side, count) => `<span class="entrance-door-bulbs is-${side}">${'<i></i>'.repeat(count)}</span>`;
   const cosmetics = '<i class="cabinet-lipstick"></i><i class="cabinet-perfume"></i><i class="cabinet-compact"></i>';
   const cabinet = () => `<div class="entrance-wall-cabinet"><div class="entrance-cabinet-glass"><span class="entrance-cabinet-shelf">${cosmetics}</span><span class="entrance-cabinet-shelf">${cosmetics}</span></div><span class="entrance-cabinet-handles"></span></div>`;
-  const furniture = (side) => `<div class="entrance-furnishings is-${side}"><div class="entrance-wall-cabinets">${cabinet()}${cabinet()}</div><div class="entrance-worktable"><div class="entrance-table-props">${cosmetics}<i class="cabinet-palette"></i></div><div class="table-top"></div><div class="werk-rail"><span>WERK</span></div><div class="werk-legs"><span class="werk-leg is-left"></span><span class="werk-leg is-right"></span><span class="werk-bar"></span><span class="werk-shelf"></span></div><span class="werk-table-shadow"></span></div></div>`;
+  const furniture = (side) => `<div class="entrance-furnishings is-${side}"><div class="entrance-wall-cabinets">${cabinet()}${cabinet()}</div><div class="entrance-worktable"><div class="entrance-table-props">${cosmetics}<i class="cabinet-palette"></i></div><div class="table-top"></div><div class="werk-rail"></div><div class="werk-legs"><span class="werk-leg is-left"></span><span class="werk-leg is-right"></span><span class="werk-bar"></span><span class="werk-shelf"></span></div><span class="werk-table-shadow"></span></div></div>`;
   return `<div class="entrance-set" aria-hidden="true"><div class="entrance-wall"></div>${sun("entrance-door-sun")}<div class="entrance-pillar is-left"></div><div class="entrance-pillar is-right"></div><div class="entrance-door"><div class="entrance-door-inside"><span class="entrance-door-sign">WERK</span><span class="entrance-curtain is-left"></span><span class="entrance-curtain is-right"></span></div>${bulbs("top", 6)}${bulbs("left", 7)}${bulbs("right", 7)}</div><div class="entrance-floor"><span></span><i></i></div>${furniture("left")}${furniture("right")}</div>`;
 }
 function entrancePortrait(queen) {
@@ -1276,42 +1308,29 @@ function startRace() {
   const trigger = document.activeElement;
   const session = createEntranceSession(queens, app.options);
   app.race = session;
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const overlay = document.createElement("div");
   overlay.className = "entrance-overlay";
   overlay.innerHTML = `<section class="entrance-shell" role="dialog" aria-modal="true" aria-label="Meet the queens"><button type="button" class="entrance-close options-close" aria-label="Close entrances">${icon("x")}</button><div class="entrance-content"></div><p class="visually-hidden entrance-live" aria-live="polite" aria-atomic="true"></p></section>`;
   document.body.append(overlay);
   const content = overlay.querySelector(".entrance-content");
-  const live = overlay.querySelector(".entrance-live");
+  const shell = overlay.querySelector(".entrance-shell");
   const previousOverflow = document.body.style.overflow;
   document.body.style.overflow = "hidden";
-  const timers = new Set();
-  const animations = new Set();
-  let disposed = false;
-  let busy = true;
-  const later = (callback, delay) => {
-    const timer = setTimeout(() => { timers.delete(timer); if (!disposed) callback(); }, delay);
-    timers.add(timer);
-  };
-  const animate = (element, keyframes, duration = 650, delay = 0) => {
-    if (reducedMotion || !element.animate) return Promise.resolve();
-    const animation = element.animate(keyframes, { duration, delay, easing: "cubic-bezier(.2,.75,.25,1)", fill: "backwards" });
-    animations.add(animation);
-    return animation.finished.catch(() => {}).finally(() => animations.delete(animation));
-  };
   const close = () => {
-    disposed = true;
-    timers.forEach(clearTimeout);
-    animations.forEach((animation) => animation.cancel());
+    shell.disposeEntrance?.();
+    shell.disposeRelationships?.();
     document.removeEventListener("keydown", onKey);
     document.body.style.overflow = previousOverflow;
     overlay.remove();
+    document.documentElement.dataset.theme = app.theme;
+    render();
     if (trigger?.isConnected) trigger.focus({ preventScroll: true });
+    else document.querySelector("[data-start]")?.focus({ preventScroll: true });
   };
   const onKey = (event) => {
     if (event.key === "Escape") { close(); return; }
     if (event.key !== "Tab") return;
-    const controls = [...overlay.querySelectorAll('button:not(:disabled), [tabindex="0"]')].filter((el) => el.getClientRects().length);
+    const controls = [...overlay.querySelectorAll('button:not(:disabled), a[href], input:not(:disabled), iframe, [tabindex="0"]')].filter((el) => el.getClientRects().length);
     const first = controls[0], last = controls.at(-1);
     if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
@@ -1320,9 +1339,79 @@ function startRace() {
   overlay.querySelector(".entrance-close").addEventListener("click", close);
   overlay.querySelector(".entrance-close").focus({ preventScroll: true });
 
+  playEntranceSession(session, content, shell, () => {
+    app.race = window.DRSeasonUI.launch(session, content, shell, close);
+  });
+}
+function playEntranceSession(session, content, shell, onComplete, onProgress = () => {}) {
+  const overlay = shell.parentElement;
+  const live = shell.querySelector(".entrance-live") || { textContent: "" };
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const timers = new Set();
+  const animations = new Set();
+  let disposed = false;
+  let busy = true;
+  let autoTimer = null;
+  if (session.phase === "lineup" || session.phase === "ready") session.autoAdvance = false;
+  const dispose = () => {
+    disposed = true;
+    timers.forEach(clearTimeout);
+    timers.clear();
+    autoTimer = null;
+    animations.forEach(animation => animation.cancel());
+    overlay.querySelectorAll("[data-entrance-flight]").forEach(element => element.remove());
+  };
+  shell.disposeEntrance = dispose;
+  const later = (callback, delay) => {
+    const timer = setTimeout(() => { timers.delete(timer); if (!disposed) callback(); }, delay);
+    timers.add(timer);
+    return timer;
+  };
+  const animate = (element, keyframes, duration = 650, delay = 0) => {
+    if (reducedMotion || !element.animate) return Promise.resolve();
+    const animation = element.animate(keyframes, { duration, delay, easing: "cubic-bezier(.2,.75,.25,1)", fill: "backwards" });
+    animations.add(animation);
+    return animation.finished.catch(() => {}).finally(() => animations.delete(animation));
+  };
+  const cancelAuto = () => {
+    if (autoTimer === null) return;
+    clearTimeout(autoTimer);
+    timers.delete(autoTimer);
+    autoTimer = null;
+  };
+  const updateControls = () => {
+    const next = content.querySelector(".entrance-next");
+    const auto = content.querySelector(".entrance-auto");
+    if (next) next.disabled = busy || (Boolean(session.autoAdvance) && session.phase === "entrances");
+    if (auto) {
+      auto.hidden = session.phase === "lineup" || session.phase === "ready";
+      auto.setAttribute("aria-pressed", String(Boolean(session.autoAdvance)));
+      auto.setAttribute("aria-label", `${session.autoAdvance ? 'Turn off' : 'Turn on'} automatic queen entrances`);
+      auto.innerHTML = `${icon(session.autoAdvance ? "pause" : "play", "icon-sm")}<span>Auto: ${session.autoAdvance ? 'On' : 'Off'}</span>`;
+    }
+  };
+  const scheduleAuto = () => {
+    cancelAuto();
+    if (disposed || busy || !session.autoAdvance || session.phase !== "entrances") return;
+    const queen = session.groups[session.groupIndex][session.queenIndex];
+    const words = `${queen.name} ${queen.entline || ''}`.trim().split(/\s+/).length;
+    const delay = Math.min(3000, Math.max(4500, words * 260 + 1500));
+    autoTimer = later(() => {
+      autoTimer = null;
+      if (session.autoAdvance && session.phase === "entrances") nextQueen(true);
+    }, delay);
+  };
+  const toggleAuto = () => {
+    if (disposed || session.phase !== "entrances") return;
+    session.autoAdvance = !session.autoAdvance;
+    cancelAuto();
+    updateControls();
+    onProgress();
+    if (session.autoAdvance) scheduleAuto();
+  };
   const updateHeader = () => {
     const group = session.groups[session.groupIndex];
-    content.querySelector(".entrance-progress").textContent = `${session.arrived.length} / ${session.cast.length} queens in the room`;
+    content.querySelector(".entrance-progress").textContent = `${session.arrived.length} / ${session.groups[session.groupIndex].length} queens in the room`;
     content.querySelector(".entrance-premiere-label").textContent = session.groups.length > 1
       ? `Premiere ${session.groupIndex + 1} of 2 | ${session.options.premiere.includes("Non-Elimination") ? "Non-elimination" : "Split premiere"}`
       : session.options.premiere;
@@ -1330,6 +1419,7 @@ function startRace() {
   };
   const enterQueen = async () => {
     session.phase = "entrances";
+    onProgress();
     busy = true;
     const queen = session.groups[session.groupIndex][session.queenIndex];
     const feature = content.querySelector(".entrance-feature");
@@ -1341,37 +1431,44 @@ function startRace() {
     next.disabled = true;
     next.innerHTML = `${session.queenIndex === session.groups[session.groupIndex].length - 1 ? "Complete this premiere" : "Next queen"} ${icon("play", "icon-sm")}`;
     live.textContent = `${queen.name}. ${queen.entline || "Welcome to the Werk Room!"}`;
-    // The portrait starts inside the doorway, then comes forward into the spotlight.
     await Promise.all([
       animate(portrait, [{ opacity: 0, transform: "translateY(-90px) scale(.16)" }, { opacity: 1, transform: "translateY(-65px) scale(.35)", offset: .3 }, { opacity: 1, transform: "translateY(0) scale(1)" }], 1050),
       animate(feature.querySelector(".entrance-introduction"), [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "translateY(0)" }], 550, 650),
     ]);
     if (disposed) return;
     content.querySelector(".entrance-room").classList.remove("is-entering");
-    next.disabled = false;
     busy = false;
+    updateControls();
+    scheduleAuto();
   };
   const finishEntrances = async () => {
+    const autoWasFocused = document.activeElement === content.querySelector(".entrance-auto");
+    cancelAuto();
+    session.autoAdvance = false;
     session.phase = "lineup";
+    busy = true;
+    updateControls();
+    onProgress();
     const portraits = [...content.querySelectorAll(".entrance-roster .entrance-portrait")];
     const before = portraits.map((portrait) => portrait.getBoundingClientRect());
     const room = content.querySelector(".entrance-room");
     room.classList.add("is-complete");
-    content.querySelector(".entrance-heading h2").textContent = "The queens are here!";
-    content.querySelector(".entrance-premiere-label").textContent = "The cast is complete. Let the season begin.";
+    content.querySelector(".entrance-heading h2").textContent = session.groups.length > 1 ? `Premiere ${session.groupIndex + 1} is here!` : "The queens are here!";
+    content.querySelector(".entrance-premiere-label").textContent = session.groups.length > 1 ? `This group is ready for Episode ${session.groupIndex + 1}.` : "The cast is complete. Let the season begin.";
     content.querySelector(".entrance-roster-label").textContent = "YOUR CAST";
     content.querySelector(".entrance-scene").hidden = true;
     const next = content.querySelector(".entrance-next");
-    next.innerHTML = `Let's start the race! ${icon("play", "icon-sm")}`;
+    next.innerHTML = `${session.groups.length > 1 ? `Begin Episode ${session.groupIndex + 1}` : "Let's start the race!"} ${icon("play", "icon-sm")}`;
     next.disabled = true;
-    live.textContent = `All ${session.cast.length} queens have entered. Let's start the race!`;
+    live.textContent = `All ${session.groups[session.groupIndex].length} queens have entered. Let's start the race!`;
     await Promise.all(portraits.map((portrait, index) => {
       const after = portrait.getBoundingClientRect();
       return animate(portrait, [{ transform: `translate(${before[index].left - after.left}px, ${before[index].top - after.top}px) scale(${before[index].width / after.width})` }, { transform: "translate(0, 0) scale(1)" }], 850, index * 30);
     }));
     if (disposed) return;
-    next.disabled = false;
     busy = false;
+    updateControls();
+    if (autoWasFocused) next.focus({ preventScroll: true });
     animate(next, [{ opacity: 0, transform: "translateY(15px)" }, { opacity: 1, transform: "translateY(0)" }], 450);
   };
   const featurePlaceholder = (portrait) => {
@@ -1381,21 +1478,16 @@ function startRace() {
     placeholder.style.height = `${portrait.offsetHeight}px`;
     portrait.before(placeholder);
   };
-  const nextQueen = async () => {
-    if (busy || disposed) return;
+  const nextQueen = async (automatic = false) => {
+    if (busy || disposed || (session.autoAdvance && !automatic)) return;
+    cancelAuto();
     if (session.phase === "lineup") { showSeasonReady(); return; }
-    if (session.phase === "between-premieres") {
-      advanceEntranceSession(session);
-      await enterQueen();
-      return;
-    }
     busy = true;
     const next = content.querySelector(".entrance-next");
     next.disabled = true;
     const queen = session.groups[session.groupIndex][session.queenIndex];
     const portrait = content.querySelector(".entrance-feature .entrance-portrait");
     const before = portrait.getBoundingClientRect();
-    // Preserve the spotlight's space while its portrait moves into the roster.
     featurePlaceholder(portrait);
     const item = document.createElement("li");
     item.className = "entrance-roster-queen";
@@ -1405,13 +1497,13 @@ function startRace() {
     roster.append(item);
     roster.scrollTop = roster.scrollHeight;
     const after = portrait.getBoundingClientRect();
-    // Animate a floating copy so the scrollable cast row cannot clip the flight.
     const flyingPortrait = portrait.cloneNode(true);
     Object.assign(flyingPortrait.style, {
       position: "fixed", left: `${before.left}px`, top: `${before.top}px`,
       width: `${before.width}px`, height: `${before.height}px`,
       transformOrigin: "top left", pointerEvents: "none", zIndex: "20",
     });
+    flyingPortrait.dataset.entranceFlight = "";
     overlay.append(flyingPortrait);
     portrait.style.visibility = "hidden";
     content.querySelector(".entrance-introduction").style.visibility = "hidden";
@@ -1420,28 +1512,40 @@ function startRace() {
     if (disposed) return;
     portrait.style.visibility = "";
     advanceEntranceSession(session);
-    content.querySelector(".entrance-progress").textContent = `${session.arrived.length} / ${session.cast.length} queens in the room`;
+    onProgress();
+    content.querySelector(".entrance-progress").textContent = `${session.arrived.length} / ${session.groups[session.groupIndex].length} queens in the room`;
     if (session.phase === "entrances") {
       await enterQueen();
-    } else if (session.phase === "between-premieres") {
-      content.querySelector(".entrance-feature").innerHTML = `<div class="entrance-group-complete"><span class="entrance-kicker">ONE ROOM. TWO GRAND ENTRANCES.</span><h3>Premiere 1 is here.</h3><p>There's another group of queens waiting behind the curtain.</p></div>`;
-      next.innerHTML = `Meet Premiere 2 ${icon("plus", "icon-sm")}`;
-      next.disabled = false;
-      busy = false;
     } else await finishEntrances();
   };
   const showSeasonReady = () => {
     advanceEntranceSession(session);
-    content.innerHTML = `<div class="entrance-ready">${sun("entrance-ready-sun")}<span class="entrance-kicker">THE STAGE IS SET</span><h2 class="font-display">Let's start the race!</h2><p>${session.cast.length} queens. One crown. Your season is ready.</p><div class="entrance-rules">${optionGroups.map(([key, label]) => `<div><span>${label}</span><strong>${esc(session.options[key])}</strong></div>`).join("")}</div><p class="entrance-ready-note">Entrances complete. The first challenge is the next stage of the simulator.</p><button type="button" class="entrance-next entrance-return">Back to season setup ${icon("check", "icon-sm")}</button></div>`;
-    content.querySelector(".entrance-return").addEventListener("click", close);
-    window.dispatchEvent(new CustomEvent("drph:entrances-complete", { detail: { cast: [...session.cast], options: { ...session.options }, groups: session.groups.map((group) => [...group]) } }));
+    dispose();
+    onComplete(session);
   };
   const showRoom = () => {
-    content.innerHTML = `<div class="entrance-room">${entranceSet()}<header class="entrance-heading"><div><span class="entrance-kicker entrance-premiere-label"></span><h2>Welcome to the Werk Room</h2></div><span class="entrance-counter"></span></header><div class="entrance-scene"><article class="entrance-feature"></article></div><section class="entrance-deck" aria-label="Queens in the Werk Room"><div class="entrance-deck-heading"><span class="entrance-roster-label">IN THE WERK ROOM</span><span class="entrance-progress"></span></div><ol class="entrance-roster"></ol></section><footer class="entrance-controls"><button type="button" class="entrance-next" disabled>Next queen ${icon("plus", "icon-sm")}</button></footer></div>`;
-    content.querySelector(".entrance-next").addEventListener("click", nextQueen);
-    enterQueen();
+    content.innerHTML = `<div class="entrance-room">${entranceSet()}<header class="entrance-heading"><div><span class="entrance-kicker entrance-premiere-label"></span><h2>Welcome to the Werk Room</h2></div><span class="entrance-counter"></span></header><div class="entrance-scene"><article class="entrance-feature"></article></div><section class="entrance-deck" aria-label="Queens in the Werk Room"><div class="entrance-deck-heading"><span class="entrance-roster-label">IN THE WERK ROOM</span><span class="entrance-progress"></span></div><ol class="entrance-roster"></ol></section><footer class="entrance-controls d-flex justify-content-center gap-2"><button type="button" class="entrance-next" disabled>Next queen ${icon("plus", "icon-sm")}</button><button type="button" class="entrance-auto" aria-pressed="false">${icon("play", "icon-sm")}<span>Auto: Off</span></button></footer></div>`;
+    content.querySelector(".entrance-next").addEventListener("click", () => nextQueen());
+    content.querySelector(".entrance-auto").addEventListener("click", toggleAuto);
+    const roster = content.querySelector(".entrance-roster");
+    session.arrived.forEach(id => {
+      const queen = session.cast.find(queen => queen.id === id);
+      if (!queen) return;
+      const item = document.createElement("li");
+      item.className = "entrance-roster-queen";
+      item.innerHTML = `${entrancePortrait(queen)}<span class="entrance-roster-name">${esc(queen.name)}</span>`;
+      roster.append(item);
+    });
+    updateHeader();
+    updateControls();
+    if (session.phase === "lineup") finishEntrances();
+    else enterQueen();
   };
-  content.innerHTML = `<div class="entrance-countdown"><div class="entrance-rays" aria-hidden="true"></div>${sun("entrance-countdown-sun")}<span class="entrance-count-number">3</span><p class="entrance-count-label">THE WERK ROOM IS WAITING</p></div>`;
+  if (session.phase !== "countdown") {
+    showRoom();
+    return dispose;
+  }
+  content.innerHTML = `<div class="entrance-countdown"><div class="entrance-rays" aria-hidden="true"></div>${sun("entrance-countdown-sun")}<span class="entrance-count-number">3</span></div>`;
   const number = content.querySelector(".entrance-count-number");
   const count = (value) => {
     number.textContent = value;
@@ -1452,12 +1556,13 @@ function startRace() {
   later(() => count(2), 900);
   later(() => count(1), 1800);
   later(() => {
-    number.textContent = "Let's Meet The Queens!";
+    number.textContent = "Let's Meet the Queens!";
     content.querySelector(".entrance-countdown").classList.add("is-announcing");
-    live.textContent = "Let's Meet The Queens!";
+    live.textContent = "Let's Meet the Queens!";
     animate(number, [{ opacity: 0, transform: "translateY(20px)" }, { opacity: 1, transform: "translateY(0)" }], 500);
   }, 2700);
   later(showRoom, 4300);
+  return dispose;
 }
 
 render();
