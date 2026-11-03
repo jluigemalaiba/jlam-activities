@@ -30,9 +30,9 @@
     }
   }
 
-  async function requestJson(url) {
+  async function requestJson(url, timeout = REQUEST_TIMEOUT_MS) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    const timer = setTimeout(() => controller.abort(), timeout);
 
     try {
       const response = await fetch(url, {
@@ -92,6 +92,21 @@
     });
   }
 
+  function titleCase(value) {
+    const minorWords = new Set(['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'from', 'in', 'into', 'nor', 'of', 'on', 'or', 'over', 'the', 'to', 'with']);
+    const words = cleanText(value).split(' ');
+    return words.map((word, index) => {
+      if (/^(?:[A-Z]{2,}|[IVXLCDM]+)$/.test(word)) return word;
+      const lower = word.toLowerCase();
+      if (index > 0 && index < words.length - 1 && minorWords.has(lower)) return lower;
+      return lower.replace(/(^|[-/])([\p{L}])/gu, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`);
+    }).join(' ');
+  }
+
+  function titleCaseList(values) {
+    return values.map(titleCase);
+  }
+
   function cleanUrl(value) {
     return typeof value === 'string' && /^https?:\/\//i.test(value.trim()) ? value.trim() : '';
   }
@@ -109,20 +124,51 @@
     return nations.length === 1 ? nations[0] : 'neutral';
   }
 
+  async function addMissingPortraits(characters) {
+    const missing = characters.filter((character) => !character.photoUrl);
+    if (!missing.length) return characters;
+
+    try {
+      const params = new URLSearchParams({
+        action: 'query',
+        format: 'json',
+        formatversion: '2',
+        origin: '*',
+        redirects: '1',
+        prop: 'pageimages',
+        piprop: 'thumbnail',
+        pithumbsize: '600',
+        titles: [...new Set(missing.map((character) => character.sourceName))].join('|'),
+      });
+      const data = await requestJson(`https://avatar.fandom.com/api.php?${params}`, 5000);
+      const portraits = new Map(
+        (data?.query?.pages || [])
+          .filter((page) => page.thumbnail?.source)
+          .map((page) => [normalizeName(page.title), cleanUrl(page.thumbnail.source)]),
+      );
+      return characters.map((character) => character.photoUrl
+        ? character
+        : { ...character, photoUrl: portraits.get(normalizeName(character.sourceName)) || '' });
+    } catch {
+      return characters;
+    }
+  }
+
   function normalizeCharacter(raw) {
     const affiliation = cleanText(raw.affiliation);
     const nations = getNationKeys(affiliation);
     return {
       id: String(raw._id),
-      name: cleanText(raw.name) || 'Unnamed character',
+      sourceName: cleanText(raw.name),
+      name: titleCase(raw.name) || 'Unnamed Character',
       photoUrl: cleanUrl(raw.photoUrl),
       affiliation,
-      allies: cleanList(raw.allies),
-      enemies: cleanList(raw.enemies),
-      affiliations: splitEntries(affiliation, 'groups'),
-      professions: splitEntries(cleanText(raw.profession)),
-      weapons: splitEntries(cleanText(raw.weapon)),
-      positions: splitEntries(cleanText(raw.position)),
+      allies: titleCaseList(cleanList(raw.allies)),
+      enemies: titleCaseList(cleanList(raw.enemies)),
+      affiliations: titleCaseList(splitEntries(affiliation, 'groups')),
+      professions: titleCaseList(splitEntries(cleanText(raw.profession))),
+      weapons: titleCaseList(splitEntries(cleanText(raw.weapon))),
+      positions: titleCaseList(splitEntries(cleanText(raw.position))),
       nations,
       teamAvatar: isTeamAvatar(affiliation),
       theme: getTheme(nations),
@@ -137,7 +183,7 @@
 
     const cached = force ? null : readCache(LIST_CACHE_KEY);
     if (Array.isArray(cached) && cached.length) {
-      listPromise = Promise.resolve(cached.map(normalizeCharacter));
+      listPromise = addMissingPortraits(cached.map(normalizeCharacter));
       return listPromise;
     }
 
@@ -146,7 +192,7 @@
         if (!Array.isArray(data)) throw new ApiError('The archive returned an unexpected response.');
         const records = data.filter((item) => item && item._id);
         writeCache(LIST_CACHE_KEY, records);
-        return records.map(normalizeCharacter);
+        return addMissingPortraits(records.map(normalizeCharacter));
       })
       .catch((error) => {
         listPromise = null;
@@ -166,7 +212,7 @@
     const cacheKey = DETAIL_CACHE_PREFIX + id;
     const cached = force ? null : readCache(cacheKey);
     if (cached && cached._id) {
-      const promise = Promise.resolve(normalizeCharacter(cached));
+      const promise = addMissingPortraits([normalizeCharacter(cached)]).then(([character]) => character);
       detailPromises.set(id, promise);
       return promise;
     }
@@ -177,7 +223,7 @@
           throw new ApiError('This character record does not exist in the archive.', { notFound: true });
         }
         writeCache(cacheKey, data);
-        return normalizeCharacter(data);
+        return addMissingPortraits([normalizeCharacter(data)]).then(([character]) => character);
       })
       .catch((error) => {
         detailPromises.delete(id);

@@ -34,7 +34,6 @@
     resultSummary: document.getElementById('resultSummary'),
     pageSummary: document.getElementById('pageSummary'),
     nationCards: document.getElementById('nationCards'),
-    statCharacters: document.getElementById('statCharacters'),
     collection: document.getElementById('characters'),
   };
 
@@ -223,7 +222,6 @@
         <div class="col-12 col-sm-6 col-lg-3">
           <div class="nation-banner">
             <article class="nation-card nation-card-${nation.key}">
-              <span class="banner-ripple" aria-hidden="true"></span>
               ${emblemHtml(nation.key, 'emblem-lg')}
               <h3 class="nation-card-title">${escapeHtml(nation.label)}</h3>
               <p class="nation-card-text">${escapeHtml(NATION_LORE[nation.key])}</p>
@@ -331,7 +329,6 @@
 
     try {
       state.characters = await fetchAllCharacters({ force });
-      el.statCharacters.textContent = state.characters.length;
       renderNationCards();
       renderList();
     } catch (error) {

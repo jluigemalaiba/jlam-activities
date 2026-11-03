@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ATLAnac — The Avatar Character Archive</title>
+    <title>ATLAnac</title>
+    <link rel="icon" type="image/png" href="./assets/icons/atlarel.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -25,7 +26,7 @@
         <div class="container">
           <a class="navbar-brand wordmark d-flex align-items-center gap-2" href="#home">
             <span class="emblem-quad emblem-sm" aria-hidden="true"><span class="emblem emblem-air"></span><span class="emblem emblem-earth"></span><span class="emblem emblem-fire"></span><span class="emblem emblem-water"></span></span>
-            <span>ATLA<span class="wordmark-accent">nac</span></span>
+            <span class="mx-2">ATLA<span class="wordmark-accent">nac</span></span>
           </a>
           <button
             class="navbar-toggler"
@@ -57,7 +58,6 @@
           <div class="row align-items-center g-5">
             <div class="col-lg-6 text-center text-lg-start hero-copy">
               <p class="eyebrow mb-3">
-                <span class="eyebrow-rule" aria-hidden="true"></span>
                 The Archive of the Four Nations
               </p>
               <h1 class="hero-title">ATLA<span class="wordmark-accent">nac</span></h1>
@@ -71,40 +71,26 @@
                 </a>
                 <a href="#nations" class="btn btn-ghost btn-lg">Browse the Nations</a>
               </div>
-              <div class="hero-stats d-flex flex-wrap gap-4 justify-content-center justify-content-lg-start mt-5">
-                <div>
-                  <span class="hero-stat-value" id="statCharacters">&mdash;</span>
-                  <span class="hero-stat-label">Recorded characters</span>
-                </div>
-                <div>
-                  <span class="hero-stat-value">4</span>
-                  <span class="hero-stat-label">Nations</span>
-                </div>
-              </div>
             </div>
             <div class="col-lg-6">
               <div class="hero-scrolls row g-2 g-sm-3" aria-label="Nation scrolls">
                 <div class="col-3">
                   <a href="#characters" class="hero-scroll hero-scroll-water" data-filter-link="water">
-                    <span class="banner-ripple" aria-hidden="true"></span>
                     <span class="hero-scroll-title">Water</span>
                   </a>
                 </div>
                 <div class="col-3 pt-4 pt-sm-5">
                   <a href="#characters" class="hero-scroll hero-scroll-earth" data-filter-link="earth">
-                    <span class="banner-ripple" aria-hidden="true"></span>
                     <span class="hero-scroll-title">Earth</span>
                   </a>
                 </div>
                 <div class="col-3">
                   <a href="#characters" class="hero-scroll hero-scroll-fire" data-filter-link="fire">
-                    <span class="banner-ripple" aria-hidden="true"></span>
                     <span class="hero-scroll-title">Fire</span>
                   </a>
                 </div>
                 <div class="col-3 pt-4 pt-sm-5">
                   <a href="#characters" class="hero-scroll hero-scroll-air" data-filter-link="air">
-                    <span class="banner-ripple" aria-hidden="true"></span>
                     <span class="hero-scroll-title">Air</span>
                   </a>
                 </div>
@@ -115,6 +101,7 @@
       </section>
 
       <section id="characters" class="collection-section">
+        <span class="emblem emblem-water emblem-ghost section-mark section-mark-water" aria-hidden="true"></span>
         <div class="container">
           <header class="section-heading text-center">
             <p class="eyebrow justify-content-center mb-2">Chapter I</p>
@@ -178,6 +165,7 @@
       </section>
 
       <section id="nations" class="nations-section">
+        <span class="emblem emblem-earth emblem-ghost section-mark section-mark-earth" aria-hidden="true"></span>
         <div class="container">
           <header class="section-heading text-center">
             <p class="eyebrow justify-content-center mb-2">Chapter II</p>
