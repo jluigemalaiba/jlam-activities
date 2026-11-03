@@ -5,6 +5,8 @@
     season: ['Regular', 'Lipsync For Your Legacy', 'All Winners'],
     returning: ['None', 'Choose who returns', 'LaLaPaRuZa', 'Remaining Queens Vote'],
     finale: ['Top 4', 'Top 3'],
+    doubleShantay: ['None', 'Double Shantay'],
+    doubleSashay: ['None', 'Double Sashay'],
   };
   const PPE = { WIN: 5, TOP2: 4.5, HIGH: 4, SAFE: 3, LOW: 2, BTM2: 1, ELIM: 0 };
   const RELATIONSHIPS = [
@@ -25,23 +27,45 @@
     ['Born Naked', 'RuPaul feat. Clairy Browne', '5Y0TwK9DiaM4cYl0SeprDy', 'PH S1 E7'],
   ].map(([title, artist, spotify, source]) => ({ title, artist, spotify, source }));
   const CHALLENGES = [
-    { id: 'girlgroup', label: 'Girl Groups', min: 8, max: 12, skill: 'dance', core: true, titles: ['Bida Ka, Beks!', 'Barangay Pop Royalty', 'Main Character Energy'], brief: 'Two groups. Four to six queens per group. Write an original verse, build choreography, and perform a pop anthem.' },
-    { id: 'snatch', label: 'Snatch Game', min: 8, skill: 'comedy', core: true, titles: ['Snatch Game: Chika Edition'], brief: 'Bring a celebrity impersonation to life with quick answers, sharp timing, and a character that stays funny.' },
-    { id: 'rusical', label: 'Rusical', min: 8, skill: 'acting', core: true, titles: ['Divas of the Last Jeep: The Rusical', 'Reyna ng Barangay: The Rusical', 'Bituin sa Terminal: The Rusical'], brief: 'Sing, dance, and act through an original camp musical about a small-town diva chasing the spotlight.' },
-    { id: 'design', label: 'Design / Ball', min: 3, skill: 'fashion', core: true, titles: ['The Sari-Sari Store Ball', 'Recycled Royalty', 'Fiesta After Dark Ball'], brief: 'Present two styled looks and construct a final outfit from unexpected materials. Construction, silhouette, and storytelling count.' },
-    { id: 'roast', label: 'Roast', min: 3, skill: 'comedy', titles: ['The Roast of the Empty Throne', 'Shade sa Barangay Hall'], brief: 'Deliver an original roast of the imaginary Barangay Glam Council. Keep the jokes sharp and the delivery warmer than the lights.' },
+    { id: 'girlgroup', label: 'Girl Groups', min: 8, max: 12, skill: 'dance', core: true, titles: ['Bida Ka, Beks', 'A Round of Haplos', 'Alarma!'], brief: 'Two groups of queens bring a Filipino pop concept to life through choreography, stage presence, and teamwork.' },
+    { id: 'snatch', label: 'Snatch Game', min: 8, skill: 'comedy', core: true, titles: ['Snatch Game, Enebe?'], brief: 'Bring a celebrity impersonation to life with quick answers, sharp timing, and a character that stays funny.' },
+    { id: 'rusical', label: 'Rusical', min: 8, skill: 'acting', core: true, titles: ['Dragna', 'Bongga Ka Gay!', 'Ang Unang Zsa-Zsa: The Rusical'], brief: 'Sing, dance, and act through an original camp musical about a small-town diva chasing the spotlight.' },
+    { id: 'design', label: 'Design / Ball', min: 3, skill: 'fashion', core: true, titles: ['The Sari-Sari Store Ball', 'Recycled Royalty', 'Happy Fiesta!'], brief: 'Present two styled looks and construct a final outfit from unexpected materials. Construction, silhouette, and storytelling count.' },
+    { id: 'roast', label: 'Roast', min: 3, skill: 'comedy', titles: ['The Roast of Mamwa Pao', 'Porkchop Roast', 'Queen of the Roast'], brief: 'Deliver an original roast of the imaginary Barangay Glam Council. Keep the jokes sharp and the delivery warmer than the lights.' },
     { id: 'acting', label: 'Acting', min: 3, skill: 'acting', titles: ['Kambal sa Dressing Room', 'Ang Nawawalang Korona', 'Bituin, Bawal ang Flat Shoes'], brief: 'Star in a camp teleserye parody. Commit to the character, land the punchlines, and share the scene.' },
     { id: 'advert', label: 'Branding / Commercial', min: 3, skill: 'comedy', titles: ['Budol Beauty Network', 'Sell Me That Fantasy'], brief: 'Create a ridiculous beauty product and sell it in an original commercial with a clear brand and a memorable joke.' },
     { id: 'makeover', label: 'Makeover', min: 3, skill: 'fashion', titles: ['Chosen Family Resemblance', 'Drag Sister, Drag Daughter'], brief: 'Transform a fictional guest into a member of your drag family. Show resemblance without losing either personality.' },
     { id: 'dance', label: 'Choreography', min: 3, skill: 'dance', titles: ['Sayaw sa Kanto', 'Afterparty Aerobics'], brief: 'Learn a fast routine and make every count look effortless. Musicality matters as much as precision.' },
-    { id: 'talent', label: 'Talent Show', min: 2, skill: 'performance', titles: ['Bida sa Unang Gabi', 'One Minute, One Queen'], brief: 'Introduce your drag through a one-minute signature talent performance.' },
+    { id: 'talent', label: 'Talent Show', min: 2, skill: 'performance', titles: ['Talent Show Extrabagansya'], brief: 'Introduce your drag through a one-minute signature talent performance.' },
     { id: 'improv', label: 'Improv / Hosting', min: 3, skill: 'comedy', titles: ['Chika Hotline Live', 'Good Morning, Mga Beks!'], brief: 'Host an unpredictable live segment and turn every surprise into a punchline.' },
-    { id: 'lalaparuza', label: 'LaLaPaRuZa', min: 8, skill: 'lipsync', titles: ['LaLaPaRuZa: Last Queen Standing'], brief: 'A survival lip-sync tournament. Match winners become safe; losing queens continue until the final elimination lip sync.' },
+    { id: 'lalaparuza', label: 'LaLaPaRuZa', min: 8, skill: 'lipsync', titles: ['LaLaPaRuZa: Todo Na Twooh!'], brief: 'A survival lip-sync tournament. Match winners become safe; losing queens continue until the final elimination lip sync.' },
   ];
-  const CELEBRITIES = ['Regine Velasquez', 'Kris Aquino', 'Vice Ganda', 'Nora Aunor', 'Vilma Santos', 'Jessica Soho', 'Melai Cantiveros', 'Ruffa Gutierrez', 'Maricel Soriano', 'Dolly Parton', 'Cher', 'Lady Gaga', 'Sharon Cuneta', 'Sarah Geronimo', 'Marian Rivera', 'Heart Evangelista', 'Lea Salonga', 'Anne Curtis', 'Ai-Ai delas Alas', 'Jolina Magdangal'];
-  const RUNWAYS = ['Pearl of the Party', 'Terno After Midnight', 'Metallics sa Maynila', 'A Thousand Flowers', 'Red Carpet, Red Alert', 'Ocean of Opulence', 'Jeepney Jewel Box', 'Black and White and Read All Over', 'Golden Hour Goddess', 'Plumes, Please!', 'Ribbons of Rebellion', 'Neon sa Kanto'];
+  const CELEBRITIES = ['Regine Velasquez', 'Kris Aquino', 'Vice Ganda', 'Nora Aunor', 'Vilma Santos', 'Jessica Soho', 'Melai Cantiveros', 'Ruffa Gutierrez', 'Maricel Soriano', 'Dolly Parton', 'Cher', 'Lady Gaga', 'Sharon Cuneta', 'Sarah Geronimo', 'Marian Rivera', 'Heart Evangelista', 'Lea Salonga', 'Anne Curtis', 'Ai-Ai delas Alas', 'Jolina Magdangal', 'KZ Tandingan', 'Moira Dela Torre', 'Regine Tolentino', 'Aga Muhlach', 'Piolo Pascual', 'John Lloyd Cruz', 'Coco Martin', 'Dingdong Dantes', 'Sam Milby', 'James Reid', 'Daniel Padilla', 'Enchong Dee', 'Jericho Rosales', 'Alden Richards', 'Billy Crawford', 'Gary Valenciano', 'Ogie Alcasid', 'Martin Nievera', 'Jaya', 'Zsa Zsa Padilla', 'Kyla', 'Jona', 'Yeng Constantino', 'Moira Dela Torre', 'Regine Velasquez-Alcasid', 'Sarah Geronimo-Guidicelli', 'Lea Salonga', 'Anne Curtis-Smith', 'Ai-Ai delas Alas', 'Jolina Magdangal-Escueta', 'KZ Tandingan', 'Moira Dela Torre', 'Regine Tolentino'];
+  const RUNWAYS = [
+    'Terno After Midnight', 'Pearlas ng Pilipinas', 'Jeepney Jewel Box', 'Neon sa Kanto',
+    'Flores de Mayo Fantasy', 'Barong, But Make It Drag', 'Filipiniana of the Future', 'Sampaguita Eleganza',
+    'Banig Couture', 'Pamaypay Extravaganza', 'Parol After Dark', 'Pista sa Barangay',
+    'Sarimanok in Flight', 'Maria Clara Reimagined', 'OPM Music Video Vixen', 'Reyna ng Santacruzan',
+    'Manila Disco Nights', 'Bahay Kubo Botanicals', 'Halo-Halo Haute Couture', 'Alamat: Mythical Majesty',
+    'LuzViMinda Island Goddess', 'Ukay-Ukay to Runway', 'Ginto ng Kapuluan', 'Perlas ng Palengke',
+  ];
+  function scheduleRunway(s, design) {
+    const used = new Set(s.episodes.map(ep => ep.runwayTheme || ep.runway));
+    let available = RUNWAYS.filter(theme => !used.has(theme));
+    if (!available.length) available = RUNWAYS.flatMap((first, i) => RUNWAYS.slice(i + 1).map(second => `${first} meets ${second}`)).filter(theme => !used.has(theme));
+    const theme = pick(s, available);
+    return { runwayTheme: theme, runway: design ? `${theme} Ball: Hometown Muse / Fiesta After Dark / Made in the Werk Room` : theme };
+  }
   const ROLES = ['The Terminal Diva', 'The Mayor of Glam', 'The Lost Heiress', 'The Karaoke Queen', 'The Fierce Conductor', 'The Beauty Queen Next Door', 'The Tindera of Dreams', 'The Chismosa Narrator', 'The Disco Auntie', 'The Pageant Coach', 'The Secret Superstar', 'The Midnight Dancer', 'The Glam Inspector', 'The Heartbroken Host', 'The Festival Muse', 'The Rookie Diva', 'The Reunion Singer', 'The Royal Stylist', 'The Hometown Hero', 'The Last Passenger'];
-  const VERSES = ['From the back of the jeep to the front of the show, dala ko ang sparkle wherever I go.', 'Walang shortcut sa crown, kaya watch me climb. Barangay girl, international shine.', 'Bawat tahi may kuwento, bawat step may tapang. My name on the marquee, yan ang aking laban.', 'Pag bukas ng curtain, ako ang eksena. Hindi extra sa story, ako ang reyna.', 'Dala ang pangarap at sapatos na mataas, the beat drops now and I bring the class.', 'Kanto to the spotlight, I made my own lane. Remember this face when you call out my name.'];
+  const GIRL_GROUP_TEAMS = {
+    'Bida Ka, Beks': ['La Bida Loca', 'Bida-bits'],
+    'A Round of Haplos': ['Haplashhh', 'Pa-kwak'],
+    'Alarma!': ['Girlaloos', 'Wembewem'],
+  };
+  function girlGroupTeams(title) {
+    const key = Object.keys(GIRL_GROUP_TEAMS).find(key => key.toLowerCase().replace(/[^a-z]/g, '') === title.toLowerCase().replace(/[^a-z]/g, ''));
+    return GIRL_GROUP_TEAMS[key] || GIRL_GROUP_TEAMS['Bida Ka, Beks'];
+  }
   const READS = [
     "Your runway had a plot twist: the outfit was still in rehearsal.",
     "I admire your confidence. It survives every piece of evidence.",
@@ -130,7 +154,7 @@
     s.groups = normalized.premiere.startsWith('Double') ? [s.active.slice(0, Math.ceil(s.active.length / 2)), s.active.slice(Math.ceil(s.active.length / 2))] : [s.active.slice()];
     for (const q of s.queens) { q.skills = Object.fromEntries(['fashion', 'comedy', 'acting', 'dance', 'performance', 'lipsync'].map(skill => [skill, 45 + random(s) * 40])); s.stars[q.id] = 0; }
     randomizeRelationships(s);
-    s.twists = { shantay: random(s) < .4, sashay: random(s) < .3, usedShantay: false, usedSashay: false };
+    s.twists = { shantay: normalized.doubleShantay === 'Double Shantay', sashay: normalized.doubleSashay === 'Double Sashay', usedShantay: false, usedSashay: false };
     s.allWinnersRounds = Math.max(8, Math.min(12, cast.length + 2));
     return s;
   }
@@ -142,43 +166,259 @@
     ep.lipSyncs.push(match);
     return match;
   }
+  const UNTUCKED_LINES = {
+  "showmance": [
+    [
+      "I saved you the seat next to me. Tonight feels less frightening with you here.",
+      "Keep holding my hand, but remind me to keep my eyes on the crown."
+    ],
+    [
+      "You looked at me during the runway and nearly made me forget my pose.",
+      "Then I owe you a distraction-free rehearsal tomorrow."
+    ],
+    [
+      "If we end up competing against each other, can we leave the feelings backstage?",
+      "I can care about you and still give you the performance of my life."
+    ],
+    [
+      "The room keeps asking about our chemistry. I would rather hear how you are feeling.",
+      "Nervous, honestly. Having you here helps, but I still have to earn my place."
+    ],
+    [
+      "I came here for a crown. I did not expect you to make the quiet moments matter.",
+      "Let us enjoy the spark without letting it decide our competition."
+    ]
+  ],
+  "friend": [
+    [
+      "That critique was hard to hear. Do you want advice or just someone to listen?",
+      "Just listen for a minute. Then we can work out how I come back stronger."
+    ],
+    [
+      "You do not have to pretend you are fine with me.",
+      "Thank you. I can take a critique; I just needed a friend afterward."
+    ],
+    [
+      "If your confidence slips tonight, borrow some of mine.",
+      "Only if you promise to ask for it back when you need it."
+    ],
+    [
+      "We can want the same crown without making each other feel small.",
+      "Exactly. Your success does not cancel out my talent."
+    ],
+    [
+      "I will help you rehearse, but I am still trying to beat you next week.",
+      "That is why I trust you. Support me, challenge me, and keep it honest."
+    ]
+  ],
+  "ally": [
+    [
+      "Let us compare the notes we received and stop making the same mistakes.",
+      "Agreed. Better preparation helps both of us, even when the judging is individual."
+    ],
+    [
+      "If a strategic choice comes up, I want us to talk before making promises.",
+      "Fair. An alliance works better when neither of us invents the rules afterward."
+    ],
+    [
+      "We cover each other in rehearsal, but the runway is our own responsibility.",
+      "That is the deal. We share the work, not the credit for someone else's performance."
+    ],
+    [
+      "People notice that we work together. We should be clear about what that means.",
+      "It means useful feedback and honest conversations, not a guaranteed rescue."
+    ],
+    [
+      "I would rather hear a difficult truth from you than a convenient compliment.",
+      "Then here is the truth: we both need to sharpen our choices next time."
+    ]
+  ],
+  "neutral": [
+    [
+      "We have barely had a proper conversation since we arrived. How are you settling in?",
+      "Still finding my rhythm. It is good to talk without a rehearsal clock running."
+    ],
+    [
+      "What part of the challenge felt most different from what you expected?",
+      "The pressure. Everything sounds simpler until it is your turn to perform."
+    ],
+    [
+      "I do not know your drag very well yet. What should I watch for next time?",
+      "A stronger point of view. I want the work to introduce me properly."
+    ],
+    [
+      "Would you mind if I sat here? I need a quiet minute.",
+      "Of course. We can take a breath before the next announcement."
+    ],
+    [
+      "Everyone seems to have an opinion tonight. I am still making up my own mind.",
+      "Same here. One conversation does not tell us everything about a person."
+    ]
+  ],
+  "tense": [
+    [
+      "Your rehearsal comment sounded more personal than helpful.",
+      "I meant the performance. I can be clearer without making it about you."
+    ],
+    [
+      "I heard you questioned my effort when I was not in the room.",
+      "I questioned a choice, not your effort. We should discuss it directly."
+    ],
+    [
+      "I am finding it difficult to tell whether that was advice or a warning.",
+      "It was criticism. You can disagree with it, but I should have said it more carefully."
+    ],
+    [
+      "We keep talking past each other, and it is making this room uncomfortable.",
+      "Then let us deal with the actual disagreement instead of guessing each other's motives."
+    ],
+    [
+      "I can respect your drag without agreeing with everything you say about mine.",
+      "Good. We do not need to be close to keep this conversation civil."
+    ]
+  ],
+  "enemy": [
+    [
+      "You keep discussing my drag. Tell me what you mean while I am sitting here.",
+      "I think your choices missed the assignment. I would say the same thing to your face."
+    ],
+    [
+      "Your opinion is loud, but it does not get an extra vote at the judging panel.",
+      "Neither does your confidence. We both have to prove ourselves onstage."
+    ],
+    [
+      "I am not going to shrink my drag to make you more comfortable.",
+      "Then stop treating every disagreement as an attempt to silence you."
+    ],
+    [
+      "If you want me out of this competition, you will have to outlast me.",
+      "That is the plan. I am concentrating on my performance, not asking for your approval."
+    ],
+    [
+      "We are not going to settle this by exchanging another set of insults.",
+      "Agreed. Keep your distance, and let the next performance speak for itself."
+    ]
+  ]
+};
+  const CONFESSIONAL_LINES = {
+  "showmance": [
+    "I feel a spark with {other}, but chemistry cannot make my competition decisions for me.",
+    "{other} makes the room feel warmer. I still need to protect my focus when the stakes rise.",
+    "I want another quiet moment with {other}, and I also want that crown. Those feelings can coexist.",
+    "If I have to compete against {other}, I will give everything. Affection is not a reason to hold back.",
+    "People can speculate about me and {other}. I would rather let our performances earn the attention."
+  ],
+  "friend": [
+    "{other} knows when I need honest advice and when I just need someone to sit beside me.",
+    "I can celebrate {other} without forgetting my own ambition. Friendship is not a consolation prize.",
+    "Having {other} here gives me support, not immunity. I still have to deliver every week.",
+    "If {other} struggles, I will help with rehearsal. Onstage, we each have to carry our own work.",
+    "I trust {other} to tell me the truth instead of giving me a compliment I cannot use."
+  ],
+  "ally": [
+    "Working with {other} is useful because we exchange real feedback, not empty promises.",
+    "{other} and I have an understanding. Any strategic decision still needs a proper conversation.",
+    "I value my alliance with {other}, but I am not signing away my own place in the competition.",
+    "{other} sees details I miss in rehearsal. That is a practical reason to keep working together.",
+    "If the rules force a difficult choice involving {other}, I will weigh loyalty against the actual stakes."
+  ],
+  "neutral": [
+    "I am still getting to know {other}. I am not going to invent a friendship or a feud for the cameras.",
+    "{other} and I had a calm conversation. That is a start, not a lifelong alliance.",
+    "I want to see more of {other}'s work before I decide where we stand.",
+    "There is no issue between me and {other}. Right now, my attention is on my own performance.",
+    "I do not know what {other} is thinking, so I would rather ask than build a story out of rumors."
+  ],
+  "tense": [
+    "The conversation with {other} felt pointed. I am listening, but my guard is up.",
+    "I can take feedback from {other}. I would appreciate it arriving without the extra attitude.",
+    "{other} and I are not on the same page, and pretending otherwise will not improve the situation.",
+    "I want some space from {other} before we turn a disagreement into something bigger.",
+    "I will keep things civil with {other}. Trust will take more than one careful conversation."
+  ],
+  "enemy": [
+    "{other} has plenty to say about my drag. None of it is a reason for me to give up my place.",
+    "I am not looking for approval from {other}. I am looking for a stronger performance next week.",
+    "There is no alliance between me and {other}. Any strategic choice will reflect that reality.",
+    "I would rather spend my energy rehearsing than have the same argument with {other} again.",
+    "{other} wants to outlast me. That makes two of us with a very clear goal."
+  ]
+};
+  function dialogueChoice(s, section, type, choices) {
+    const previous = s.episodes.flatMap(ep => ep.dialogue?.[section] || []).filter(row => row.relationshipType === type);
+    const used = new Set(previous.map(row => row.variant));
+    let available = choices.map((value, variant) => ({ value, variant })).filter(row => !used.has(row.variant));
+    if (!available.length) available = choices.map((value, variant) => ({ value, variant })).filter(row => row.variant !== previous.at(-1)?.variant);
+    return pick(s, available);
+  }
   function dialogue(s, participants) {
     const shuffled = shuffle(s, participants), scenes = [], used = new Set(), pairs = [];
-    const talk = {
-      showmance: [['Sa lahat ng ingay dito, ikaw ang gusto kong katabi. Pero crown muna, ha.', 'May spark, may competition. Puwede bang sabay nating kayanin?'], ['Kinilig ako, pero huwag mong nakawin ang focus ko sa runway.', 'Dito muna tayo. Hinga, retouch, tapos laban ulit.']],
-      friend: [['Alam kong mahirap tonight. Proud ako sa ginawa mo.', 'I saved you a seat. Kuwento mo sa akin, walang judgment.'], ['Salamat. Kailangan ko lang ng kaunting lakas ng loob.', 'Whatever happens, nandito ako. Bukas, rehearsal tayo.']],
-      ally: [['Compare notes tayo before the next challenge. We work better together.', 'Kung may vote, I want us to be honest with each other.'], ['Deal. Tulungan sa rehearsal, pero fair pa rin sa runway.', 'May strategy tayo, pero kailangan pa rin nating mag-deliver.']],
-      neutral: [['Sino ang prediction mo for the win tonight?', 'May extra lashes ka ba? Emotional support lashes lang.'], ['Kahit sino, basta deserve. Pero sana ako.', 'One challenge at a time, sis. Hinga muna.']],
-      tense: [['Kanina rehearsal pa lang, parang may judging panel ka na.', 'May notes ka sa performance ko. Gusto kong marinig muna ang judges.'], ['I hear you. Pero iba ang nakita ko sa rehearsal.', 'Sige, noted. Next week, performance na ang sasagot.']],
-      enemy: [['If you have something to say about my drag, sabihin mo sa akin.', 'You keep calling my name. Sa runway mo patunayan.'], ['My opinion is my opinion. Sa runway naman tayo mag-usap.', 'Then let the track record do the talking. Hindi ako aatras.']],
-    };
     for (let a = 0; a < shuffled.length; a++) for (let b = a + 1; b < shuffled.length; b++) pairs.push({ a: shuffled[a], b: shuffled[b], priority: Math.abs(relationship(s, shuffled[a], shuffled[b])) + random(s) * 65 });
     pairs.sort((a, b) => b.priority - a.priority);
     for (const pair of pairs) {
       if (used.has(pair.a) || used.has(pair.b)) continue;
       const { a, b } = pair, rel = relationship(s, a, b), type = relationshipType(rel);
-      scenes.push({ a, b, tone: type.label, relationshipType: type.id, lines: talk[type.id].map(lines => pick(s, lines)), delta: rel >= 15 ? 3 : rel <= -15 ? -3 : 1 });
+      const choice = dialogueChoice(s, 'scenes', type.id, UNTUCKED_LINES[type.id]);
+      scenes.push({ a, b, tone: type.label, relationshipType: type.id, lines: [...choice.value], variant: choice.variant, delta: rel >= 15 ? 3 : rel <= -15 ? -3 : 1 });
       used.add(a); used.add(b);
       if (scenes.length >= Math.min(3, Math.floor(shuffled.length / 2))) break;
     }
     const confessionals = shuffled.slice(0, 2).map((id, index) => {
       const scene = scenes.find(scene => scene.a === id || scene.b === id);
       const target = scene ? (scene.a === id ? scene.b : scene.a) : shuffled[(index + 1) % shuffled.length];
-      const other = queen(s, target).name, type = relationshipType(relationship(s, id, target));
-      const thoughts = {
-        showmance: [`May chemistry kami ni ${other}. Pero I need to keep my head in this race.`, `${other} makes this room feel lighter. If a lipstick comes between us, that is a different conversation.`],
-        friend: [`${other} checked on me before the runway. That kind of support matters.`, `I trust ${other}. We can celebrate each other and still want the same crown.`],
-        ally: [`Working with ${other} is a good move. We push each other, and that helps my game.`, `${other} and I have an understanding. A vote is still a choice, and choices have consequences.`],
-        neutral: [`I am still figuring out ${other}. One conversation at a time, sis.`, `Everyone is watching everyone, including ${other}. The track record will tell the story.`],
-        tense: [`That conversation with ${other} felt pointed. I am keeping my guard up.`, `I do not know where I stand with ${other}. Next week, I want my performance to speak.`],
-        enemy: [`${other} has plenty to say about my drag. I am not giving up my place for that.`, `The tension with ${other} is real in this game. If I get a strategic choice, I will remember tonight.`],
-      };
-      return { id, target, relationshipType: type.id, line: pick(s, thoughts[type.id]) };
+      const type = relationshipType(relationship(s, id, target));
+      const choice = dialogueChoice(s, 'confessionals', type.id, CONFESSIONAL_LINES[type.id]);
+      return { id, target, relationshipType: type.id, variant: choice.variant, line: choice.value.replaceAll('{other}', queen(s, target).name) };
     });
-    return { scenes, confessionals };
+    return { version: 2, scenes, confessionals };
   }
+  function ensureDialogue(s, ep) {
+    if (ep.dialogue?.version !== 2) {
+      const rng = s.rng;
+      ep.dialogue = dialogue(s, ep.participants);
+      s.rng = rng;
+    }
+    return ep.dialogue;
+  }
+  const MINI_CHALLENGES = [
+    { title: "The Reading Challenge", description: "The library is open, barangay edition! Take turns delivering clever, playful insults about your fellow queens as if trading quips at a neighborhood gathering. Original punchlines and comic timing win. Keep the reads in English." },
+    { title: "Quick Drag: Tindera of the Year", description: "Become a public-market vendor in quick drag and sell an everyday market item as a luxury must-have. Invent a catchy sales call, handle a surprise haggler, and close with a punchline." },
+    { title: "Palarong Pakak", description: "Turn a barangay sports day into a drag relay with spoon-and-calamansi balancing, sack-race poses, and a dramatic finish. Coordination, character, and comic reactions decide the winner." },
+    { title: "Santacruzan Snapshot", description: "Create a floral procession-inspired fashion portrait using paper flowers and a handheld arch. You get one photograph to show a graceful silhouette, a strong expression, and your own drag personality." },
+    { title: "Pinoy Henyo: Drag Edition", description: "Guess the Filipino food, household item, or drag accessory on your card by asking questions answered only with yes, no, or maybe. The queen who identifies the most cards before time runs out wins." },
+    { title: "Sari-Sari Store Memory Game", description: "Study a miniature sari-sari store display before it is covered. Recall the products and their positions, then deliver your answers as an impatient customer placing an order." },
+    { title: "Parlor Queen Speed Styling", description: "Transform a mystery wig into the signature hairstyle of your neighborhood beauty-parlor character. Work against the clock, then introduce your salon with a confident pose and a quick sales pitch." },
+    { title: "Marites Puppet Hotline", description: "Turn a puppet into a fellow queen and stage a playful neighborhood gossip call. Capture her signature mannerisms, invent a harmless rumor about her drag, and finish with a witty punchline." },
+    { title: "Teleserye Without Words", description: "Perform a classic teleserye twist without speaking: a surprise heir, a switched identity, or a dramatic family reunion. Use readable facial expressions and exaggerated movement to tell the story." },
+    { title: "Budol Beauty Counter", description: "Invent a fictional Filipino beauty product, draw its packaging, and pitch it like an enthusiastic livestream seller. Give it a memorable name, an outrageous promise, and a ten-second slogan." },
+    { title: "Pinoy Showbiz Speed Impressions", description: "Switch between surprise Filipino celebrity impressions in timed rounds. Use recognizable mannerisms, a clear character, and original jokes rather than repeating another queen." },
+    { title: "Electric Fan Eleganza", description: "Pose for a glamorous neighborhood photo-studio portrait while an electric fan changes direction. Keep your expression and wig under control, then turn a surprise interruption into a cover-worthy moment." },
+    { title: "Perya Makeover Booth", description: "Apply makeup to a mannequin while blindfolded at a fictional town-fair beauty booth. Reveal the result, name your look, and convince the crowd that every unexpected detail was intentional." },
+    { title: "Jeepney Barya Relay", description: "Act out passing the fare along a pretend jeepney while balancing a bag and reacting to surprise stops. Get the correct prop coins to the driver without dropping your commuter character." },
+    { title: "Barangay Awards Night", description: "Accept an absurd neighborhood award with no preparation. Thank an unexpected guest, explain why you deserved the title, and end with a dramatic, funny final line." },
+    { title: "Family Group Chat Drama", description: "Turn a sequence of emojis from a fictional Filipino family group chat into a short scene. Make the misunderstanding clear, play the reactions, and resolve it with a comic twist." },
+    { title: "Ukay-Ukay Sales Pitch", description: "Pick a mystery secondhand accessory and present it as the greatest ukay-ukay discovery ever. Invent its glamorous backstory, demonstrate three uses, and win over a skeptical shopper." },
+    { title: "Barangay Weather Bulletin", description: "Deliver a quick-drag neighborhood weather report while receiving surprise updates about the fiesta, laundry, and outdoor videoke. Keep the forecast clear and turn each interruption into a joke." },
+    { title: "Fiesta Stop Dance", description: "Perform at an imaginary barangay fiesta and freeze in a character pose whenever the music stops. Keep each pose distinct while selling the excitement of a neighborhood dance contest." },
+    { title: "Balikbayan Box Surprise", description: "Draw three unexpected objects from a fictional balikbayan box and turn them into a short homecoming comedy scene. Use every prop and build toward one clear punchline." },
+    { title: "Miss Barangay Q and A", description: "Answer ridiculous community-pageant questions with complete confidence. Deliver a poised introduction, give a clever answer, and finish with a memorable statement worthy of a sash." },
+    { title: "OPM Album Cover Divas", description: "Create the cover of a fictional Original Pilipino Music album using your body and simple props. Invent an artist persona, name the album, and perform a dramatic promotional pose." },
+    { title: "Barangay Announcer Takeover", description: "Read increasingly tricky fictional neighborhood announcements as a confident barangay host. Keep the details clear while handling surprise name changes, repeated announcements, and an impatient audience." },
+    { title: "Radyo Drama Sound Booth", description: "Create live sound effects for a fictional Filipino radio drama using only your voice. Follow the narrator through a market, a jeepney ride, and a dramatic homecoming without missing a cue." },
+    { title: "Teleserye Door Slam", description: "Perform three different teleserye exits through the Werk Room door: betrayed heiress, triumphant rival, and heartbroken star. Make every departure readable, distinct, and funny." },
+    { title: "Barangay Fashion Hearing", description: "Defend a questionable fiesta outfit at a fictional neighborhood hearing. Explain your design choices, improvise answers to complaints, and deliver a persuasive closing punchline." },
+    { title: "Videoke Grand Finals", description: "Invent a dramatic videoke contestant and perform an original short chorus for the imaginary neighborhood finals. Introduce your song dedication, sell the emotion, and react to a surprise score." },
+    { title: "Flores de Mayo Paper Crown", description: "Build a floral headpiece from paper and craft supplies for a fictional neighborhood flower parade. Present a clear silhouette, name your look, and introduce your character with a confident walk." },
+    { title: "Taho Jingle Takeover", description: "Create an original advertising jingle for a fictional taho stall. Include the product name, a catchy neighborhood sales call, and one unexpected joke in a short live pitch." },
+    { title: "Fiesta Host Emergency", description: "Host an imaginary barangay fiesta while the talent act is late and the program keeps changing. Introduce surprise guests, keep the crowd entertained, and smoothly announce the next event." },
+  ];
   function mini(s, ids) {
-    return { title: pick(s, ['Quick Drag: Tindera of the Year', 'Palarong Pakak', 'The One-Take Photoshoot', 'Charades, Beks!', 'Drag Memory Game']), winner: pick(s, ids), reading: false, reads: [] };
+    const used = new Set(s.episodes.map(ep => ep.mini?.title));
+    const choices = MINI_CHALLENGES.filter(challenge => challenge.title !== 'The Reading Challenge');
+    const unused = choices.filter(challenge => !used.has(challenge.title));
+    const previous = s.episodes.at(-1)?.mini?.title;
+    const challenge = pick(s, unused.length ? unused : choices.filter(challenge => challenge.title !== previous));
+    return { ...challenge, winner: pick(s, ids), reading: false, reads: [] };
   }
   function scheduleReading(s, ep) {
     if (s.readingDone) return;
@@ -192,6 +432,7 @@
     if (!lastRound && random(s) >= 1 / remainingRounds) return;
     const lines = shuffle(s, READS), readers = shuffle(s, ep.participants);
     ep.mini.title = 'The Reading Challenge';
+    ep.mini.description = MINI_CHALLENGES[0].description;
     ep.mini.reading = true;
     ep.mini.reads = readers.map((id, index) => ({ id, target: readers[(index + 1) % readers.length], line: lines[index] }));
   }
@@ -206,11 +447,14 @@
     const last = s.episodes.filter(e => e.kind === 'competition').at(-1)?.challenge.id;
     return pick(s, eligible.filter(c => c.id !== last).length ? eligible.filter(c => c.id !== last) : eligible);
   }
-  function casting(s, challenge, ids) {
+  function casting(s, challenge, ids, title) {
     if (challenge.id === 'snatch') return shuffle(s, CELEBRITIES).slice(0, ids.length).map((role, i) => ({ id: ids[i], role, note: pick(s, ['Quick-witted answers keep the character alive.', 'Leans into a larger-than-life voice and improvised reactions.', 'Finds the joke in an unexpected answer.']) }));
     if (challenge.id === 'roast') return ids.map(id => ({ id, role: 'Roasting the imaginary Glam Council', note: pick(s, ['Councilor Glitter has been serving looks since dial-up. Unfortunately, the outfit is still loading.', 'The council promised a bigger budget for drag. They spent it all on one ring light.', 'Mayor Sparkle has a five-step plan for glamour. Step one: find the other four steps.', 'Our imaginary guest judge is so committed to suspense, even the zipper is on a cliffhanger.', 'The Glam Council called this a black-tie event. Their tie is the only thing with a clean finish.', 'Madam Chairwoman brought receipts. Unfortunately, they are all from the wig repair shop.']) }));
     if (challenge.id === 'rusical') return shuffle(s, ROLES).slice(0, ids.length).map((role, i) => ({ id: ids[i], role, note: 'An original role in this fictional Rusical.' }));
-    if (challenge.id === 'girlgroup') { const order = shuffle(s, ids), cut = Math.ceil(ids.length / 2); return order.map((id, i) => ({ id, role: i < cut ? 'The Kanto Divas' : 'The Glitter Barkada', note: `${pick(s, VERSES)} ${queen(s, id).name} in the spotlight: ${pick(s, ['ready for my reign.', 'watch me own the stage.', 'the crown is calling my name.'])}` })); }
+    if (challenge.id === 'girlgroup') {
+      const order = shuffle(s, ids), cut = Math.ceil(ids.length / 2), teams = girlGroupTeams(title);
+      return order.map((id, i) => ({ id, role: teams[i < cut ? 0 : 1] }));
+    }
     return ids.map(id => ({ id, role: challenge.id === 'advert' ? pick(s, ['Confidence in a Can', 'Wig Insurance Plus', 'Bongga Brow Balm']) : challenge.id === 'design' ? pick(s, ['A woven-paper silhouette with sculptural shoulders.', 'A festival-inspired look made from recycled packaging.', 'An evening gown built from fabric scraps and metallic trims.']) : 'The assignment', note: pick(s, ['Commits to an ambitious concept.', 'Keeps the idea polished and focused.', 'Takes a risk with the presentation.']) }));
   }
   function makeEpisode(s, kind, participants) {
@@ -264,7 +508,8 @@
     ep.ranking = ep.scores.filter(row => !(ep.guestIds || []).includes(row.id)).sort((a, b) => b.total - a.total).map(row => row.id);
     for (const id of ep.participants) ep.placements[id] = (ep.guestIds || []).includes(id) ? 'GUEST' : 'SAFE';
     const top = ep.ranking[0];
-    const highCount = ep.participants.length >= 8 ? 2 : ep.participants.length >= 5 ? 1 : 0;
+    const forWin = s.options.season !== 'Regular' || ep.nonElimination;
+    const highCount = ep.ranking.length >= 7 && !forWin ? 2 : ep.ranking.length >= 5 ? 1 : 0;
     if (s.options.season === 'All Winners' || ep.nonElimination || s.options.season === 'Lipsync For Your Legacy') {
       const topTwo = ep.ranking.slice(0, 2);
       const match = battle(s, topTwo, 'Lip Sync for the Win', ep);
@@ -308,9 +553,9 @@
       ep.ranking.slice(1, 1 + highCount).forEach(id => { ep.placements[id] = 'HIGH'; });
       const bottom = ep.ranking.slice(-2), match = battle(s, bottom, 'Lip Sync for Your Life', ep);
       bottom.forEach(id => { ep.placements[id] = 'BTM2'; });
-      if (s.twists.shantay && !s.twists.usedShantay && random(s) < .32) {
+      if (s.options.doubleShantay === 'Double Shantay' && !s.twists.usedShantay) {
         ep.twist = 'Double shantay'; match.winners = [...bottom]; match.losers = []; match.outcome = 'double-shantay';
-      } else if (s.twists.sashay && !s.twists.usedSashay && s.active.length - 2 >= s.finaleSize && !(s.active.length === 9 && ep.pendingEight) && random(s) < .38) {
+      } else if (s.options.doubleSashay === 'Double Sashay' && !s.twists.usedSashay && s.active.length - 2 >= s.finaleSize && !(s.active.length === 9 && ep.pendingEight)) {
         ep.twist = 'Double sashay'; ep.eliminated = [...bottom]; match.winners = []; match.losers = [...bottom]; match.outcome = 'double-sashay'; bottom.forEach(id => { ep.placements[id] = 'ELIM'; });
       } else { ep.eliminated = [...match.losers]; ep.placements[match.losers[0]] = 'ELIM'; }
     }
@@ -325,6 +570,7 @@
     ep.title = `The Grand Finale: Top ${s.finaleSize}`;
     ep.mini = null;
     ep.runway = 'Coronation Eleganza';
+    ep.scores = ep.participants.map(id => ({ id, runway: Math.round(queen(s, id).skills.fashion * .38 + random(s) * 62) }));
     let finalTwo;
     if (ep.participants.length === 4) {
       const seeds = shuffle(s, ep.participants);
@@ -353,7 +599,7 @@
       ep.note = 'Stars decide the finalists. Ties use PPE, challenge wins, then a seeded random draw. This qualification is not a scored challenge.';
       ep.participants.forEach(id => { ep.placements[id] = ep.finalists.includes(id) ? 'FINALIST' : 'CUT'; });
     } else if (returnDue(s)) ep = prepareReturn(s);
-    else if (!(s.groups.length === 2 && s.competitionCount < 2) && s.active.length === s.finaleSize && (s.options.season !== 'All Winners' || s.competitionCount >= s.allWinnersRounds)) ep = prepareFinale(s);
+    else if (s.readingDone && !(s.groups.length === 2 && s.competitionCount < 2) && s.active.length === s.finaleSize && (s.options.season !== 'All Winners' || s.competitionCount >= s.allWinnersRounds)) ep = prepareFinale(s);
     else {
       const split = s.groups.length === 2 && s.competitionCount < 2;
       let ids = split ? s.groups[s.competitionCount].filter(id => s.active.includes(id)) : [...s.active];
@@ -371,13 +617,13 @@
       ep.challenge = { ...(largeGirlGroup ? CHALLENGES.find(c => c.id === 'girlgroup') : scheduleChallenge(s, ids, split)) };
       ep.guestIds = guestIds;
       ep.title = pick(s, ep.challenge.titles);
-      ep.casting = casting(s, ep.challenge, ids);
-      ep.runway = ep.challenge.id === 'design' ? 'Three looks: Daytime Diva / Festival Queen / Made in the Werk Room' : pick(s, RUNWAYS);
+      ep.casting = casting(s, ep.challenge, ids, ep.title);
+      Object.assign(ep, scheduleRunway(s, ep.challenge.id === 'design'));
       ep.mini = mini(s, ids);
       const pending = CHALLENGES.filter(c => c.core && c.min >= 8 && !s.coreDone.includes(c.id) && c.id !== ep.challenge.id);
       ep.pendingEight = pending.length > 0;
       const protectEight = s.active.length === 8 && pending.length > 0;
-      ep.nonElimination = s.options.season === 'All Winners' || (ep.premiere && s.options.premiere.includes('Non-Elimination')) || ids.length < 4 || protectEight;
+      ep.nonElimination = s.options.season === 'All Winners' || s.active.length === s.finaleSize || (ep.premiere && s.options.premiere.includes('Non-Elimination')) || ids.length < 4 || protectEight;
       if (protectEight && !s.options.premiere.includes('Non-Elimination') && s.options.season !== 'All Winners') ep.note = 'A non-elimination showcase keeps eight queens available for the remaining required large-cast challenges.';
       else if (ids.length < 4) ep.note = 'This small premiere group is a top-two showcase; nobody goes home.';
       else if (ep.nonElimination && s.options.season !== 'All Winners') ep.note = 'A top-two lip sync decides the win. No queen is eliminated in this premiere.';
@@ -418,7 +664,7 @@
     return ep;
   }
   function coreNotes(s) { return CHALLENGES.filter(c => c.core && !s.coreDone.includes(c.id)).map(c => `${c.label}: not scheduled because no eligible round remained (${c.min}${c.max ? '-' + c.max : '+'} queens required).`); }
-  const api = { FORMATS, PPE, SONGS, CHALLENGES, RELATIONSHIPS, relationshipType, setRelationship, clearRelationships, randomizeRelationships, createSeason, prepareEpisode, completeEpisode, chooseReturn, ppe, wins, relationship, queen, coreNotes };
+  const api = { FORMATS, PPE, SONGS, CHALLENGES, MINI_CHALLENGES, RUNWAYS, UNTUCKED_LINES, CONFESSIONAL_LINES, ensureDialogue, girlGroupTeams, RELATIONSHIPS, relationshipType, setRelationship, clearRelationships, randomizeRelationships, createSeason, prepareEpisode, completeEpisode, chooseReturn, ppe, wins, relationship, queen, coreNotes };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else scope.DRSeason = api;
 })(typeof window !== 'undefined' ? window : globalThis);

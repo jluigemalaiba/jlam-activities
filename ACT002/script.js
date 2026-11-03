@@ -597,7 +597,7 @@ const queens = queenRoster.map((queen) => ({
   id: `s${queen.season}-${slug(queen.name)}`,
 }));
 const app = {
-  options: { premiere: "Normal Premiere", season: "Regular", returning: "None", finale: "Top 4", ...read("drph-options", {}) },
+  options: { premiere: "Normal Premiere", season: "Regular", returning: "None", finale: "Top 4", doubleShantay: "None", doubleSashay: "None", ...read("drph-options", {}) },
   theme: read("drph-theme", "flag"),
   castIds: read("drph-cast", []),
   customs: read("drph-customs", []),
@@ -1231,6 +1231,8 @@ const optionGroups = [
   ["season", "Season Format", ["Regular", "Lipsync For Your Legacy", "All Winners"]],
   ["returning", "Returning Format", ["None", "Choose who returns", "LaLaPaRuZa", "Remaining Queens Vote"]],
   ["finale", "Finale Format", ["Top 4", "Top 3"]],
+  ["doubleShantay", "Double Shantay", ["None", "Double Shantay"]],
+  ["doubleSashay", "Double Sashay", ["None", "Double Sashay"]],
 ];
 function openOptions(trigger) {
   const overlay = document.createElement("div");

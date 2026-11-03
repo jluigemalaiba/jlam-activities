@@ -1,13 +1,13 @@
 (function () {
   'use strict';
   const E = window.DRSeason;
-  const LABELS = { relationships: 'Connections', mini: 'Mini', maxi: 'Maxi', runway: 'Runway', untucked: 'Untucked', judging: 'Judging', lipsync: 'Lip sync', outcome: 'Results', track: 'Track record', return: 'Return', qualification: 'Qualification', finalists: 'Finalists', crowning: 'Crowning', summary: 'Season summary' };
+  const LABELS = { relationships: 'Connections', mini: 'Mini', maxi: 'Maxi', runway: 'Runway', untucked: 'Untucked', judging: 'Judging 1', deliberation: 'Judging 2', lipsync: 'Lip sync', outcome: 'Results', track: 'Track record', return: 'Return', qualification: 'Qualification', finalists: 'Finalists', crowning: 'Crowning', summary: 'Season summary' };
   const badge = status => `<span class="sim-status is-${String(status).toLowerCase()}"${status === 'LOW' ? ' title="Negative critiques, but safe from the bottom two"' : ''}>${status === 'RUNNERUP' ? 'RUNNER-UP' : status === 'GUEST' ? 'GUEST' : esc(status)}</span>`;
   function steps(ep) {
     if (ep.kind === 'return') return ['return', 'untucked', ...(ep.lipSyncs.length ? ['lipsync'] : []), 'outcome', 'track'];
     if (ep.kind === 'qualifier') return ['untucked', 'qualification', 'outcome', 'track'];
     if (ep.kind === 'finale') return [...(ep.mini ? ['mini'] : []), 'runway', 'untucked', 'finalists', 'lipsync', 'crowning', 'track', 'summary'];
-    return ['mini', 'maxi', 'runway', 'untucked', 'judging', 'lipsync', 'outcome', 'track'];
+    return ['mini', 'maxi', 'runway', 'judging', 'untucked', 'deliberation', 'lipsync', 'outcome', 'track'];
   }
   function saveSeason(s) {
     try { localStorage.setItem('drph-season', JSON.stringify(s)); return true; }
@@ -16,12 +16,20 @@
   function loadSeason() {
     try {
       const s = JSON.parse(localStorage.getItem('drph-season'));
-      return s?.version === 1 && Array.isArray(s.queens) && s.queens.length >= 4 && Array.isArray(s.episodes) && s.options && s.relationships && s.stars ? s : null;
+      if (!(s?.version === 1 && Array.isArray(s.queens) && s.queens.length >= 4 && Array.isArray(s.episodes) && s.options && s.relationships && s.stars)) return null;
+      s.options.doubleShantay ??= 'None';
+      s.options.doubleSashay ??= 'None';
+      return s;
     } catch { return null; }
   }
   function launch(session, content, shell, onClose) {
     const s = session.version === 1 ? session : E.createSeason(session.cast, session.options, crypto.getRandomValues(new Uint32Array(1))[0]);
     s.introducedIds = s.introducedIds || (session.version === 1 ? s.queens.map(queen => queen.id) : [...session.arrived]);
+    if (s.judgingFlowVersion !== 2) {
+      if (s.current?.kind === 'competition' && s.uiStep === 'untucked') s.uiStep = 'judging';
+      s.judgingFlowVersion = 2;
+    }
+    if (s.current && !s.current.completed) E.ensureDialogue(s, s.current);
     s.theme = s.theme || app.theme;
     document.documentElement.dataset.theme = s.theme;
     let historyIndex = null;
@@ -43,7 +51,7 @@
           if (a === b) return '<td class="sim-matrix-self"><span aria-label="Same queen">&mdash;</span></td>';
           const type = E.relationshipType(E.relationship(s, a, b));
           return `<td><button type="button" class="sim-relation is-${type.id}" data-relationship-pair="${row},${column}" tabindex="${row === 0 && column === 1 ? '0' : '-1'}" aria-haspopup="dialog" aria-label="${name(a)} and ${name(b)}: ${type.label}. Edit relationship.">${type.short}</button></td>`;
-        }).join('')}</tr>`).join('')}</tbody></table></div><div class="sim-matrix-legend d-flex flex-wrap gap-2">${E.RELATIONSHIPS.map(type => `<span class="sim-relation is-${type.id}">${type.label}</span>`).join('')}</div><p class="sim-matrix-help">Relationships are mutual. Clear all sets every visible pair to Neutral. Showmances are rare when randomized.</p><p class="visually-hidden" role="status" data-relationship-status></p></section>` +
+        }).join('')}</tr>`).join('')}</tbody></table></div><div class="sim-matrix-legend d-flex flex-wrap gap-2">${E.RELATIONSHIPS.map(type => `<span class="sim-relation is-${type.id}">${type.label}</span>`).join('')}</div><p class="sim-matrix-help">Relationships are mutual. Clear all sets every visible pair to Neutral.</p><p class="visually-hidden" role="status" data-relationship-status></p></section>` +
         `<div class="sim-format-strip">${optionGroups.map(([key, label]) => `<span><small>${label}</small><strong>${esc(s.options[key])}</strong></span>`).join('')}</div>`;
     }
     function bindRelationships() {
@@ -152,35 +160,77 @@
     }
     function miniPage(ep) {
       const m = ep.mini;
-      return pageTitle(`EPISODE ${ep.number} / WERK ROOM`, m.title, m.reading ? 'The library is now officially open!' : 'A quick Werk Room challenge before the main event.') +
+      return pageTitle(`EPISODE ${ep.number} / WERK ROOM`, m.title, m.description || E.MINI_CHALLENGES.find(challenge => challenge.title === m.title)?.description || 'Complete a short performance task in the Werk Room. Creativity, confidence, and comic timing decide the winner.') +
         (m.reading ? cards(m.reads.map(read => `<article class="sim-panel sim-read">${identity(read.id, `Reading ${name(read.target)}`)}<blockquote>${esc(read.line)}</blockquote></article>`)) : `<div class="sim-participant-row">${ep.participants.map(id => `<div>${face(id)}<span>${name(id)}</span></div>`).join('')}</div>`) +
         `<div class="sim-spotlight-result"><span class="sim-eyebrow">MINI-CHALLENGE WINNER</span>${face(m.winner, 'is-large')}<h3>${name(m.winner)}</h3><p>A small confidence boost for tonight's maxi performance.</p></div>`;
     }
     function maxiPage(ep) {
-      return pageTitle(`EPISODE ${ep.number} / ${ep.challenge.label}`, ep.title, ep.challenge.brief) +
+      const heading = pageTitle(`EPISODE ${ep.number} / ${ep.challenge.label}`, ep.title, ep.challenge.brief);
+      if (ep.challenge.id === 'girlgroup') {
+        const teams = [...new Set(ep.casting.map(row => row.role))];
+        const names = E.girlGroupTeams(ep.title);
+        return heading + `<div class="sim-girl-groups d-flex flex-wrap gap-3">${teams.map((team, index) => {
+          const members = ep.casting.filter(row => row.role === team);
+          return `<article class="sim-panel sim-girl-team"><header><h3>${esc(names[index] || team)}</h3><small>${members.length} members</small></header><ul class="list-unstyled mb-0">${members.map(row => `<li>${identity(row.id, ep.guestIds?.includes(row.id) ? 'Encore guest' : '')}</li>`).join('')}</ul></article>`;
+        }).join('')}</div>`;
+      }
+      return heading +
         (ep.split ? note(`Double Premiere: group ${ep.premiere} competes in Episode ${ep.number}. The cast merges in Episode 3.`) : '') + note(ep.note) +
-        (ep.challenge.id === 'girlgroup' ? `<div class="sim-team-headings">${[...new Set(ep.casting.map(row => row.role))].map(team => `<span><strong>${esc(team)}</strong><small>${ep.casting.filter(row => row.role === team).length} members</small></span>`).join('')}</div>` : '') +
         cards(ep.casting.map(row => `<article class="sim-panel sim-assignment">${identity(row.id, ep.guestIds?.includes(row.id) ? 'Encore guest / not scored' : 'Challenge assignment')}<span class="sim-chip">${esc(row.role)}</span><p>${esc(row.note)}</p></article>`));
     }
     function runwayPage(ep) {
       return pageTitle(`EPISODE ${ep.number} / MAIN STAGE`, 'Category is...', ep.runway) +
-        cards(ep.participants.map(id => { const score = ep.scores?.find(row => row.id === id)?.runway; return `<article class="sim-panel sim-runway">${face(id, 'is-runway')}<h3>${name(id)}</h3><p>${score === undefined ? 'A final look that celebrates this queen\'s drag story.' : score >= 80 ? 'A polished silhouette, confident presentation, and beautiful details.' : score >= 60 ? 'A clear point of view with a few details that could be sharper.' : 'An ambitious idea with some unfinished details on the runway.'}</p></article>`; }));
+        cards(ep.participants.map(id => {
+          const score = ep.scores?.find(row => row.id === id)?.runway;
+          const rating = score >= 85 ? 'superb' : score >= 70 ? 'great' : score >= 50 ? 'good' : 'bottom-worthy';
+          return `<article class="sim-panel sim-runway">${face(id, 'is-runway')}<p>${name(id)} ${score === undefined ? 'presented a coronation runway.' : `had a ${rating} runway.`}</p></article>`;
+        }));
     }
     function untuckedPage(ep) {
+      E.ensureDialogue(s, ep);
       return pageTitle(`EPISODE ${ep.number} / BACKSTAGE`, 'Untucked!', 'The challenge is over. The conversation is just beginning.') +
         `<div class="sim-dialogue-list">${ep.dialogue.scenes.map(scene => `<article class="sim-panel"><div class="sim-conversation-heading"><span class="sim-chip">${scene.tone}</span><small>Connection: ${E.relationship(s, scene.a, scene.b) > 0 ? '+' : ''}${E.relationship(s, scene.a, scene.b)}</small></div><div class="sim-dialogue">${identity(scene.a)}<blockquote>${esc(scene.lines[0])}</blockquote></div><div class="sim-dialogue is-reply">${identity(scene.b)}<blockquote>${esc(scene.lines[1])}</blockquote></div></article>`).join('')}</div>` +
         `<h3 class="sim-section-title">In the confessional</h3>` + cards(ep.dialogue.confessionals.map(c => `<article class="sim-panel sim-confessional">${identity(c.id, c.target ? `Confessional / about ${name(c.target)}` : 'Confessional')}<blockquote>${esc(c.line)}</blockquote></article>`));
     }
+    function judgingCards(values) {
+      return `<div class="sim-judging-grid">${values.join('')}</div>`;
+    }
+    function judgingLineup(ep) {
+      const ranking = ep.ranking || ep.scores.filter(row => ep.placements[row.id] !== 'GUEST').sort((a, b) => b.total - a.total).map(row => row.id);
+      const critiqued = ranking.length <= 6 || ep.challenge.id === 'lalaparuza' ? ranking : [...ranking.slice(0, 3), ...ranking.slice(-3)];
+      return { critiqued, safe: ranking.filter(id => !critiqued.includes(id)) };
+    }
     function judgingPage(ep) {
+      const { critiqued, safe } = judgingLineup(ep);
+      const tournament = ep.challenge.id === 'lalaparuza';
+      const safeCall = safe.length ? `<section class="sim-panel sim-safe-call"><span class="sim-eyebrow">SAFE THIS WEEK</span><div class="sim-judging-roster">${safe.map(id => identity(id, '')).join('')}</div><p>You are safe. You may untuck in the Werk Room.</p></section>` : '';
+      const announcement = tournament ? 'Every queen will compete in the survival lip-sync tournament. These critiques do not decide who stays.' : safe.length ? 'The queens remaining onstage represent the tops and bottoms of the week. It is time for your critiques.' : 'Every competing queen will receive critiques this week. Please remain onstage.';
+      return pageTitle(`EPISODE ${ep.number} / JUDGING PART 1`, 'Let us talk about tonight.', 'First, the safe queens. Then, the critiques.') + safeCall +
+        `<section class="sim-panel sim-judging-announcement"><p>${announcement}</p></section>` +
+        judgingCards(critiqued.map(id => {
+          const row = ep.scores.find(row => row.id === id);
+          const performance = row.performance >= 80 ? 'Your performance was confident, precise, and memorable.' : row.performance >= 60 ? 'Your performance had a clear idea, but needed more polish and commitment.' : 'Your performance lacked clarity. We needed stronger choices and a more controlled delivery.';
+          const runway = row.runway >= 85 ? 'The runway was exceptional: a complete fashion statement.' : row.runway >= 70 ? 'Your runway showed strong styling and a clear point of view.' : row.runway >= 50 ? 'The runway was solid, though the details could have been more refined.' : 'The runway needed a more considered silhouette and a cleaner finish.';
+          return `<article class="sim-panel sim-critique">${identity(id, 'Judges? critique')}<p>${performance}</p><p>${runway}</p></article>`;
+        }));
+    }
+    function deliberationPage(ep) {
+      const { critiqued } = judgingLineup(ep);
+      const tournament = ep.challenge.id === 'lalaparuza';
       const forWin = ep.nonElimination || s.options.season !== 'Regular';
-      return pageTitle(`EPISODE ${ep.number} / JUDGES' CRITIQUES`, 'The judges have spoken.', ep.challenge.id === 'lalaparuza' ? 'Tonight the survival bracket decides who stays.' : 'Challenge performance counts for 80%; runway counts for 20%. Mini-challenge wins add a small performance boost.') +
-        cards(ep.scores.map(row => {
-          let status = ep.placements[row.id];
-          if (ep.challenge.id === 'lalaparuza') status = 'SAFE';
-          else if (status === 'ELIM') status = 'BTM2';
-          else if (forWin && status === 'WIN') status = 'TOP2';
-          return `<article class="sim-panel sim-critique">${identity(row.id)}${badge(status)}<div class="sim-score-bars"><span>Challenge <b>${row.performance}</b></span><i style="--score:${row.performance}%"></i><span>Runway <b>${row.runway}</b></span><i style="--score:${row.runway}%"></i></div><p>${status === 'LOW' ? 'One of the weaker performances tonight. You receive negative critiques, but are safe from the bottom two.' : row.total >= 80 ? 'You commanded the assignment and made it your own.' : row.total >= 60 ? 'We see your point of view; push the details further.' : 'The idea was there, but the delivery needed more precision.'}</p></article>`;
-        })) + note(ep.note);
+      const top = ep.ranking.filter(id => ['WIN', 'TOP2'].includes(ep.placements[id]));
+      const bottom = ep.ranking.filter(id => ['BTM2', 'ELIM'].includes(ep.placements[id]));
+      const verdict = tournament ? 'The survival tournament will decide who stays. All queens will lip sync; no elimination result has been announced.' : forWin ? `${top.map(name).join(' and ')}, you are the top two of the week. You will lip sync for the win.` : `${top.map(name).join(' and ')}, condragulations! You are the winner of this week?s challenge.`;
+      const bottomCall = !tournament && bottom.length ? `<section class="sim-panel sim-bottom-call"><span class="sim-eyebrow">BOTTOM TWO</span><div class="sim-judging-roster">${bottom.map(id => identity(id, '')).join('')}</div><p>${s.options.season === 'Lipsync For Your Legacy' ? 'You are up for elimination. The lip-sync winner will make the decision.' : 'You will lip sync for your life.'}</p></section>` : '';
+      const placements = tournament ? '' : cards(critiqued.map(id => {
+        const placement = ep.placements[id];
+        const status = placement === 'ELIM' ? 'BTM2' : forWin && placement === 'WIN' ? 'TOP2' : placement;
+        return `<article class="sim-panel sim-placement">${identity(id, '')}${badge(status)}</article>`;
+      }));
+      const scores = ep.scoresRevealed ? `<section id="sim-judging-scores" class="sim-score-reveal" aria-label="Revealed judging scores"><h3 class="sim-section-title">The scores</h3>${judgingCards(ep.scores.map(row => `<article class="sim-panel sim-critique">${identity(row.id, ep.placements[row.id] === 'GUEST' ? 'Encore guest' : '')}<div class="sim-score-bars"><span>Challenge <b>${row.performance}</b></span><i style="--score:${row.performance}%"></i><span>Runway <b>${row.runway}</b></span><i style="--score:${row.runway}%"></i></div><p class="sim-score-total">Combined score <strong>${row.total.toFixed(1)}</strong></p></article>`))}</section>` : '';
+      return pageTitle(`EPISODE ${ep.number} / JUDGING PART 2`, 'Welcome back, queens.', 'The critiques are complete. It is time for the decisions.') +
+        `<section class="sim-panel sim-judging-announcement"><p>${verdict}</p></section>` + bottomCall + placements +
+        `<div class="sim-score-action"><button type="button" class="sim-secondary" data-reveal-scores aria-expanded="${Boolean(ep.scoresRevealed)}" aria-controls="sim-judging-scores">${ep.scoresRevealed ? 'Hide scores' : 'Reveal scores'} ${icon(ep.scoresRevealed ? 'x' : 'check', 'icon-sm')}</button></div>` + (scores || '<section id="sim-judging-scores" hidden></section>');
     }
     function spotifyPlayer(track) {
       return s.playerTrack === track.spotify ? `<iframe class="sim-spotify" title="Spotify: ${esc(track.title)} by ${esc(track.artist)}" src="https://open.spotify.com/embed/track/${track.spotify}?theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe><p class="sim-player-note">Playback or preview availability is controlled by Spotify.</p>` : `<button type="button" class="sim-secondary" data-player="${track.spotify}">${icon('play')} Load Spotify player</button>`;
@@ -269,6 +319,7 @@
       else if (view === 'runway') body = runwayPage(ep);
       else if (view === 'untucked') body = untuckedPage(ep);
       else if (view === 'judging') body = judgingPage(ep);
+      else if (view === 'deliberation') body = deliberationPage(ep);
       else if (view === 'lipsync') body = lipSyncPage(ep);
       else if (view === 'return') body = returnPage(ep);
       else if (view === 'qualification') body = qualificationPage(ep);
@@ -288,6 +339,7 @@
       content.querySelector('[data-sim-next]').addEventListener('click', next);
       content.querySelector('[data-view-track]')?.addEventListener('click', () => { historyIndex = -1; renderTrackView(); });
       content.querySelectorAll('[data-reveal-match]').forEach(button => button.addEventListener('click', () => { const index = Number(button.dataset.revealMatch); if (index === (s.revealedMatches || 0)) { s.revealedMatches = index + 1; persist(); render(false, true); content.querySelectorAll('.sim-match').item(index + 1)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } }));
+      content.querySelector('[data-reveal-scores]')?.addEventListener('click', () => { ep.scoresRevealed = !ep.scoresRevealed; persist(); render(false, true); content.querySelector('[data-reveal-scores]')?.focus({ preventScroll: true }); });
       content.querySelectorAll('[data-player]').forEach(button => button.addEventListener('click', () => { s.playerTrack = button.dataset.player; persist(); render(false, true); }));
       content.querySelectorAll('[name="returning-queen"]').forEach(input => input.addEventListener('change', () => { s.returnChoice = input.value; persist(); content.querySelector('[data-sim-next]').disabled = false; }));
       bindExtras();
