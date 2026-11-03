@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATLAnac — The Avatar Character Archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Macondo&family=Shojumaru&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body class="page-home" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-root-margin="0px 0px -55%">
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark archive-nav fixed-top" aria-label="Main navigation">
+        <div class="container">
+          <a class="navbar-brand wordmark d-flex align-items-center gap-2" href="#home">
+            <span class="emblem-quad emblem-sm" aria-hidden="true"><span class="emblem emblem-air"></span><span class="emblem emblem-earth"></span><span class="emblem emblem-fire"></span><span class="emblem emblem-water"></span></span>
+            <span>ATLA<span class="wordmark-accent">nac</span></span>
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
+            aria-controls="mainNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto gap-md-2 py-2 py-md-0">
+              <li class="nav-item"><a class="nav-link" href="#home" data-nav="home">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="#characters" data-nav="characters">Characters</a></li>
+              <li class="nav-item"><a class="nav-link" href="#nations" data-nav="nations">Nations</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <span class="emblem emblem-air emblem-ghost hero-mark hero-mark-tl" aria-hidden="true"></span>
+        <span class="emblem emblem-fire emblem-ghost hero-mark hero-mark-br" aria-hidden="true"></span>
+        <div class="container position-relative">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-6 text-center text-lg-start hero-copy">
+              <p class="eyebrow mb-3">
+                <span class="eyebrow-rule" aria-hidden="true"></span>
+                The Archive of the Four Nations
+              </p>
+              <h1 class="hero-title">ATLA<span class="wordmark-accent">nac</span></h1>
+              <p class="hero-lead mx-auto mx-lg-0">
+                Explore the world of the Four Nations. Discover the characters, their stories, alliances, and
+                rivalries.
+              </p>
+              <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start mt-4">
+                <a href="#characters" class="btn btn-seal btn-lg">
+                  <i class="bi bi-journal-bookmark me-2" aria-hidden="true"></i>Open the Archive
+                </a>
+                <a href="#nations" class="btn btn-ghost btn-lg">Browse the Nations</a>
+              </div>
+              <div class="hero-stats d-flex flex-wrap gap-4 justify-content-center justify-content-lg-start mt-5">
+                <div>
+                  <span class="hero-stat-value" id="statCharacters">&mdash;</span>
+                  <span class="hero-stat-label">Recorded characters</span>
+                </div>
+                <div>
+                  <span class="hero-stat-value">4</span>
+                  <span class="hero-stat-label">Nations</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="hero-scrolls row g-2 g-sm-3" aria-label="Nation scrolls">
+                <div class="col-3">
+                  <a href="#characters" class="hero-scroll hero-scroll-water" data-filter-link="water">
+                    <span class="banner-ripple" aria-hidden="true"></span>
+                    <span class="hero-scroll-title">Water</span>
+                  </a>
+                </div>
+                <div class="col-3 pt-4 pt-sm-5">
+                  <a href="#characters" class="hero-scroll hero-scroll-earth" data-filter-link="earth">
+                    <span class="banner-ripple" aria-hidden="true"></span>
+                    <span class="hero-scroll-title">Earth</span>
+                  </a>
+                </div>
+                <div class="col-3">
+                  <a href="#characters" class="hero-scroll hero-scroll-fire" data-filter-link="fire">
+                    <span class="banner-ripple" aria-hidden="true"></span>
+                    <span class="hero-scroll-title">Fire</span>
+                  </a>
+                </div>
+                <div class="col-3 pt-4 pt-sm-5">
+                  <a href="#characters" class="hero-scroll hero-scroll-air" data-filter-link="air">
+                    <span class="banner-ripple" aria-hidden="true"></span>
+                    <span class="hero-scroll-title">Air</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="characters" class="collection-section">
+        <div class="container">
+          <header class="section-heading text-center">
+            <p class="eyebrow justify-content-center mb-2">Chapter I</p>
+            <h2 class="section-title">The Character Scroll</h2>
+            <div class="ornament" aria-hidden="true">
+              <span class="ornament-line"></span>
+              <span class="emblem-quad emblem-xs" aria-hidden="true"><span class="emblem emblem-air"></span><span class="emblem emblem-earth"></span><span class="emblem emblem-fire"></span><span class="emblem emblem-water"></span></span>
+              <span class="ornament-line"></span>
+            </div>
+          </header>
+
+          <div class="scroll">
+            <div class="scroll-rod" aria-hidden="true"></div>
+            <div class="scroll-sheet">
+              <form class="scroll-controls" id="searchForm" role="search" autocomplete="off">
+                <div class="controls-block">
+                  <label for="searchInput" class="controls-label">
+                    <i class="bi bi-search" aria-hidden="true"></i>Search the Character
+                  </label>
+                  <div class="input-group archive-search">
+                    <span class="input-group-text"><i class="bi bi-search" aria-hidden="true"></i></span>
+                    <input
+                      type="search"
+                      id="searchInput"
+                      class="form-control"
+                      placeholder="Search by name, e.g. Zuko"
+                      maxlength="60"
+                    />
+                    <button type="button" class="btn btn-clear d-none" id="clearSearch" aria-label="Clear search">
+                      <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    </button>
+                    <button type="submit" class="btn btn-seal px-3 px-sm-4" aria-label="Search">
+                      <i class="bi bi-arrow-right d-sm-none" aria-hidden="true"></i><span class="d-none d-sm-inline">Search</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="controls-block">
+                  <p class="controls-label" id="filterLabel">
+                    <i class="bi bi-funnel" aria-hidden="true"></i>Filters
+                  </p>
+                  <div class="filter-grid" id="filterChips" role="radiogroup" aria-labelledby="filterLabel"></div>
+                </div>
+              </form>
+
+              <div class="scroll-status d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <p class="mb-0" id="resultSummary" aria-live="polite">&nbsp;</p>
+                <p class="mb-0 scroll-status-page" id="pageSummary"></p>
+              </div>
+
+              <div class="scroll-body" id="scrollBody" tabindex="-1">
+                <div id="characterList"></div>
+              </div>
+
+              <nav class="mt-4" aria-label="Character pages">
+                <ul class="pagination archive-pagination justify-content-center flex-wrap mb-0" id="pagination"></ul>
+              </nav>
+            </div>
+            <div class="scroll-rod" aria-hidden="true"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="nations" class="nations-section">
+        <div class="container">
+          <header class="section-heading text-center">
+            <p class="eyebrow justify-content-center mb-2">Chapter II</p>
+            <h2 class="section-title section-title-light">The Four Nations</h2>
+            <div class="ornament ornament-light" aria-hidden="true">
+              <span class="ornament-line"></span>
+              <span class="emblem-quad emblem-xs" aria-hidden="true"><span class="emblem emblem-air"></span><span class="emblem emblem-earth"></span><span class="emblem emblem-fire"></span><span class="emblem emblem-water"></span></span>
+              <span class="ornament-line"></span>
+            </div>
+            <p class="section-lead mx-auto">
+              Water. Earth. Fire. Air. Choose a nation to unroll only the records of its people.
+            </p>
+          </header>
+          <div class="row g-4" id="nationCards"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="archive-footer">
+      <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 text-center">
+        <span class="wordmark wordmark-sm">ATLA<span class="wordmark-accent">nac</span></span>
+        <span>
+          Character data from the
+          <a href="https://github.com/paigeegorry/last-airbender-api" target="_blank" rel="noopener">Last Airbender API</a>.
+          A fan-made encyclopedia.
+        </span>
+      </div>
+    </footer>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./js/lists.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/ui.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

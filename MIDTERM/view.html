@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Character Record — ATLAnac</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Macondo&family=Shojumaru&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body class="page-view theme-neutral">
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark archive-nav fixed-top" aria-label="Main navigation">
+        <div class="container">
+          <a class="navbar-brand wordmark d-flex align-items-center gap-2" href="index.html#home">
+            <span class="emblem-quad emblem-sm" aria-hidden="true"><span class="emblem emblem-air"></span><span class="emblem emblem-earth"></span><span class="emblem emblem-fire"></span><span class="emblem emblem-water"></span></span>
+            <span>ATLA<span class="wordmark-accent">nac</span></span>
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
+            aria-controls="mainNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto gap-md-2 py-2 py-md-0">
+              <li class="nav-item"><a class="nav-link" href="index.html#home">Home</a></li>
+              <li class="nav-item">
+                <a class="nav-link active" href="index.html#characters" aria-current="page" data-back-link>Characters</a>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="index.html#nations">Nations</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="view-main">
+      <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+          <a href="index.html#characters" class="btn btn-ghost btn-ghost-dark" data-back-link>
+            <i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Back to Characters
+          </a>
+          <span class="view-breadcrumb" id="viewBreadcrumb">Character Record</span>
+        </div>
+
+        <div id="recordRoot" aria-live="polite"></div>
+      </div>
+    </main>
+
+    <footer class="archive-footer">
+      <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 text-center">
+        <span class="wordmark wordmark-sm">ATLA<span class="wordmark-accent">nac</span></span>
+        <span>
+          Character data from the
+          <a href="https://github.com/paigeegorry/last-airbender-api" target="_blank" rel="noopener">Last Airbender API</a>.
+          A fan-made encyclopedia.
+        </span>
+      </div>
+    </footer>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./js/lists.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/ui.js"></script>
+    <script src="./js/view.js"></script>
+  </body>
+</html>
