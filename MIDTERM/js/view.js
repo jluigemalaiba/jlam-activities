@@ -209,6 +209,19 @@
     const updateNav = () => nav?.classList.toggle('is-scrolled', window.scrollY > 56);
     updateNav();
     window.addEventListener('scroll', updateNav, { passive: true });
+    const navLinks = document.querySelectorAll('#mainNav .nav-link');
+    navLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinks.forEach((item) => {
+          const isActive = item === link;
+          item.classList.toggle('active', isActive);
+          if (isActive) item.setAttribute('aria-current', 'page');
+          else item.removeAttribute('aria-current');
+        });
+        const menu = document.getElementById('mainNav');
+        if (menu?.classList.contains('show')) window.bootstrap?.Collapse.getOrCreateInstance(menu).hide();
+      });
+    });
     const footer = document.querySelector('.archive-footer');
     if (footer && 'IntersectionObserver' in window) {
       new IntersectionObserver(([entry]) => {

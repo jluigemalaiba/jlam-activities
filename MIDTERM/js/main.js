@@ -320,8 +320,19 @@
       if (event.target.closest('[data-action="retry"]')) loadCharacters({ force: true });
     });
 
-    document.querySelectorAll('#mainNav .nav-link').forEach((link) => {
+    const navLinks = document.querySelectorAll('#mainNav .nav-link');
+    const setActiveNavLink = (activeLink) => {
+      navLinks.forEach((link) => {
+        const isActive = link === activeLink;
+        link.classList.toggle('active', isActive);
+        if (isActive) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    navLinks.forEach((link) => {
       link.addEventListener('click', () => {
+        setActiveNavLink(link);
         const menu = document.getElementById('mainNav');
         if (menu.classList.contains('show')) window.bootstrap?.Collapse.getOrCreateInstance(menu).hide();
       });

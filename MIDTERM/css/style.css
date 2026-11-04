@@ -374,7 +374,7 @@
   color: var(--gold);
 }
 
-.archive-nav .nav-link.active::after {
+.archive-nav .nav-link::after {
   content: '';
   position: absolute;
   left: var(--bs-navbar-nav-link-padding-x);
@@ -382,6 +382,15 @@
   width: 1.25rem;
   height: 2px;
   background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease;
+}
+
+.archive-nav .nav-link:hover::after,
+.archive-nav .nav-link:focus-visible::after,
+.archive-nav .nav-link.active::after {
+  transform: scaleX(1);
 }
 
 .archive-nav .navbar-toggler {
