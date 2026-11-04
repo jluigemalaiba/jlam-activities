@@ -14,10 +14,11 @@
 
   function portraitUrl(url, width) {
     if (!url) return '';
-    if (width && /\/revision\/latest(\?|$)/.test(url)) {
-      return url.replace('/revision/latest', `/revision/latest/scale-to-width-down/${width}`);
+    let normalized = url.replace('://vignette.wikia.nocookie.net/', '://static.wikia.nocookie.net/');
+    if (width && /\/revision\/latest(\?|$)/.test(normalized)) {
+      normalized = normalized.replace('/revision/latest', `/revision/latest/scale-to-width-down/${width}`);
     }
-    return url;
+    return normalized;
   }
 
   const FALLBACK_AVATAR = '<span class="portrait-fallback" aria-hidden="true"><i class="bi bi-person-fill"></i></span>';
@@ -25,7 +26,8 @@
   function portraitHtml(character, { width = 240, eager = false } = {}) {
     if (!character || !character.photoUrl) return FALLBACK_AVATAR;
     return `<img src="${escapeHtml(portraitUrl(character.photoUrl, width))}" alt="Portrait of ${escapeHtml(character.name)}"
-      loading="${eager ? 'eager' : 'lazy'}" decoding="async" referrerpolicy="no-referrer" data-portrait>`;
+      loading="${eager ? 'eager' : 'lazy'}" decoding="async" data-portrait
+      data-source-name="${escapeHtml(character.sourceName || character.name)}" data-portrait-width="${width}">`;
   }
 
   function fallbackAvatarHtml() {
@@ -35,9 +37,18 @@
   function installImageFallback() {
     document.addEventListener(
       'error',
-      (event) => {
+      async (event) => {
         const img = event.target;
         if (img instanceof HTMLImageElement && img.hasAttribute('data-portrait')) {
+          if (!img.dataset.portraitRetry) {
+            img.dataset.portraitRetry = 'true';
+            const sourceName = img.dataset.sourceName || img.alt.replace(/^Portrait of /, '');
+            const fallbackUrl = await ATLAnac.api?.fetchPortraitByName?.(sourceName);
+            if (fallbackUrl && fallbackUrl !== img.currentSrc) {
+              img.src = portraitUrl(fallbackUrl, Number(img.dataset.portraitWidth) || 240);
+              return;
+            }
+          }
           img.insertAdjacentHTML('afterend', FALLBACK_AVATAR);
           img.remove();
         }

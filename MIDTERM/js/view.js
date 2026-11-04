@@ -47,9 +47,13 @@
 
   function factsHtml(character) {
     const facts = [
+      { icon: 'bi-person-vcard', label: 'Physical Appearance', entries: character.appearance },
+      { icon: 'bi-gender-ambiguous', label: 'Gender', entries: character.gender ? [character.gender] : [] },
       { icon: 'bi-flag', label: 'Nation / Affiliation', entries: character.affiliations },
       { icon: 'bi-briefcase', label: 'Profession', entries: character.professions },
       { icon: 'bi-shield-shaded', label: 'Weapon', entries: character.weapons },
+      { icon: 'bi-heart', label: 'Love', entries: character.loves },
+      { icon: 'bi-arrow-counterclockwise', label: 'Predecessor', entries: [character.predecessor] },
     ];
     if (character.positions.length) facts.push({ icon: 'bi-award', label: 'Position', entries: character.positions });
     return `<dl class="row g-3 mb-0">${facts.map(factHtml).join('')}</dl>`;

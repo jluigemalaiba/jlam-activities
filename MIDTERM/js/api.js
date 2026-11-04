@@ -124,6 +124,39 @@
     return nations.length === 1 ? nations[0] : 'neutral';
   }
 
+  const portraitLookupPromises = new Map();
+
+  function portraitTitles(name) {
+    const cleanName = cleanText(name);
+    const withoutQualifier = cleanName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+    return [...new Set([cleanName, withoutQualifier].filter(Boolean))];
+  }
+
+  function fetchPortraitByName(name) {
+    const titles = portraitTitles(name);
+    const key = titles.join('|').toLowerCase();
+    if (!key) return Promise.resolve('');
+    if (portraitLookupPromises.has(key)) return portraitLookupPromises.get(key);
+
+    const params = new URLSearchParams({
+      action: 'query',
+      format: 'json',
+      formatversion: '2',
+      origin: '*',
+      redirects: '1',
+      prop: 'pageimages',
+      piprop: 'thumbnail',
+      pithumbsize: '600',
+      titles: titles.join('|'),
+    });
+    const lookup = requestJson(`https://avatar.fandom.com/api.php?${params}`, 5000)
+      .then((data) => (data?.query?.pages || []).find((page) => page.thumbnail?.source)?.thumbnail?.source || '')
+      .then(cleanUrl)
+      .catch(() => '');
+    portraitLookupPromises.set(key, lookup);
+    return lookup;
+  }
+
   async function addMissingPortraits(characters) {
     const missing = characters.filter((character) => !character.photoUrl);
     if (!missing.length) return characters;
@@ -157,6 +190,16 @@
   function normalizeCharacter(raw) {
     const affiliation = cleanText(raw.affiliation);
     const nations = getNationKeys(affiliation);
+    const appearance = [
+      ['Eye Color', raw.eye],
+      ['Hair Color', raw.hair],
+      ['Skin', raw.skin],
+    ]
+      .map(([label, value]) => {
+        const detail = titleCase(value);
+        return detail ? `${label}: ${detail}` : '';
+      })
+      .filter(Boolean);
     return {
       id: String(raw._id),
       sourceName: cleanText(raw.name),
@@ -169,6 +212,10 @@
       professions: titleCaseList(splitEntries(cleanText(raw.profession))),
       weapons: titleCaseList(splitEntries(cleanText(raw.weapon))),
       positions: titleCaseList(splitEntries(cleanText(raw.position))),
+      appearance,
+      gender: titleCase(raw.gender),
+      loves: titleCaseList(splitEntries(cleanText(raw.love))),
+      predecessor: titleCase(raw.predecessor) || 'Not an Avatar',
       nations,
       teamAvatar: isTeamAvatar(affiliation),
       theme: getTheme(nations),
@@ -288,6 +335,7 @@
     getNationKeys,
     fetchAllCharacters,
     fetchCharacterById,
+    fetchPortraitByName,
     matchesFilter,
     matchesSearch,
     getNation,
