@@ -99,7 +99,7 @@
       if (/^(?:[A-Z]{2,}|[IVXLCDM]+)$/.test(word)) return word;
       const lower = word.toLowerCase();
       if (index > 0 && index < words.length - 1 && minorWords.has(lower)) return lower;
-      return lower.replace(/(^|[-/])([\p{L}])/gu, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`);
+      return lower.replace(/(^|[-/(])([\p{L}])/gu, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`);
     }).join(' ');
   }
 
