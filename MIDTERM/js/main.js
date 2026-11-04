@@ -243,11 +243,18 @@
 
   function setQuery(query) {
     const next = query.trim().slice(0, 60);
-    el.clearSearch.classList.toggle('d-none', !query);
+    setClearSearchVisibility(query);
     if (next === state.query) return;
     state.query = next;
     state.page = 1;
     renderList();
+  }
+
+  function setClearSearchVisibility(query) {
+    const isVisible = Boolean(query);
+    el.clearSearch.classList.toggle('is-visible', isVisible);
+    el.clearSearch.setAttribute('aria-hidden', String(!isVisible));
+    el.clearSearch.tabIndex = isVisible ? 0 : -1;
   }
 
   function setFilter(filter) {
@@ -276,7 +283,7 @@
     const debouncedSearch = debounce(setQuery, SEARCH_DEBOUNCE_MS);
 
     el.searchInput.addEventListener('input', (event) => {
-      el.clearSearch.classList.toggle('d-none', !event.target.value);
+      setClearSearchVisibility(event.target.value);
       debouncedSearch(event.target.value);
     });
 
@@ -333,6 +340,15 @@
     } else {
       footer?.classList.add('is-open');
     }
+
+    const characterScroll = document.querySelector('.character-scroll');
+    if (characterScroll && 'IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        characterScroll.classList.toggle('is-open', entry.isIntersecting);
+      }, { threshold: 0, rootMargin: '0px 0px -12% 0px' }).observe(characterScroll);
+    } else {
+      characterScroll?.classList.add('is-open');
+    }
   }
 
   async function loadCharacters({ force = false } = {}) {
@@ -357,7 +373,7 @@
     installImageFallback();
     readStateFromUrl();
     el.searchInput.value = state.query;
-    el.clearSearch.classList.toggle('d-none', !state.query);
+    setClearSearchVisibility(state.query);
     bindEvents();
     el.nationCards.addEventListener('click', (event) => {
       if (event.target.closest('[data-action="retry"]')) loadCharacters({ force: true });

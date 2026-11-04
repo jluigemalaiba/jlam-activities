@@ -14,11 +14,7 @@
 
   function portraitUrl(url, width) {
     if (!url) return '';
-    let normalized = url.replace('://vignette.wikia.nocookie.net/', '://static.wikia.nocookie.net/');
-    if (width && /\/revision\/latest(\?|$)/.test(normalized)) {
-      normalized = normalized.replace('/revision/latest', `/revision/latest/scale-to-width-down/${width}`);
-    }
-    return normalized;
+    return url;
   }
 
   const FALLBACK_AVATAR = '<span class="portrait-fallback" aria-hidden="true"><i class="bi bi-person-fill"></i></span>';
