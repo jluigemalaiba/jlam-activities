@@ -215,7 +215,7 @@
       appearance,
       gender: titleCase(raw.gender),
       loves: titleCaseList(splitEntries(cleanText(raw.love))),
-      predecessor: titleCase(raw.predecessor) || 'Not an Avatar',
+      predecessor: titleCase(raw.predecessor) || 'Not recorded in the archive',
       nations,
       teamAvatar: isTeamAvatar(affiliation),
       theme: getTheme(nations),

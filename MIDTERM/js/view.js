@@ -33,8 +33,8 @@
   }
 
   function factHtml({ icon, label, entries }) {
-    const content = entries.length === 1 && entries[0] === 'Not an Avatar'
-      ? '<span class="fact-missing">Not an Avatar</span>'
+    const content = entries.length === 1 && entries[0] === 'Not recorded in the archive'
+      ? '<span class="fact-missing">Not recorded in the archive</span>'
       : entries.length
       ? `<ul class="fact-list">${entries.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}</ul>`
       : '<span class="fact-missing">Not recorded in the archive</span>';
@@ -55,7 +55,7 @@
       { icon: 'bi-briefcase', label: 'Profession', entries: character.professions },
       { icon: 'bi-shield-shaded', label: 'Weapon', entries: character.weapons },
       { icon: 'bi-heart', label: 'Love', entries: character.loves },
-      { icon: 'bi-arrow-counterclockwise', label: 'Predecessor', entries: [character.predecessor || 'Not an Avatar'] },
+      { icon: 'bi-arrow-counterclockwise', label: 'Predecessor', entries: [character.predecessor || 'Not recorded in the archive'] },
     ];
     if (character.positions.length) facts.push({ icon: 'bi-award', label: 'Position', entries: character.positions });
     return `<dl class="row g-3 mb-0">${facts.map(factHtml).join('')}</dl>`;

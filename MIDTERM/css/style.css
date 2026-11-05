@@ -728,7 +728,7 @@
   pointer-events: none;
   transform: translateY(-0.6rem);
   will-change: max-height, opacity, transform;
-  transition: max-height 1.05s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-height 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .character-scroll-content > * {
@@ -749,11 +749,18 @@
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
-  transition: max-height 1.05s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.42s ease 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-height 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.36s ease 0.14s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .character-scroll.is-open .character-scroll-details {
   padding-top: 1.25rem;
+}
+
+/* Keep a direct jump to Nations from being shifted by the scroll's reveal animation. */
+.character-scroll.is-navigation-bypass .scroll-sheet,
+.character-scroll.is-navigation-bypass .character-scroll-content,
+.character-scroll.is-navigation-bypass .character-scroll-details {
+  transition: none !important;
 }
 
 .scroll-controls {
@@ -1657,6 +1664,16 @@
   align-items: center;
   gap: 0.65rem;
   min-width: 0;
+}
+
+.footer-brand-link {
+  text-decoration: none;
+}
+
+.footer-brand-link:focus-visible {
+  outline: 2px solid var(--seal);
+  outline-offset: 0.35rem;
+  border-radius: 0.25rem;
 }
 
 .footer-brand .wordmark {
